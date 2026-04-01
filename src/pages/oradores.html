@@ -171,12 +171,12 @@
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-6">
-                <h3 class="mb-0">Registro de discursos públicos</h3>
+                <h2 class="mb-0"><strong> Información de oradores locales</strong></h2>
               </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Página de ejemplo</li>
+                  <li class="breadcrumb-item active" aria-current="page">Oradores</li>
                 </ol>
               </div>
             </div>
@@ -189,13 +189,42 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <!-- Tu contenido personalizado comienza aquí -->
             <div class="row">
               <div class="col-12">
-                <p>Esta es una página limpia lista para tu proyecto.</p>
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Listado de Oradores y temas</h3>
+                    <div class="card-tools">
+                      <div class="input-group input-group-sm" style="width: 250px;">
+                        <input type="text" id="search-orador" class="form-control" placeholder="Buscar orador o tema...">
+                        <div class="input-group-append">
+                          <button class="btn btn-default">
+                            <i class="bi bi-search"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body table-responsive p-0" style="height: 600px;">
+                    <table class="table table-head-fixed table-hover text-nowrap">
+                      <thead>
+                        <tr>
+                          <th>Orador</th>
+                          <th>Privilegio</th>
+                          <th>Congregación</th>
+                          <th>Núm.</th>
+                          <th>Título</th>
+                          <th>Canción</th>
+                        </tr>
+                      </thead>
+                      <tbody id="oradores-table-body">
+                        <!-- Datos dinámicos -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
-            <!-- Fin de contenido personalizado -->
           </div>
           <!--end::Container-->
         </div>
@@ -271,6 +300,102 @@
     </script>
     <!--end::OverlayScrollbars Configure-->
 
+    <script>
+      document.addEventListener('DOMContentLoaded', async function () {
+        const tableBody = document.getElementById('oradores-table-body');
+        const searchInput = document.getElementById('search-orador');
+        let oradoresData = [];
+
+        async function fetchOradores() {
+          try {
+            const response = await fetch('http://localhost:3000/api/oradores-temas');
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || 'Error en el servidor');
+            }
+            
+            oradoresData = await response.json();
+            renderTable(oradoresData);
+          } catch (error) {
+            console.error('Error:', error);
+            tableBody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error: ${error.message}</td></tr>`;
+          }
+        }
+        
+        function renderTable(data) {
+          tableBody.innerHTML = '';
+          
+          // Agrupar temas por orador usando id_orador como clave principal
+          const groupedOradores = data.reduce((acc, item) => {
+            // Usamos el id_orador o el nombre como clave única para evitar agrupaciones accidentales
+            const speakerKey = item.id_orador || item.nombre;
+
+            if (!acc[speakerKey]) {
+              acc[speakerKey] = {
+                nombre: item.nombre,
+                congregacion: item.congregacion,
+                privilegio: item.privilegio,
+                temas: []
+              };
+            }
+            // Solo añadir el tema si existe (no es una fila de orador sin temas)
+            if (item.numero_tema || item.titulo) {
+              acc[speakerKey].temas.push({
+                numero_tema: item.numero_tema,
+                titulo: item.titulo,
+                cancion_sugerida: item.cancion_sugerida
+              });
+            }
+            return acc;
+          }, {});
+
+          Object.values(groupedOradores).forEach(orador => {
+            const numTemas = orador.temas.length > 0 ? orador.temas.length : 1; // Al menos 1 fila para el orador
+            
+            const privilegioText = orador.privilegio ? 'Anciano' : 'Siervo Ministerial';
+            const privilegioBadge = orador.privilegio ? 'text-bg-primary' : 'text-bg-info';
+
+            // Renderizar la primera fila del orador con rowspan
+            let firstRow = document.createElement('tr');
+            firstRow.innerHTML = `
+              <td rowspan="${numTemas}"><strong>${orador.nombre}</strong></td>
+              <td rowspan="${numTemas}"><span class="badge ${privilegioBadge}">${privilegioText}</span></td>
+              <td rowspan="${numTemas}">${orador.congregacion || 'El Castillo'}</td>
+              <td>${orador.temas[0]?.numero_tema || '--'}</td>
+              <td>${orador.temas[0]?.titulo || '<i class="text-muted">Sin tema registrado</i>'}</td>
+              <td>${orador.temas[0]?.cancion_sugerida ? 'Cant. ' + orador.temas[0].cancion_sugerida : '--'}</td>
+            `;
+            tableBody.appendChild(firstRow);
+
+            // Renderizar filas adicionales para temas (si hay más de uno)
+            for (let i = 1; i < orador.temas.length; i++) {
+              let subsequentRow = document.createElement('tr');
+              subsequentRow.innerHTML = `
+                <td>${orador.temas[i].numero_tema || '--'}</td>
+                <td>${orador.temas[i].titulo || '<i class="text-muted">Sin tema registrado</i>'}</td>
+                <td>${orador.temas[i].cancion_sugerida ? 'Cant. ' + orador.temas[i].cancion_sugerida : '--'}</td>
+              `;
+              tableBody.appendChild(subsequentRow);
+            }
+          });
+        }
+
+        // Buscador básico
+        searchInput.addEventListener('input', (e) => {
+          const term = e.target.value.toLowerCase();
+          // Para el buscador, necesitamos filtrar la data original y luego reagruparla
+          const filteredRawData = oradoresData.filter(o => 
+            o.nombre.toLowerCase().includes(term) ||
+            (o.titulo && o.titulo.toLowerCase().includes(term)) ||
+            (o.congregacion && o.congregacion.toLowerCase().includes(term)) ||
+            (o.numero_tema && o.numero_tema.toString().includes(term))
+          );
+          renderTable(filteredRawData); // La función renderTable ya agrupa
+        });
+
+        fetchOradores();
+      });
+    </script>
     <!--end::Script-->
   </body>
   <!--end::Body-->
