@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+  <!--begin::Head-->
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Administrador de roles | Registro de bosquejos</title>
+
+    <!--begin::Accessibility Meta Tags-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
+    <!--end::Accessibility Meta Tags-->
+
+    <!--begin::Primary Meta Tags-->
+    <meta name="title" content="Administrador de roles de discursos" />
+    <meta name="author" content="Marco Antonio Zatarain" />
+    <meta
+      name="description"
+      content="Aplicación web diseñada para asistir el manejo de los discursos publidos dentro de las congregaciones de los Testigos de Jehova"
+    />
+    <meta
+      name="keywords"
+      content="coordinar discursos, agenda de roles, discursos publicos, visitas entre congregaciones"
+    />
+    <!--end::Primary Meta Tags-->
+
+    <!--begin::Accessibility Features-->
+    <!-- Skip links will be dynamically added by accessibility.js -->
+    <meta name="supported-color-schemes" content="light dark" />
+    <link rel="preload" href="../../dist/css/adminlte.css" as="style" />
+    <!--end::Accessibility Features-->
+
+    <!--begin::Fonts-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+      integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
+      crossorigin="anonymous"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <!--end::Fonts-->
+
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css"
+      crossorigin="anonymous"
+    />
+    <!--end::Third Party Plugin(OverlayScrollbars)-->
+
+    <!--begin::Third Party Plugin(Bootstrap Icons)-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+      crossorigin="anonymous"
+    />
+    <!--end::Third Party Plugin(Bootstrap Icons)-->
+
+    <!--begin::Required Plugin(AdminLTE)-->
+    <link rel="stylesheet" href="../../dist/css/adminlte.css" />
+    <!--end::Required Plugin(AdminLTE)-->
+  </head>
+  <!--end::Head-->
+  <!--begin::Body-->
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
+      <!--begin::Header-->
+      <nav class="app-header navbar navbar-expand bg-body">
+        <!--begin::Container-->
+        <div class="container-fluid">
+          <!--begin::Start Navbar Links-->
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                <i class="bi bi-list"></i>
+              </a>
+            </li>
+            <li class="nav-item d-none d-md-block">
+              <a href="#" class="nav-link">Home</a>
+            </li>
+          </ul>
+          <!--end::Start Navbar Links-->
+        </div>
+        <!--end::Container-->
+      </nav>
+      <!--end::Header-->
+      <!--begin::Sidebar-->
+      <aside class="app-sidebar shadow" data-bs-theme="dark" style="background-color: #1F3056;">
+        <!--begin::Sidebar Brand-->
+        <div class="sidebar-brand">
+          <!--begin::Brand Link-->
+          <a href="./index.html" class="brand-link">
+            <!--begin::Brand Image-->
+            <img
+              src="../../dist/assets/img/AdminLTELogo.png"
+              alt="AdminLTE Logo"
+              class="brand-image opacity-75 shadow"
+            />
+            <!--end::Brand Image-->
+            <!--begin::Brand Text-->
+            <span class="brand-text fw-light">Administrador de roles</span>
+            <!--end::Brand Text-->
+          </a>
+          <!--end::Brand Link-->
+        </div>
+        <!--end::Sidebar Brand-->
+        <!--begin::Sidebar Wrapper-->
+        <div class="sidebar-wrapper">
+          <nav class="mt-2">
+            <!--begin::Sidebar Menu-->
+            <ul
+              class="nav sidebar-menu flex-column"
+              data-lte-toggle="treeview"
+              role="navigation"
+              aria-label="Main navigation"
+              data-accordion="false"
+              id="navigation"
+            >
+              <li class="nav-item">
+                <a href="./index.html" class="nav-link">
+                  <i class="nav-icon bi bi-house-door-fill"></i>
+                  <p>Dashboard</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./registros.html" class="nav-link active">
+                  <i class="nav-icon bi bi-card-list"></i>
+                  <p>Registro de bosquejos</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./visitantes.html" class="nav-link">
+                  <i class="nav-icon bi bi-journal-bookmark-fill"></i>
+                  <p>Nos visitan</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./salidas.html" class="nav-link">
+                  <i class="nav-icon bi bi-arrow-up-right-square-fill"></i>
+                  <p>Salidas</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./agenda.html" class="nav-link">
+                  <i class="nav-icon bi bi-calendar-check-fill"></i>
+                  <p>Agenda de roles</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./oradores.html" class="nav-link">
+                  <i class="nav-icon bi bi-people-fill"></i>
+                  <p>Oradores locales</p>
+                </a>
+              </li>                          
+            </ul>
+            <!--end::Sidebar Menu-->
+          </nav>
+        </div>
+        <!--end::Sidebar Wrapper-->
+      </aside>
+      <!--end::Sidebar-->
+      <!--begin::App Main-->
+      <main class="app-main">
+        <div class="app-content-header">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-6">
+                <h2 class="mb-0"><strong>Registros</strong></h2>
+                <p class="text-secondary mb-0">Historial de presentación</p>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="./index.html">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Registro de bosquejos</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="app-content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Lista de Bosquejos</h3>
+                    <div class="card-tools d-flex">
+                      <select id="sort-date" class="form-select form-select-sm me-2" style="width: 180px;">
+                        <option value="none">Ordenar por Núm.</option>
+                        <option value="recent">Más reciente primero</option>
+                        <option value="oldest">Más antiguo primero</option>
+                      </select>
+                      <div class="input-group input-group-sm" style="width: 250px;">
+                        <input type="text" name="table_search" class="form-control float-end" placeholder="Buscar discurso...">
+                        <div class="input-group-append">
+                          <button type="submit" class="btn btn-default">
+                            <i class="bi bi-search"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body table-responsive p-0" style="height: 600px;">
+                    <table class="table table-head-fixed table-hover text-nowrap">
+                      <thead>
+                        <tr>
+                          <th>Núm.</th>
+                          <th>Título del Discurso</th>
+                          <th>Última fecha</th>
+                          <th>Estatus</th>
+                          <th>Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody id="bosquejos-table-body">
+                        <!-- Los datos se cargarán aquí dinámicamente -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <!--end::App Main-->
+
+      <!-- Modal para Editar Fecha -->
+      <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editModalLabel">Actualizar Presentación</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p id="edit-speech-info" class="fw-bold"></p>
+              <form id="editForm">
+                <input type="hidden" id="edit-id">
+                <div class="mb-3">
+                  <label for="edit-fecha" class="form-label">Fecha de última presentación</label>
+                  <input type="date" class="form-control" id="edit-fecha">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" id="save-date-btn" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal para Editar Título -->
+      <div class="modal fade" id="editTitleModal" tabindex="-1" aria-labelledby="editTitleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editTitleModalLabel">Editar Título del Discurso</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p id="edit-title-info" class="text-muted small"></p>
+              <form id="editTitleForm">
+                <input type="hidden" id="edit-title-id">
+                <div class="mb-3">
+                  <label for="edit-titulo-input" class="form-label">Nuevo título</label>
+                  <input type="text" class="form-control" id="edit-titulo-input" required>
+                </div>
+                <div>
+                  <p class="text-danger">Nota: Asegurese de usar un título actualizado y aprobado por la organización.</p>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" id="save-title-btn" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--begin::Footer-->
+      <footer class="app-footer text-center">
+        <!--begin::To the end-->
+        <!--end::To the end-->
+        <!--begin::Copyright-->
+        <strong>
+          Copyright &copy; 2026&nbsp;
+        </strong>
+        Developed by
+        <strong> 
+          <a href="https://github.com/Marcoz08" class="text-decoration-none">MarcoZ</a>.
+        </strong>
+        <!--end::Copyright-->
+      </footer>
+      <!--end::Footer-->
+
+
+    </div>
+    <!--end::App Wrapper-->
+    <!--begin::Script-->
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
+    <script src="../../dist/js/adminlte.js"></script>
+    <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
+    <script>
+      const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+      const Default = {
+        scrollbarTheme: 'os-theme-light',
+        scrollbarAutoHide: 'leave',
+        scrollbarClickScroll: true,
+      };
+      document.addEventListener('DOMContentLoaded', function () {
+        const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+
+        // Disable OverlayScrollbars on mobile devices to prevent touch interference
+        const isMobile = window.innerWidth <= 992;
+
+        if (
+          sidebarWrapper &&
+          OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined &&
+          !isMobile
+        ) {
+          OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+            scrollbars: {
+              theme: Default.scrollbarTheme,
+              autoHide: Default.scrollbarAutoHide,
+              clickScroll: Default.scrollbarClickScroll,
+            },
+          });
+        }
+      });
+    </script>
+    <!--end::OverlayScrollbars Configure-->
+
+    <!-- Lógica para cargar datos desde el servidor -->
+    <script>
+      document.addEventListener('DOMContentLoaded', async function () {
+        const tableBody = document.getElementById('bosquejos-table-body');
+        const searchInput = document.querySelector('input[name="table_search"]');
+        const sortSelect = document.getElementById('sort-date');
+        let bosquejosOriginales = [];
+
+        async function fetchBosquejos() {
+          try {
+            const response = await fetch('http://localhost:3000/api/bosquejos');
+            if (!response.ok) throw new Error('Error al obtener datos');
+            
+            bosquejosOriginales = await response.json();
+            updateDisplay();
+          } catch (error) {
+            console.error('Error:', error);
+            tableBody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Error al conectar con el servidor</td></tr>';
+          }
+        }
+
+        function updateDisplay() {
+          const term = searchInput.value.toLowerCase();
+          const sortVal = sortSelect.value;
+
+          // 1. Filtrar
+          let filtered = bosquejosOriginales.filter(b => 
+            b.titulo.toLowerCase().includes(term) || b.num.toString().includes(term)
+          );
+
+          // 2. Ordenar
+          if (sortVal === 'recent') {
+            filtered.sort((a, b) => {
+              if (!a.fecha_ult) return 1;
+              if (!b.fecha_ult) return -1;
+              return new Date(b.fecha_ult) - new Date(a.fecha_ult);
+            });
+          } else if (sortVal === 'oldest') {
+            filtered.sort((a, b) => {
+              if (!a.fecha_ult) return 1;
+              if (!b.fecha_ult) return -1;
+              return new Date(a.fecha_ult) - new Date(b.fecha_ult);
+            });
+          }
+
+          renderTable(filtered);
+        }
+
+        function renderTable(data) {
+          tableBody.innerHTML = '';
+          const now = new Date();
+          const threeMonthsAgo = new Date();
+          threeMonthsAgo.setMonth(now.getMonth() - 3);
+          const sixMonthsAgo = new Date();
+          sixMonthsAgo.setMonth(now.getMonth() - 6);
+
+          data.forEach(item => {
+            const tr = document.createElement('tr');
+            
+            // Ajuste para evitar que el timezone cambie la fecha al mostrarla
+            let rawFecha = '';
+            if (item.fecha_ult) {
+              const d = new Date(item.fecha_ult);
+              rawFecha = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+            }
+            const fechaStr = rawFecha ? rawFecha.split('-').reverse().join('-') : '--';
+            
+            let badgeClass = '';
+            let badgeStyle = '';
+            let statusText = '';
+
+            if (!item.fecha_ult) {
+              badgeClass = 'text-bg-success'; // Verde
+              statusText = 'Disponible';
+            } else {
+              const lastDate = new Date(item.fecha_ult);
+              if (lastDate >= threeMonthsAgo) {
+                badgeClass = 'text-bg-danger'; // Rojo
+                statusText = 'Muy reciente';
+              } else if (lastDate >= sixMonthsAgo) {
+                badgeClass = 'text-white'; 
+                badgeStyle = 'style="background-color: #fd7e14;"'; // Naranja vibrante (Bootstrap orange)
+                statusText = 'Reciente';
+              } else {
+                badgeClass = 'text-bg-warning'; // Amarillo
+                statusText = 'Presentado';
+              }
+            }
+
+            tr.innerHTML = `
+              <td>${item.num}</td>
+              <td>${item.titulo}</td>
+              <td>${fechaStr}</td>
+              <td><span class="badge ${badgeClass}" ${badgeStyle}>${statusText}</span></td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary edit-btn" 
+                        data-id="${item.id}" 
+                        data-num="${item.num}" 
+                        data-titulo="${item.titulo}" 
+                        data-fecha="${rawFecha}"
+                        title="Modificar fecha">
+                  <i class="bi bi-calendar-event"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary edit-title-btn ms-1" 
+                        data-id="${item.id}" 
+                        data-num="${item.num}" 
+                        data-titulo="${item.titulo}" 
+                        title="Editar tema">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+              </td>
+            `;
+            tableBody.appendChild(tr);
+          });
+        }
+
+        // Abrir modal y cargar datos
+        tableBody.addEventListener('click', (e) => {
+          const dateBtn = e.target.closest('.edit-btn');
+          const titleBtn = e.target.closest('.edit-title-btn');
+
+          if (dateBtn) {
+            const { id, num, titulo, fecha } = dateBtn.dataset;
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-speech-info').innerText = `Bosquejo #${num}: ${titulo}`;
+            document.getElementById('edit-fecha').value = fecha;
+            new bootstrap.Modal(document.getElementById('editModal')).show();
+          } else if (titleBtn) {
+            const { id, num, titulo } = titleBtn.dataset;
+            document.getElementById('edit-title-id').value = id;
+            document.getElementById('edit-title-info').innerText = `Actualizando Bosquejo #${num}`;
+            document.getElementById('edit-titulo-input').value = titulo;
+            new bootstrap.Modal(document.getElementById('editTitleModal')).show();
+          }
+        });
+
+        // Guardar cambios
+        document.getElementById('save-date-btn').addEventListener('click', async () => {
+          const id = document.getElementById('edit-id').value;
+          const nuevaFecha = document.getElementById('edit-fecha').value;
+
+          try {
+            const response = await fetch(`http://localhost:3000/api/bosquejos/${id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ fecha_ult: nuevaFecha })
+            });
+
+            if (response.ok) {
+              const modalInstance = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+              modalInstance.hide();
+              fetchBosquejos(); // Recargar tabla
+            } else {
+              const errorData = await response.json();
+              alert('Error al actualizar: ' + (errorData.error || 'Respuesta inesperada del servidor'));
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('No se pudo conectar con el servidor. Asegúrate de que el backend esté corriendo.');
+          }
+        });
+
+        // Guardar cambios de título
+        document.getElementById('save-title-btn').addEventListener('click', async () => {
+          const id = document.getElementById('edit-title-id').value;
+          const nuevoTitulo = document.getElementById('edit-titulo-input').value;
+
+          if (!nuevoTitulo.trim()) return alert('El título no puede estar vacío');
+
+          try {
+            const response = await fetch(`http://localhost:3000/api/bosquejos/${id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ titulo: nuevoTitulo })
+            });
+
+            if (response.ok) {
+              const modalInstance = bootstrap.Modal.getInstance(document.getElementById('editTitleModal'));
+              modalInstance.hide();
+              fetchBosquejos(); // Recargar tabla
+            } else {
+              const errorData = await response.json();
+              alert('Error al actualizar el título: ' + (errorData.error || 'Error desconocido'));
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('No se pudo conectar con el servidor.');
+          }
+        });
+
+        // Eventos
+        searchInput.addEventListener('input', updateDisplay);
+        sortSelect.addEventListener('change', updateDisplay);
+
+        fetchBosquejos();
+      });
+    </script>
+    <!--end::Script-->
+  </body>
+  <!--end::Body-->
+</html>
