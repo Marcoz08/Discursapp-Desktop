@@ -227,6 +227,9 @@
       </main>
       <!--end::App Main-->
 
+      <!-- Contenedor para notificaciones (Toasts) -->
+      <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1055;"></div>
+
       <!-- Modal para Editar Fecha -->
       <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -486,6 +489,41 @@
           }
         });
 
+        /**
+         * Función reutilizable para mostrar notificaciones (Toasts)
+         */
+        function showNotification(message, type = 'success', errorCode = null) {
+          const toastContainer = document.getElementById('toastContainer');
+          const toastId = 'toast-' + Date.now();
+          const bgClass = type === 'success' ? 'text-bg-success' : 'text-bg-danger';
+          const icon = type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill';
+          
+          let bodyContent = message;
+          if (errorCode) {
+            bodyContent = `<strong>Error en la operación:</strong><br>${message} <br><small>Código: ${errorCode}</small>`;
+          }
+
+          const toastHTML = `
+            <div id="${toastId}" class="toast align-items-center ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="d-flex">
+                <div class="toast-body">
+                  <div class="d-flex align-items-center">
+                    <i class="bi ${icon} fs-5 me-2"></i>
+                    <div>${bodyContent}</div>
+                  </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+            </div>
+          `;
+          
+          toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+          const toastElement = document.getElementById(toastId);
+          const toast = new bootstrap.Toast(toastElement, { delay: type === 'success' ? 3000 : 7000 });
+          toast.show();
+          toastElement.addEventListener('hidden.bs.toast', () => toastElement.remove());
+        }
+
         // Guardar cambios
         document.getElementById('save-date-btn').addEventListener('click', async () => {
           const id = document.getElementById('edit-id').value;
@@ -501,14 +539,15 @@
             if (response.ok) {
               const modalInstance = bootstrap.Modal.getInstance(document.getElementById('editModal'));
               modalInstance.hide();
+              showNotification('La fecha de presentación se actualizó correctamente.', 'success');
               fetchBosquejos(); // Recargar tabla
             } else {
               const errorData = await response.json();
-              alert('Error al actualizar: ' + (errorData.error || 'Respuesta inesperada del servidor'));
+              showNotification(errorData.error || 'Error al guardar fecha', 'danger', response.status);
             }
           } catch (error) {
             console.error('Error:', error);
-            alert('No se pudo conectar con el servidor. Asegúrate de que el backend esté corriendo.');
+            showNotification('No se pudo conectar con el servidor.', 'danger', 'FETCH_ERROR');
           }
         });
 
@@ -517,7 +556,10 @@
           const id = document.getElementById('edit-title-id').value;
           const nuevoTitulo = document.getElementById('edit-titulo-input').value;
 
-          if (!nuevoTitulo.trim()) return alert('El título no puede estar vacío');
+          if (!nuevoTitulo.trim()) {
+            showNotification('El título no puede estar vacío', 'danger');
+            return;
+          }
 
           try {
             const response = await fetch(`http://localhost:3000/api/bosquejos/${id}`, {
@@ -529,14 +571,15 @@
             if (response.ok) {
               const modalInstance = bootstrap.Modal.getInstance(document.getElementById('editTitleModal'));
               modalInstance.hide();
+              showNotification('El título del discurso ha sido actualizado.', 'success');
               fetchBosquejos(); // Recargar tabla
             } else {
               const errorData = await response.json();
-              alert('Error al actualizar el título: ' + (errorData.error || 'Error desconocido'));
+              showNotification(errorData.error || 'Error al guardar título', 'danger', response.status);
             }
           } catch (error) {
             console.error('Error:', error);
-            alert('No se pudo conectar con el servidor.');
+            showNotification('Error de conexión con el servidor.', 'danger', 'FETCH_ERROR');
           }
         });
 

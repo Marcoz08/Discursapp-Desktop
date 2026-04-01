@@ -212,9 +212,10 @@
                           <th>Orador</th>
                           <th>Privilegio</th>
                           <th>Congregación</th>
-                          <th>Núm.</th>
+                          <th class="text-center">Núm.</th>
                           <th>Título</th>
                           <th>Canción</th>
+                          <th class="text-center">Acciones</th>
                         </tr>
                       </thead>
                       <tbody id="oradores-table-body">
@@ -230,6 +231,45 @@
         </div>
         <!--end::App Content-->
       </main>
+
+      <!-- Contenedor para notificaciones (Toasts) - Se requiere para que los avisos aparezcan -->
+      <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1055;"></div>
+
+      <!-- Modal para Confirmar Eliminación de Orador -->
+      <div class="modal fade" id="deleteSpeakerModal" tabindex="-1" aria-labelledby="deleteSpeakerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+              <h5 class="modal-title" id="deleteSpeakerModalLabel">
+                <i class="bi bi-exclamation-octagon-fill me-2"></i>Confirmar eliminación
+              </h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>¿Está seguro de que desea eliminar al orador: <strong id="delete-speaker-name"></strong>?</p>
+              
+              <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <strong>Advertencia:</strong> Se borrará toda la información de este discursante, incluyendo todos los temas y discursos que tenga asociados.
+              </div>
+
+              <div class="form-check mt-3">
+                <input class="form-check-input" type="checkbox" id="confirm-delete-check">
+                <label class="form-check-label fw-bold" for="confirm-delete-check">
+                  Entendido, acepto que esta acción es irreversible.
+                </label>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" id="btn-confirm-delete" class="btn btn-danger" disabled>
+                <i class="bi bi-trash me-1"></i> Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!--end::App Main-->
 
       <!--begin::Footer-->
@@ -325,58 +365,87 @@
         function renderTable(data) {
           tableBody.innerHTML = '';
           
-          // Agrupar temas por orador usando id_orador como clave principal
-          const groupedOradores = data.reduce((acc, item) => {
-            // Usamos el id_orador o el nombre como clave única para evitar agrupaciones accidentales
+          // Usamos Map para agrupar temas manteniendo el orden original de la consulta (alfabético)
+          const groupedMap = new Map();
+          
+          data.forEach(item => {
             const speakerKey = item.id_orador || item.nombre;
 
-            if (!acc[speakerKey]) {
-              acc[speakerKey] = {
+            if (!groupedMap.has(speakerKey)) {
+              groupedMap.set(speakerKey, {
+                id_orador: item.id_orador,
                 nombre: item.nombre,
                 congregacion: item.congregacion,
                 privilegio: item.privilegio,
+                aprobado: item.aprobado,
                 temas: []
-              };
+              });
             }
-            // Solo añadir el tema si existe (no es una fila de orador sin temas)
             if (item.numero_tema || item.titulo) {
-              acc[speakerKey].temas.push({
+              groupedMap.get(speakerKey).temas.push({
                 numero_tema: item.numero_tema,
                 titulo: item.titulo,
                 cancion_sugerida: item.cancion_sugerida
               });
             }
-            return acc;
-          }, {});
+          });
 
-          Object.values(groupedOradores).forEach(orador => {
+          groupedMap.forEach(orador => {
             const numTemas = orador.temas.length > 0 ? orador.temas.length : 1; // Al menos 1 fila para el orador
             
             const privilegioText = orador.privilegio ? 'Anciano' : 'Siervo Ministerial';
             const privilegioBadge = orador.privilegio ? 'text-bg-primary' : 'text-bg-info';
 
+            // Definimos el icono: palomita verde si es TRUE, preventivo naranja si es FALSE o NULL
+            const aprobadoIcon = orador.aprobado ? 
+              '<i class="bi bi-check-circle-fill text-success ms-1" title="Aprobado para salir"></i>' : 
+              '<i class="bi bi-exclamation-triangle-fill text-warning ms-1" title="Pendiente de aprobación para salir"></i>';
+
+            const speakerId = orador.id_orador || orador.nombre; 
+
+            const speakerRows = []; // Arreglo para agrupar las filas de este orador y aplicar hover grupal
+
             // Renderizar la primera fila del orador con rowspan
             let firstRow = document.createElement('tr');
             firstRow.innerHTML = `
               <td rowspan="${numTemas}"><strong>${orador.nombre}</strong></td>
-              <td rowspan="${numTemas}"><span class="badge ${privilegioBadge}">${privilegioText}</span></td>
+              <td rowspan="${numTemas}"><span class="badge ${privilegioBadge}">${privilegioText}</span>${aprobadoIcon}</td>
               <td rowspan="${numTemas}">${orador.congregacion || 'El Castillo'}</td>
-              <td>${orador.temas[0]?.numero_tema || '--'}</td>
+              <td class="text-center">${orador.temas[0]?.numero_tema || '--'}</td>
               <td>${orador.temas[0]?.titulo || '<i class="text-muted">Sin tema registrado</i>'}</td>
               <td>${orador.temas[0]?.cancion_sugerida ? 'Cant. ' + orador.temas[0].cancion_sugerida : '--'}</td>
+              <td rowspan="${numTemas}" class="text-center align-middle">
+                <button class="btn btn-sm btn-outline-primary edit-speaker-btn" data-id="${speakerId}" title="Editar orador">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger delete-speaker-btn ms-1" data-id="${speakerId}" data-nombre="${orador.nombre}" title="Eliminar orador">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
             `;
-            tableBody.appendChild(firstRow);
+            speakerRows.push(firstRow);
 
             // Renderizar filas adicionales para temas (si hay más de uno)
             for (let i = 1; i < orador.temas.length; i++) {
               let subsequentRow = document.createElement('tr');
               subsequentRow.innerHTML = `
-                <td>${orador.temas[i].numero_tema || '--'}</td>
+                <td class="text-left">${orador.temas[i].numero_tema || '--'}</td>
                 <td>${orador.temas[i].titulo || '<i class="text-muted">Sin tema registrado</i>'}</td>
                 <td>${orador.temas[i].cancion_sugerida ? 'Cant. ' + orador.temas[i].cancion_sugerida : '--'}</td>
               `;
-              tableBody.appendChild(subsequentRow);
+              speakerRows.push(subsequentRow);
             }
+
+            // Aplicar efecto de hover grupal y añadir las filas al cuerpo de la tabla
+            speakerRows.forEach(row => {
+              row.addEventListener('mouseenter', () => {
+                speakerRows.forEach(r => r.classList.add('table-active'));
+              });
+              row.addEventListener('mouseleave', () => {
+                speakerRows.forEach(r => r.classList.remove('table-active'));
+              });
+              tableBody.appendChild(row);
+            });
           });
         }
 
@@ -391,6 +460,92 @@
             (o.numero_tema && o.numero_tema.toString().includes(term))
           );
           renderTable(filteredRawData); // La función renderTable ya agrupa
+        });
+
+        // Lógica del Modal de Eliminación
+        const deleteModal = new bootstrap.Modal(document.getElementById('deleteSpeakerModal'));
+        const btnConfirmDelete = document.getElementById('btn-confirm-delete');
+        const checkConfirmDelete = document.getElementById('confirm-delete-check');
+        let speakerToDeleteId = null;
+
+        tableBody.addEventListener('click', (e) => {
+          const deleteBtn = e.target.closest('.delete-speaker-btn');
+          if (deleteBtn) {
+            speakerToDeleteId = deleteBtn.dataset.id;
+            document.getElementById('delete-speaker-name').innerText = deleteBtn.dataset.nombre;
+            checkConfirmDelete.checked = false;
+            btnConfirmDelete.disabled = true;
+            deleteModal.show();
+          }
+        });
+
+        checkConfirmDelete.addEventListener('change', () => {
+          btnConfirmDelete.disabled = !checkConfirmDelete.checked;
+        });
+
+        /**
+         * Función para mostrar avisos emergentes (Toasts) de éxito o error
+         * @param {string} message - El mensaje a mostrar
+         * @param {string} type - 'success' para verde, 'danger' para rojo
+         * @param {number|string} errorCode - (Opcional) Código de error para mostrar en fallos
+         */
+        function showNotification(message, type = 'success', errorCode = null) {
+          const toastContainer = document.getElementById('toastContainer');
+          const toastId = 'toast-' + Date.now(); // ID único para evitar conflictos
+          const bgClass = type === 'success' ? 'text-bg-success' : 'text-bg-danger';
+          const icon = type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill';
+          
+          // Si hay un código de error, formateamos el mensaje para que sea más informativo
+          let bodyContent = message;
+          if (errorCode) {
+            bodyContent = `<strong>No se pudo completar la acción solicitada.</strong><br>${message} <br><small class="opacity-75">Código de error: ${errorCode}</small>`;
+          }
+
+          const toastHTML = `
+            <div id="${toastId}" class="toast align-items-center ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="d-flex">
+                <div class="toast-body">
+                  <div class="d-flex align-items-center">
+                    <i class="bi ${icon} fs-5 me-2"></i>
+                    <div>${bodyContent}</div>
+                  </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+            </div>
+          `;
+          
+          toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+          // Inicializar y mostrar el Toast de Bootstrap
+          const toastElement = document.getElementById(toastId);
+          const toast = new bootstrap.Toast(toastElement, { delay: type === 'success' ? 3000 : 6000 });
+          toast.show();
+          
+          // Eliminar el elemento del DOM después de que se oculte para no saturar la página
+          toastElement.addEventListener('hidden.bs.toast', () => toastElement.remove());
+        }
+
+        btnConfirmDelete.addEventListener('click', async () => {
+          if (!speakerToDeleteId) return;
+          
+          try {
+            // Llamada real al backend para eliminar
+            const response = await fetch(`http://localhost:3000/api/oradores/${speakerToDeleteId}`, {
+              method: 'DELETE'
+            });
+
+            if (response.ok) {
+              deleteModal.hide();
+              showNotification('El orador y sus temas han sido eliminados correctamente.', 'success');
+              fetchOradores(); // Recargamos la tabla para ver los cambios
+            } else {
+              const errorData = await response.json();
+              showNotification(errorData.error || 'Error en el servidor', 'danger', response.status);
+            }
+          } catch (error) {
+            console.error('Error en la petición DELETE:', error);
+            showNotification('Error de conexión. Asegúrese de que el servidor esté activo.', 'danger', 'CONN_ERROR');
+          }
         });
 
         fetchOradores();

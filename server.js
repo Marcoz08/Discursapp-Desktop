@@ -74,6 +74,7 @@ Columnas:
   - telefono: VARCHAR(20), NULL (Número de contacto.) 
   - privilegio: BOOLEAN, DEFAULT TRUE ('TRUE' para Ancianos, 'FALSE' para Siervos Ministeriales.)
   - congregacion: VARCHAR(100), DEFAULT 'El Castillo' (Nombre de la congregación de origen.)
+  - aprobado: BOOLEAN, DEFAULT NULL (Si esta aprovado "TRUE"puede salir a discursar)
 
 Tabla: temas_orador
 Columnas:
@@ -94,6 +95,7 @@ app.get('/api/oradores-temas', async (req, res) => {
                 o.nombre, 
                 o.congregacion, 
                 o.privilegio, 
+                o.aprobado, -- Incluimos el estado de aprobación en la consulta
                 t.numero_tema, 
                 t.titulo, 
                 t.cancion_sugerida 
@@ -106,6 +108,36 @@ app.get('/api/oradores-temas', async (req, res) => {
     } catch (err) {
         console.error('Error en /api/oradores-temas:', err);
         res.status(500).json({ error: err.message });
+    }
+});
+
+// Ruta para eliminar un orador y todos sus temas asociados
+app.delete('/api/oradores/:id', async (req, res) => {
+    const { id } = req.params;
+    const connection = await pool.getConnection(); // Obtenemos conexión para manejar la transacción
+    try {
+        await connection.beginTransaction(); // Iniciamos la transacción
+
+        // 1. Eliminamos primero los temas asociados (por la relación de llave foránea)
+        await connection.query("DELETE FROM temas_orador WHERE id_orador = ?", [id]);
+
+        // 2. Eliminamos al orador de la tabla principal
+        const [result] = await connection.query("DELETE FROM oradores WHERE id_orador = ?", [id]);
+
+        if (result.affectedRows === 0) {
+            await connection.rollback();
+            return res.status(404).json({ error: "No se encontró el orador para eliminar" });
+        }
+
+        await connection.commit(); // Confirmamos los cambios en la BD
+        console.log(`Orador ID ${id} eliminado con éxito.`);
+        res.json({ message: "Orador y sus temas eliminados correctamente" });
+    } catch (err) {
+        await connection.rollback(); // Si algo falla, revertimos todo
+        console.error('Error al eliminar orador:', err);
+        res.status(500).json({ error: err.message });
+    } finally {
+        connection.release(); // Liberamos la conexión al pool
     }
 });
 /////////////////////////// FIN BACKEND PAGINA oradores.html ////////////////////////////////////////
