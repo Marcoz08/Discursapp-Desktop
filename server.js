@@ -93,6 +93,7 @@ app.get('/api/oradores-temas', async (req, res) => {
             SELECT 
                 o.id_orador,
                 o.nombre, 
+                o.telefono,
                 o.congregacion, 
                 o.privilegio, 
                 o.aprobado, -- Incluimos el estado de aprobación en la consulta
@@ -138,6 +139,63 @@ app.delete('/api/oradores/:id', async (req, res) => {
         res.status(500).json({ error: err.message });
     } finally {
         connection.release(); // Liberamos la conexión al pool
+    }
+});
+
+// Ruta para añadir un nuevo orador
+app.post('/api/oradores', async (req, res) => {
+    const { nombre, telefono, privilegio, congregacion, aprobado } = req.body;
+
+    // Validación básica: el nombre del orador es obligatorio
+    if (!nombre) {
+        return res.status(400).json({ error: "El nombre del orador es obligatorio." });
+    }
+
+    try {
+        const query = `
+            INSERT INTO oradores (nombre, telefono, privilegio, congregacion, aprobado)
+            VALUES (?, ?, ?, ?, ?)
+        `;
+        const [result] = await pool.query(query, [
+            nombre,
+            telefono || null, // Permite que el teléfono sea NULL si no se proporciona
+            privilegio,       // 1 para Anciano, 0 para Siervo Ministerial
+            congregacion || 'El Castillo', // Valor por defecto si no se proporciona
+            aprobado          // TRUE o FALSE
+        ]);
+
+        res.status(201).json({ message: "Orador añadido con éxito", id_orador: result.insertId });
+    } catch (err) {
+        console.error('Error al añadir orador:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Ruta para actualizar los datos de un orador
+app.put('/api/oradores/:id', async (req, res) => {
+    const { id } = req.params;
+    const { nombre, telefono, privilegio, congregacion, aprobado } = req.body;
+
+    if (!nombre) {
+        return res.status(400).json({ error: "El nombre es obligatorio." });
+    }
+
+    try {
+        const query = `
+            UPDATE oradores 
+            SET nombre = ?, telefono = ?, privilegio = ?, congregacion = ?, aprobado = ? 
+            WHERE id_orador = ?
+        `;
+        const [result] = await pool.query(query, [nombre, telefono, privilegio, congregacion, aprobado, id]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "No se encontró el orador para actualizar" });
+        }
+
+        res.json({ message: "Orador actualizado con éxito" });
+    } catch (err) {
+        console.error('Error al actualizar orador:', err);
+        res.status(500).json({ error: err.message });
     }
 });
 /////////////////////////// FIN BACKEND PAGINA oradores.html ////////////////////////////////////////

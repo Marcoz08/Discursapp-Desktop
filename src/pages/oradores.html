@@ -194,7 +194,19 @@
                 <div class="card">
                   <div class="card-header">
                     <h3 class="card-title">Listado de Oradores y temas</h3>
-                    <div class="card-tools">
+                    <div class="card-tools d-flex">
+                      <!-- Botón de refrescar manual -->
+                      <button id="btn-refresh" class="btn btn-sm btn-outline-secondary me-2" title="Refrescar">
+                        <i class="bi bi-arrow-clockwise"></i>
+                      </button>
+                      <!-- Botón para abrir el futuro formulario de nuevo orador -->
+                      <button id="btn-add-speaker" class="btn btn-sm btn-primary me-2">
+                        <i class="bi bi-person-plus-fill me-1"></i> Añadir orador
+                      </button>
+                      <!-- Botón para exportar el listado a PDF -->
+                      <button id="btn-export-pdf" class="btn btn-sm btn-outline-danger me-2">
+                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> Exportar a PDF
+                      </button>
                       <div class="input-group input-group-sm" style="width: 250px;">
                         <input type="text" id="search-orador" class="form-control" placeholder="Buscar orador o tema...">
                         <div class="input-group-append">
@@ -234,6 +246,131 @@
 
       <!-- Contenedor para notificaciones (Toasts) - Se requiere para que los avisos aparezcan -->
       <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1055;"></div>
+
+      <!-- Modal para Añadir Orador -->
+      <div class="modal fade" id="addSpeakerModal" tabindex="-1" aria-labelledby="addSpeakerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+              <h5 class="modal-title" id="addSpeakerModalLabel">
+                <i class="bi bi-person-plus-fill me-2"></i>Añadir Nuevo Orador
+              </h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="addSpeakerForm">
+                <div class="mb-3">
+                  <label for="speaker-name" class="form-label">Nombre del Orador <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="speaker-name" required>
+                </div>
+                <div class="mb-3">
+                  <label for="speaker-phone" class="form-label">Teléfono de Contacto</label>
+                  <input type="text" class="form-control" id="speaker-phone">
+                </div>
+                <div class="mb-3">
+                  <label for="speaker-congregation" class="form-label">Congregación</label>
+                  <input type="text" class="form-control" id="speaker-congregation" value="El Castillo">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Privilegio <span class="text-danger">*</span></label>
+                  <div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="speakerPrivilege" id="privilegeAnciano" value="1" checked>
+                      <label class="form-check-label" for="privilegeAnciano">Anciano</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="speakerPrivilege" id="privilegeSiervo" value="0">
+                      <label class="form-check-label" for="privilegeSiervo">Siervo Ministerial</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 form-check">
+                  <input type="checkbox" class="form-check-input" id="speaker-approved" checked>
+                  <label class="form-check-label" for="speaker-approved">Aprobado para salir a discursar</label>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" id="btn-save-speaker" class="btn btn-primary">
+                <i class="bi bi-save me-1"></i> Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal para Editar Orador -->
+      <div class="modal fade" id="editSpeakerModal" tabindex="-1" aria-labelledby="editSpeakerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+              <h5 class="modal-title" id="editSpeakerModalLabel">
+                <i class="bi bi-pencil-square me-2"></i>Editar Orador
+              </h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="editSpeakerForm">
+                <input type="hidden" id="edit-speaker-id">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="edit-speaker-name" class="form-label">Nombre del Orador <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="edit-speaker-name" required>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="edit-speaker-phone" class="form-label">Teléfono de Contacto</label>
+                    <input type="text" class="form-control" id="edit-speaker-phone">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="edit-speaker-congregation" class="form-label">Congregación</label>
+                    <input type="text" class="form-control" id="edit-speaker-congregation">
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label d-block">Privilegio <span class="text-danger">*</span></label>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="editSpeakerPrivilege" id="editPrivilegeAnciano" value="1">
+                      <label class="form-check-label" for="editPrivilegeAnciano">Anciano</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="editSpeakerPrivilege" id="editPrivilegeSiervo" value="0">
+                      <label class="form-check-label" for="editPrivilegeSiervo">Siervo Ministerial</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 form-check">
+                  <input type="checkbox" class="form-check-input" id="edit-speaker-approved">
+                  <label class="form-check-label" for="edit-speaker-approved">Aprobado para salir a discursar</label>
+                </div>
+              </form>
+              <hr>
+              <h6><i class="bi bi-book me-2"></i>Temas Registrados</h6>
+              <div class="table-responsive" style="max-height: 200px;">
+                <table class="table table-sm table-striped">
+                  <thead>
+                    <tr>
+                      <th>Núm.</th>
+                      <th>Título</th>
+                      <th>Canción</th>
+                    </tr>
+                  </thead>
+                  <tbody id="edit-speaker-temas-body">
+                    <!-- Temas se cargarán aquí dinámicamente -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" id="btn-update-speaker" class="btn btn-primary">
+                <i class="bi bi-save me-1"></i> Guardar Cambios
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- Modal para Confirmar Eliminación de Orador -->
       <div class="modal fade" id="deleteSpeakerModal" tabindex="-1" aria-labelledby="deleteSpeakerModalLabel" aria-hidden="true">
@@ -376,6 +513,7 @@
                 id_orador: item.id_orador,
                 nombre: item.nombre,
                 congregacion: item.congregacion,
+                telefono: item.telefono,
                 privilegio: item.privilegio,
                 aprobado: item.aprobado,
                 temas: []
@@ -460,6 +598,134 @@
             (o.numero_tema && o.numero_tema.toString().includes(term))
           );
           renderTable(filteredRawData); // La función renderTable ya agrupa
+        });
+
+        // Lógica para el botón de refrescar manual
+        document.getElementById('btn-refresh').addEventListener('click', () => {
+          fetchOradores();
+          showNotification('Listado de oradores actualizado.', 'success');
+        });
+
+        // Lógica para el botón "Añadir orador"odal(document.getElementById('addSpeakerModal'));
+        const editSpeakerModal = new bootstrap.Modal(document.getElementById('editSpeakerModal'));
+        const addSpeakerForm = document.getElementById('addSpeakerForm');
+        const btnAddSpeaker = document.getElementById('btn-add-speaker');
+        const btnSaveSpeaker = document.getElementById('btn-save-speaker');
+        const btnUpdateSpeaker = document.getElementById('btn-update-speaker');
+
+        btnAddSpeaker.addEventListener('click', () => {
+          // Limpiar el formulario y establecer valores por defecto antes de abrir el modal
+          addSpeakerForm.reset();
+          document.getElementById('speaker-congregation').value = 'El Castillo';
+          document.getElementById('privilegeAnciano').checked = true; // Por defecto Anciano
+          document.getElementById('speaker-approved').checked = true; // Por defecto Aprobado
+          addSpeakerModal.show();
+        });
+
+        btnSaveSpeaker.addEventListener('click', async () => {
+          const nombre = document.getElementById('speaker-name').value.trim();
+          const telefono = document.getElementById('speaker-phone').value.trim();
+          const congregacion = document.getElementById('speaker-congregation').value.trim();
+          const privilegio = document.querySelector('input[name="speakerPrivilege"]:checked').value === '1'; // Convertir a booleano
+          const aprobado = document.getElementById('speaker-approved').checked; // Booleano directamente
+
+          // Validación básica del lado del cliente
+          if (!nombre) {
+            showNotification('El nombre del orador es obligatorio.', 'danger');
+            return;
+          }
+
+          try {
+            const response = await fetch('http://localhost:3000/api/oradores', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ nombre, telefono, privilegio, congregacion, aprobado })
+            });
+
+            if (response.ok) {
+              addSpeakerModal.hide();
+              showNotification('Orador añadido correctamente.', 'success');
+              fetchOradores(); // Recargar la tabla para mostrar el nuevo orador
+            } else {
+              const errorData = await response.json();
+              showNotification(errorData.error || 'Error al añadir orador', 'danger', response.status);
+            }
+          } catch (error) {
+            console.error('Error en la petición POST:', error);
+            showNotification('Error de conexión. Asegúrese de que el servidor esté activo.', 'danger', 'CONN_ERROR');
+          }
+        });
+
+        // Evento para abrir modal de edición y cargar datos
+        tableBody.addEventListener('click', (e) => {
+          const editBtn = e.target.closest('.edit-speaker-btn');
+          if (editBtn) {
+            const id = editBtn.dataset.id;
+            // Buscamos todas las filas relacionadas a este orador en la data plana
+            const oratorRows = oradoresData.filter(item => (item.id_orador || item.nombre).toString() === id.toString());
+            
+            if (oratorRows.length === 0) return;
+
+            const speaker = oratorRows[0];
+            document.getElementById('edit-speaker-id').value = id;
+            document.getElementById('edit-speaker-name').value = speaker.nombre;
+            document.getElementById('edit-speaker-phone').value = speaker.telefono || '';
+            document.getElementById('edit-speaker-congregation').value = speaker.congregacion || '';
+            
+            if (speaker.privilegio) {
+              document.getElementById('editPrivilegeAnciano').checked = true;
+            } else {
+              document.getElementById('editPrivilegeSiervo').checked = true;
+            }
+            
+            document.getElementById('edit-speaker-approved').checked = speaker.aprobado === 1;
+
+            // Cargar la lista de temas en el modal
+            const temasBody = document.getElementById('edit-speaker-temas-body');
+            temasBody.innerHTML = '';
+            oratorRows.forEach(row => {
+              if (row.numero_tema || row.titulo) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                  <td>${row.numero_tema || '--'}</td>
+                  <td>${row.titulo || '--'}</td>
+                  <td>${row.cancion_sugerida ? 'Cant. ' + row.cancion_sugerida : '--'}</td>
+                `;
+                temasBody.appendChild(tr);
+              }
+            });
+            if (temasBody.innerHTML === '') temasBody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">Sin temas registrados</td></tr>';
+
+            editSpeakerModal.show();
+          }
+        });
+
+        btnUpdateSpeaker.addEventListener('click', async () => {
+          const id = document.getElementById('edit-speaker-id').value;
+          const nombre = document.getElementById('edit-speaker-name').value.trim();
+          const telefono = document.getElementById('edit-speaker-phone').value.trim();
+          const congregacion = document.getElementById('edit-speaker-congregation').value.trim();
+          const privilegio = document.querySelector('input[name="editSpeakerPrivilege"]:checked').value === '1';
+          const aprobado = document.getElementById('edit-speaker-approved').checked;
+
+          try {
+            const response = await fetch(`http://localhost:3000/api/oradores/${id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ nombre, telefono, privilegio, congregacion, aprobado })
+            });
+
+            if (response.ok) {
+              editSpeakerModal.hide();
+              showNotification('Datos del orador actualizados correctamente.', 'success');
+              fetchOradores();
+            } else {
+              const errorData = await response.json();
+              showNotification(errorData.error || 'Error al actualizar', 'danger', response.status);
+            }
+          } catch (error) {
+            showNotification('Error de conexión con el servidor.', 'danger', 'FETCH_ERROR');
+          }
         });
 
         // Lógica del Modal de Eliminación
