@@ -354,6 +354,7 @@
                       <th>Núm.</th>
                       <th>Título</th>
                       <th>Canción</th>
+                      <th class="text-end">Acción</th>
                     </tr>
                   </thead>
                   <tbody id="edit-speaker-temas-body">
@@ -361,6 +362,28 @@
                   </tbody>
                 </table>
               </div>
+              <div id="new-topic-form" class="mt-3 p-2 border rounded bg-light" style="display: none;">
+                <h6 class="small fw-bold">Nuevo Tema</h6>
+                <div class="row g-2">
+                  <div class="col-md-2">
+                    <input type="number" id="new-topic-num" class="form-control form-control-sm" placeholder="Núm.">
+                  </div>
+                  <div class="col-md-6">
+                    <input type="text" id="new-topic-title" class="form-control form-control-sm" placeholder="Título">
+                  </div>
+                  <div class="col-md-2">
+                    <input type="number" id="new-topic-song" class="form-control form-control-sm" placeholder="Cant.">
+                  </div>
+                  <div class="col-md-2 text-end">
+                    <button type="button" id="btn-save-new-topic" class="btn btn-sm btn-success w-100">
+                      <i class="bi bi-check-lg"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <button type="button" id="btn-show-add-topic" class="btn btn-sm btn-outline-success mt-2">
+                <i class="bi bi-plus-circle me-1"></i> Añadir tema
+              </button>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -482,6 +505,7 @@
         const tableBody = document.getElementById('oradores-table-body');
         const searchInput = document.getElementById('search-orador');
         let oradoresData = [];
+        let temasPendientesEliminar = [];
 
         async function fetchOradores() {
           try {
@@ -661,6 +685,7 @@
           const editBtn = e.target.closest('.edit-speaker-btn');
           if (editBtn) {
             const id = editBtn.dataset.id;
+            temasPendientesEliminar = []; // Resetear lista de eliminaciones al abrir
             // Buscamos todas las filas relacionadas a este orador en la data plana
             const oratorRows = oradoresData.filter(item => (item.id_orador || item.nombre).toString() === id.toString());
             
@@ -690,11 +715,16 @@
                   <td>${row.numero_tema || '--'}</td>
                   <td>${row.titulo || '--'}</td>
                   <td>${row.cancion_sugerida ? 'Cant. ' + row.cancion_sugerida : '--'}</td>
+                  <td class="text-end">
+                    <button type="button" class="btn btn-sm btn-link text-danger remove-topic-btn" data-id-registro="${row.id_registro}" title="Eliminar tema">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
                 `;
                 temasBody.appendChild(tr);
               }
             });
-            if (temasBody.innerHTML === '') temasBody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">Sin temas registrados</td></tr>';
+            if (temasBody.innerHTML === '') temasBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Sin temas registrados</td></tr>';
 
             editSpeakerModal.show();
           }
@@ -709,6 +739,14 @@
           const aprobado = document.getElementById('edit-speaker-approved').checked;
 
           try {
+            // Procesar eliminaciones pendientes antes de actualizar orador
+            if (temasPendientesEliminar.length > 0) {
+              for (const idTema of temasPendientesEliminar) {
+                await fetch(`http://localhost:3000/api/temas-orador/${idTema}`, { method: 'DELETE' });
+              }
+              temasPendientesEliminar = [];
+            }
+
             const response = await fetch(`http://localhost:3000/api/oradores/${id}`, {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
@@ -726,6 +764,110 @@
           } catch (error) {
             showNotification('Error de conexión con el servidor.', 'danger', 'FETCH_ERROR');
           }
+        });
+
+        // --- Lógica para añadir nuevos temas a un orador ---
+        const btnShowAddTopic = document.getElementById('btn-show-add-topic');
+        const newTopicForm = document.getElementById('new-topic-form');
+        const btnSaveNewTopic = document.getElementById('btn-save-new-topic');
+
+        btnShowAddTopic.addEventListener('click', () => {
+          newTopicForm.style.display = 'block';
+          btnShowAddTopic.style.display = 'none';
+        });
+
+        // Función auxiliar para refrescar solo los temas dentro del modal
+        async function refreshModalThemes(id_orador) {
+          try {
+            const response = await fetch('http://localhost:3000/api/oradores-temas');
+            if (response.ok) {
+              oradoresData = await response.json();
+              const oratorRows = oradoresData.filter(item => (item.id_orador || item.nombre).toString() === id_orador.toString());
+              
+              const temasBody = document.getElementById('edit-speaker-temas-body');
+              temasBody.innerHTML = '';
+              oratorRows.forEach(row => {
+                if ((row.numero_tema || row.titulo) && !temasPendientesEliminar.includes(row.id_registro?.toString())) {
+                  const tr = document.createElement('tr');
+                  tr.innerHTML = `
+                    <td>${row.numero_tema || '--'}</td>
+                    <td>${row.titulo || '--'}</td>
+                    <td>${row.cancion_sugerida ? 'Cant. ' + row.cancion_sugerida : '--'}</td>
+                    <td class="text-end">
+                      <button type="button" class="btn btn-sm btn-link text-danger remove-topic-btn" data-id-registro="${row.id_registro}" title="Eliminar tema">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </td>
+                  `;
+                  temasBody.appendChild(tr);
+                }
+              });
+              if (temasBody.innerHTML === '') temasBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Sin temas registrados</td></tr>';
+              
+              renderTable(oradoresData); // También refrescamos la tabla principal
+            }
+          } catch (error) {
+            console.error('Error al refrescar temas:', error);
+          }
+        }
+
+        // Lógica para quitar temas visualmente y encolar su eliminación
+        document.getElementById('edit-speaker-temas-body').addEventListener('click', (e) => {
+          const btn = e.target.closest('.remove-topic-btn');
+          if (btn) {
+            const idRegistro = btn.dataset.idRegistro;
+            if (idRegistro && idRegistro !== "null") {
+              temasPendientesEliminar.push(idRegistro.toString());
+            }
+            btn.closest('tr').remove();
+            const body = document.getElementById('edit-speaker-temas-body');
+            if (body.children.length === 0) {
+              body.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Sin temas registrados</td></tr>';
+            }
+          }
+        });
+
+        btnSaveNewTopic.addEventListener('click', async () => {
+          const id_orador = document.getElementById('edit-speaker-id').value;
+          const numero_tema = document.getElementById('new-topic-num').value;
+          const titulo = document.getElementById('new-topic-title').value.trim();
+          const cancion_sugerida = document.getElementById('new-topic-song').value;
+
+          if (!numero_tema && !titulo) {
+            showNotification('Ingrese al menos el número o título del discurso.', 'danger');
+            return;
+          }
+
+          try {
+            const response = await fetch('http://localhost:3000/api/temas-orador', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id_orador, numero_tema, titulo, cancion_sugerida })
+            });
+
+            if (response.ok) {
+              showNotification('Nuevo tema añadido correctamente.', 'success');
+              // Limpiar y ocultar formulario
+              document.getElementById('new-topic-num').value = '';
+              document.getElementById('new-topic-title').value = '';
+              document.getElementById('new-topic-song').value = '';
+              newTopicForm.style.display = 'none';
+              btnShowAddTopic.style.display = 'block';
+
+              await refreshModalThemes(id_orador);
+            } else {
+              const errorData = await response.json();
+              showNotification(errorData.error || 'Error al añadir tema', 'danger', response.status);
+            }
+          } catch (error) {
+            showNotification('Error de conexión con el servidor.', 'danger', 'FETCH_ERROR');
+          }
+        });
+
+        // Resetear el estado del formulario de temas al cerrar el modal
+        document.getElementById('editSpeakerModal').addEventListener('hidden.bs.modal', () => {
+          newTopicForm.style.display = 'none';
+          btnShowAddTopic.style.display = 'block';
         });
 
         // Lógica del Modal de Eliminación

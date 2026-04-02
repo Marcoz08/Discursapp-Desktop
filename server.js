@@ -91,6 +91,7 @@ app.get('/api/oradores-temas', async (req, res) => {
     try {
         const query = `
             SELECT 
+                t.id_registro,
                 o.id_orador,
                 o.nombre, 
                 o.telefono,
@@ -195,6 +196,34 @@ app.put('/api/oradores/:id', async (req, res) => {
         res.json({ message: "Orador actualizado con éxito" });
     } catch (err) {
         console.error('Error al actualizar orador:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Ruta para eliminar un tema específico por su ID de registro
+app.delete('/api/temas-orador/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await pool.query("DELETE FROM temas_orador WHERE id_registro = ?", [id]);
+        res.json({ message: "Tema eliminado con éxito" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Ruta para añadir un nuevo tema a un orador específico
+app.post('/api/temas-orador', async (req, res) => {
+    const { id_orador, numero_tema, titulo, cancion_sugerida } = req.body;
+
+    if (!id_orador) {
+        return res.status(400).json({ error: "El ID del orador es obligatorio." });
+    }
+
+    try {
+        const query = "INSERT INTO temas_orador (id_orador, numero_tema, titulo, cancion_sugerida) VALUES (?, ?, ?, ?)";
+        await pool.query(query, [id_orador, numero_tema || null, titulo || null, cancion_sugerida || null]);
+        res.status(201).json({ message: "Tema añadido con éxito" });
+    } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
