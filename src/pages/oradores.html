@@ -247,59 +247,6 @@
       <!-- Contenedor para notificaciones (Toasts) - Se requiere para que los avisos aparezcan -->
       <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1055;"></div>
 
-      <!-- Modal para Añadir Orador -->
-      <div class="modal fade" id="addSpeakerModal" tabindex="-1" aria-labelledby="addSpeakerModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-              <h5 class="modal-title" id="addSpeakerModalLabel">
-                <i class="bi bi-person-plus-fill me-2"></i>Añadir Nuevo Orador
-              </h5>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form id="addSpeakerForm">
-                <div class="mb-3">
-                  <label for="speaker-name" class="form-label">Nombre del Orador <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" id="speaker-name" required>
-                </div>
-                <div class="mb-3">
-                  <label for="speaker-phone" class="form-label">Teléfono de Contacto</label>
-                  <input type="text" class="form-control" id="speaker-phone">
-                </div>
-                <div class="mb-3">
-                  <label for="speaker-congregation" class="form-label">Congregación</label>
-                  <input type="text" class="form-control" id="speaker-congregation" value="El Castillo">
-                </div>
-                <div class="mb-3">
-                  <label class="form-label">Privilegio <span class="text-danger">*</span></label>
-                  <div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="speakerPrivilege" id="privilegeAnciano" value="1" checked>
-                      <label class="form-check-label" for="privilegeAnciano">Anciano</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="speakerPrivilege" id="privilegeSiervo" value="0">
-                      <label class="form-check-label" for="privilegeSiervo">Siervo Ministerial</label>
-                    </div>
-                  </div>
-                </div>
-                <div class="mb-3 form-check">
-                  <input type="checkbox" class="form-check-input" id="speaker-approved" checked>
-                  <label class="form-check-label" for="speaker-approved">Aprobado para salir a discursar</label>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" id="btn-save-speaker" class="btn btn-primary">
-                <i class="bi bi-save me-1"></i> Guardar
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Modal para Editar Orador -->
       <div class="modal fade" id="editSpeakerModal" tabindex="-1" aria-labelledby="editSpeakerModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -315,7 +262,7 @@
                 <input type="hidden" id="edit-speaker-id">
                 <div class="row">
                   <div class="col-md-6 mb-3">
-                    <label for="edit-speaker-name" class="form-label">Nombre del Orador <span class="text-danger">*</span></label>
+                    <label for="edit-speaker-name" class="form-label">Nombre <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="edit-speaker-name" required>
                   </div>
                   <div class="col-md-6 mb-3">
@@ -325,7 +272,7 @@
                 </div>
                 <div class="row">
                   <div class="col-md-6 mb-3">
-                    <label for="edit-speaker-congregation" class="form-label">Congregación</label>
+                    <label for="edit-speaker-congregation" class="form-label">Congregación <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="edit-speaker-congregation">
                   </div>
                   <div class="col-md-6 mb-3">
@@ -505,6 +452,8 @@
         const tableBody = document.getElementById('oradores-table-body');
         const searchInput = document.getElementById('search-orador');
         let oradoresData = [];
+        let isEditMode = false;
+        let originalTopicValuesInModal = new Map(); // Map<id_registro (string), {numero_tema: number|null, titulo: string|null, cancion_sugerida: number|null}>
         let temasPendientesEliminar = [];
 
         async function fetchOradores() {
@@ -630,67 +579,43 @@
           showNotification('Listado de oradores actualizado.', 'success');
         });
 
-        // Lógica para el botón "Añadir orador"odal(document.getElementById('addSpeakerModal'));
+        // Lógica para el botón "Añadir orador"
         const editSpeakerModal = new bootstrap.Modal(document.getElementById('editSpeakerModal'));
-        const addSpeakerForm = document.getElementById('addSpeakerForm');
         const btnAddSpeaker = document.getElementById('btn-add-speaker');
-        const btnSaveSpeaker = document.getElementById('btn-save-speaker');
         const btnUpdateSpeaker = document.getElementById('btn-update-speaker');
 
         btnAddSpeaker.addEventListener('click', () => {
-          // Limpiar el formulario y establecer valores por defecto antes de abrir el modal
-          addSpeakerForm.reset();
-          document.getElementById('speaker-congregation').value = 'El Castillo';
-          document.getElementById('privilegeAnciano').checked = true; // Por defecto Anciano
-          document.getElementById('speaker-approved').checked = true; // Por defecto Aprobado
-          addSpeakerModal.show();
-        });
-
-        btnSaveSpeaker.addEventListener('click', async () => {
-          const nombre = document.getElementById('speaker-name').value.trim();
-          const telefono = document.getElementById('speaker-phone').value.trim();
-          const congregacion = document.getElementById('speaker-congregation').value.trim();
-          const privilegio = document.querySelector('input[name="speakerPrivilege"]:checked').value === '1'; // Convertir a booleano
-          const aprobado = document.getElementById('speaker-approved').checked; // Booleano directamente
-
-          // Validación básica del lado del cliente
-          if (!nombre) {
-            showNotification('El nombre del orador es obligatorio.', 'danger');
-            return;
-          }
-
-          try {
-            const response = await fetch('http://localhost:3000/api/oradores', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ nombre, telefono, privilegio, congregacion, aprobado })
-            });
-
-            if (response.ok) {
-              addSpeakerModal.hide();
-              showNotification('Orador añadido correctamente.', 'success');
-              fetchOradores(); // Recargar la tabla para mostrar el nuevo orador
-            } else {
-              const errorData = await response.json();
-              showNotification(errorData.error || 'Error al añadir orador', 'danger', response.status);
-            }
-          } catch (error) {
-            console.error('Error en la petición POST:', error);
-            showNotification('Error de conexión. Asegúrese de que el servidor esté activo.', 'danger', 'CONN_ERROR');
-          }
+          isEditMode = false;
+          document.getElementById('editSpeakerModalLabel').innerHTML = '<i class="bi bi-person-plus-fill me-2"></i>Añadir Nuevo Orador';
+          document.getElementById('edit-speaker-id').value = '';
+          document.getElementById('editSpeakerForm').reset();
+          document.getElementById('edit-speaker-congregation').value = 'El Castillo';
+          document.getElementById('editPrivilegeAnciano').checked = true;
+          document.getElementById('edit-speaker-approved').checked = true;
+          
+          document.getElementById('edit-speaker-temas-body').innerHTML = '<tr><td colspan="4" class="text-center text-muted">Sin temas registrados</td></tr>';
+          temasPendientesEliminar = [];
+          originalTopicValuesInModal.clear();
+          
+          newTopicForm.style.display = 'none';
+          btnShowAddTopic.style.display = 'block';
+          editSpeakerModal.show();
         });
 
         // Evento para abrir modal de edición y cargar datos
         tableBody.addEventListener('click', (e) => {
           const editBtn = e.target.closest('.edit-speaker-btn');
           if (editBtn) {
+            isEditMode = true;
+            document.getElementById('editSpeakerModalLabel').innerHTML = '<i class="bi bi-pencil-square me-2"></i>Editar Orador';
             const id = editBtn.dataset.id;
             temasPendientesEliminar = []; // Resetear lista de eliminaciones al abrir
             // Buscamos todas las filas relacionadas a este orador en la data plana
             const oratorRows = oradoresData.filter(item => (item.id_orador || item.nombre).toString() === id.toString());
             
             if (oratorRows.length === 0) return;
-
+            
+            originalTopicValuesInModal.clear(); // Limpiar el estado anterior al abrir el modal
             const speaker = oratorRows[0];
             document.getElementById('edit-speaker-id').value = id;
             document.getElementById('edit-speaker-name').value = speaker.nombre;
@@ -704,6 +629,10 @@
             }
             
             document.getElementById('edit-speaker-approved').checked = speaker.aprobado === 1;
+            
+            // Resetear el formulario de añadir tema al abrir el modal
+            newTopicForm.style.display = 'none';
+            btnShowAddTopic.style.display = 'block';
 
             // Cargar la lista de temas en el modal
             const temasBody = document.getElementById('edit-speaker-temas-body');
@@ -711,10 +640,16 @@
             oratorRows.forEach(row => {
               if (row.numero_tema || row.titulo) {
                 const tr = document.createElement('tr');
+                // Almacenar los valores originales para detectar cambios
+                originalTopicValuesInModal.set(row.id_registro.toString(), {
+                  numero_tema: row.numero_tema,
+                  titulo: row.titulo,
+                  cancion_sugerida: row.cancion_sugerida
+                });
                 tr.innerHTML = `
-                  <td>${row.numero_tema || '--'}</td>
-                  <td>${row.titulo || '--'}</td>
-                  <td>${row.cancion_sugerida ? 'Cant. ' + row.cancion_sugerida : '--'}</td>
+                  <td><input type="number" class="form-control form-control-sm topic-edit-input" data-id-registro="${row.id_registro}" data-field="numero_tema" value="${row.numero_tema || ''}"></td>
+                  <td><input type="text" class="form-control form-control-sm topic-edit-input" data-id-registro="${row.id_registro}" data-field="titulo" value="${row.titulo || ''}"></td>
+                  <td><input type="number" class="form-control form-control-sm topic-edit-input" data-id-registro="${row.id_registro}" data-field="cancion_sugerida" value="${row.cancion_sugerida || ''}"></td>
                   <td class="text-end">
                     <button type="button" class="btn btn-sm btn-link text-danger remove-topic-btn" data-id-registro="${row.id_registro}" title="Eliminar tema">
                       <i class="bi bi-trash"></i>
@@ -735,32 +670,108 @@
           const nombre = document.getElementById('edit-speaker-name').value.trim();
           const telefono = document.getElementById('edit-speaker-phone').value.trim();
           const congregacion = document.getElementById('edit-speaker-congregation').value.trim();
-          const privilegio = document.querySelector('input[name="editSpeakerPrivilege"]:checked').value === '1';
+          const privilegioRadio = document.querySelector('input[name="editSpeakerPrivilege"]:checked');
+          const privilegio = privilegioRadio ? privilegioRadio.value === '1' : true;
           const aprobado = document.getElementById('edit-speaker-approved').checked;
 
+          if (!nombre || !congregacion) {
+            showNotification('El nombre y la congregación son campos obligatorios.', 'danger');
+            return;
+          }
+
+          // Array para almacenar todas las promesas de actualización de temas
+          const topicUpdatePromises = [];
+
           try {
+            let finalOradorId = id;
+            const speakerData = { nombre, telefono, privilegio, congregacion, aprobado };
+
             // Procesar eliminaciones pendientes antes de actualizar orador
             if (temasPendientesEliminar.length > 0) {
               for (const idTema of temasPendientesEliminar) {
-                await fetch(`http://localhost:3000/api/temas-orador/${idTema}`, { method: 'DELETE' });
+                topicUpdatePromises.push(fetch(`http://localhost:3000/api/temas-orador/${idTema}`, { method: 'DELETE' }));
               }
               temasPendientesEliminar = [];
             }
 
-            const response = await fetch(`http://localhost:3000/api/oradores/${id}`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ nombre, telefono, privilegio, congregacion, aprobado })
+            // 1. Guardar o Actualizar Orador primero para tener el ID
+            if (!isEditMode) {
+              const response = await fetch('http://localhost:3000/api/oradores', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(speakerData)
+              });
+              if (!response.ok) throw new Error('Error al crear orador');
+              const result = await response.json();
+              finalOradorId = result.id_orador;
+            } else {
+              const response = await fetch(`http://localhost:3000/api/oradores/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(speakerData)
+              });
+              if (!response.ok) throw new Error('Error al actualizar orador');
+            }
+
+            // 2. Ahora procesar los temas usando finalOradorId
+            // Procesar actualizaciones de temas existentes
+            const topicInputs = document.querySelectorAll('#edit-speaker-temas-body .topic-edit-input');
+            const changedTopics = new Map(); // Map<id_registro, {field: value, ...}>
+
+            topicInputs.forEach(input => {
+              const idRegistro = input.dataset.idRegistro;
+              const field = input.dataset.field;
+              let currentInputValue = input.value; // Valor como string del input
+
+              const originalTopic = originalTopicValuesInModal.get(idRegistro);
+              if (!originalTopic) return; // No debería ocurrir para temas existentes
+
+              let originalValue = originalTopic[field];
+
+              let processedCurrentValue;
+              if (input.type === 'number') {
+                  processedCurrentValue = currentInputValue === '' ? null : parseInt(currentInputValue, 10);
+              } else { // Tipo texto
+                  processedCurrentValue = currentInputValue === '' ? null : currentInputValue;
+              }
+
+              // Comparar el valor procesado actual con el valor original
+              if (processedCurrentValue !== originalValue) {
+                if (!changedTopics.has(idRegistro)) changedTopics.set(idRegistro, {});
+                changedTopics.get(idRegistro)[field] = processedCurrentValue;
+              }
             });
 
-            if (response.ok) {
-              editSpeakerModal.hide();
-              showNotification('Datos del orador actualizados correctamente.', 'success');
-              fetchOradores();
-            } else {
-              const errorData = await response.json();
-              showNotification(errorData.error || 'Error al actualizar', 'danger', response.status);
+            for (const [idRegistro, updates] of changedTopics.entries()) {
+              topicUpdatePromises.push(fetch(`http://localhost:3000/api/temas-orador/${idRegistro}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updates)
+              }));
             }
+
+            // Procesar temas totalmente nuevos
+            const newTopicRows = document.querySelectorAll('.new-topic-row');
+            newTopicRows.forEach(row => {
+              const inputs = row.querySelectorAll('.topic-new-input');
+              const newTopicData = { id_orador: finalOradorId };
+              inputs.forEach(input => {
+                  const field = input.dataset.field;
+                  newTopicData[field] = input.value === '' ? null : (input.type === 'number' ? parseInt(input.value, 10) : input.value);
+              });
+              topicUpdatePromises.push(fetch('http://localhost:3000/api/temas-orador', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newTopicData)
+              }));
+            });
+
+            // Esperar a que todas las operaciones de temas se completen
+            await Promise.all(topicUpdatePromises);
+
+            editSpeakerModal.hide();
+            showNotification(isEditMode ? 'Orador actualizado.' : 'Orador añadido con éxito.', 'success');
+            fetchOradores();
           } catch (error) {
             showNotification('Error de conexión con el servidor.', 'danger', 'FETCH_ERROR');
           }
@@ -776,50 +787,16 @@
           btnShowAddTopic.style.display = 'none';
         });
 
-        // Función auxiliar para refrescar solo los temas dentro del modal
-        async function refreshModalThemes(id_orador) {
-          try {
-            const response = await fetch('http://localhost:3000/api/oradores-temas');
-            if (response.ok) {
-              oradoresData = await response.json();
-              const oratorRows = oradoresData.filter(item => (item.id_orador || item.nombre).toString() === id_orador.toString());
-              
-              const temasBody = document.getElementById('edit-speaker-temas-body');
-              temasBody.innerHTML = '';
-              oratorRows.forEach(row => {
-                if ((row.numero_tema || row.titulo) && !temasPendientesEliminar.includes(row.id_registro?.toString())) {
-                  const tr = document.createElement('tr');
-                  tr.innerHTML = `
-                    <td>${row.numero_tema || '--'}</td>
-                    <td>${row.titulo || '--'}</td>
-                    <td>${row.cancion_sugerida ? 'Cant. ' + row.cancion_sugerida : '--'}</td>
-                    <td class="text-end">
-                      <button type="button" class="btn btn-sm btn-link text-danger remove-topic-btn" data-id-registro="${row.id_registro}" title="Eliminar tema">
-                        <i class="bi bi-trash"></i>
-                      </button>
-                    </td>
-                  `;
-                  temasBody.appendChild(tr);
-                }
-              });
-              if (temasBody.innerHTML === '') temasBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Sin temas registrados</td></tr>';
-              
-              renderTable(oradoresData); // También refrescamos la tabla principal
-            }
-          } catch (error) {
-            console.error('Error al refrescar temas:', error);
-          }
-        }
-
         // Lógica para quitar temas visualmente y encolar su eliminación
         document.getElementById('edit-speaker-temas-body').addEventListener('click', (e) => {
           const btn = e.target.closest('.remove-topic-btn');
           if (btn) {
+            const row = btn.closest('tr');
             const idRegistro = btn.dataset.idRegistro;
-            if (idRegistro && idRegistro !== "null") {
+            if (idRegistro && idRegistro !== "null" && !row.classList.contains('new-topic-row')) {
               temasPendientesEliminar.push(idRegistro.toString());
             }
-            btn.closest('tr').remove();
+            row.remove();
             const body = document.getElementById('edit-speaker-temas-body');
             if (body.children.length === 0) {
               body.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Sin temas registrados</td></tr>';
@@ -827,8 +804,7 @@
           }
         });
 
-        btnSaveNewTopic.addEventListener('click', async () => {
-          const id_orador = document.getElementById('edit-speaker-id').value;
+        btnSaveNewTopic.addEventListener('click', () => {
           const numero_tema = document.getElementById('new-topic-num').value;
           const titulo = document.getElementById('new-topic-title').value.trim();
           const cancion_sugerida = document.getElementById('new-topic-song').value;
@@ -838,30 +814,28 @@
             return;
           }
 
-          try {
-            const response = await fetch('http://localhost:3000/api/temas-orador', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ id_orador, numero_tema, titulo, cancion_sugerida })
-            });
+          const temasBody = document.getElementById('edit-speaker-temas-body');
+          if (temasBody.innerHTML.includes('Sin temas registrados')) temasBody.innerHTML = '';
 
-            if (response.ok) {
-              showNotification('Nuevo tema añadido correctamente.', 'success');
-              // Limpiar y ocultar formulario
-              document.getElementById('new-topic-num').value = '';
-              document.getElementById('new-topic-title').value = '';
-              document.getElementById('new-topic-song').value = '';
-              newTopicForm.style.display = 'none';
-              btnShowAddTopic.style.display = 'block';
+          const tr = document.createElement('tr');
+          tr.classList.add('new-topic-row');
+          tr.innerHTML = `
+            <td><input type="number" class="form-control form-control-sm topic-new-input" data-field="numero_tema" value="${numero_tema}"></td>
+            <td><input type="text" class="form-control form-control-sm topic-new-input" data-field="titulo" value="${titulo}"></td>
+            <td><input type="number" class="form-control form-control-sm topic-new-input" data-field="cancion_sugerida" value="${cancion_sugerida}"></td>
+            <td class="text-end">
+              <button type="button" class="btn btn-sm btn-link text-danger remove-topic-btn" title="Eliminar tema">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          `;
+          temasBody.appendChild(tr);
 
-              await refreshModalThemes(id_orador);
-            } else {
-              const errorData = await response.json();
-              showNotification(errorData.error || 'Error al añadir tema', 'danger', response.status);
-            }
-          } catch (error) {
-            showNotification('Error de conexión con el servidor.', 'danger', 'FETCH_ERROR');
-          }
+          document.getElementById('new-topic-num').value = '';
+          document.getElementById('new-topic-title').value = '';
+          document.getElementById('new-topic-song').value = '';
+          newTopicForm.style.display = 'none';
+          btnShowAddTopic.style.display = 'block';
         });
 
         // Resetear el estado del formulario de temas al cerrar el modal

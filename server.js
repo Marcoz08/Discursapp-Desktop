@@ -227,7 +227,115 @@ app.post('/api/temas-orador', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+// Ruta para actualizar un tema específico por su ID de registro
+app.put('/api/temas-orador/:id', async (req, res) => {
+    const { id } = req.params; // id_registro
+    const { numero_tema, titulo, cancion_sugerida } = req.body;
+
+    // Construir la cláusula SET dinámicamente según los campos proporcionados en el cuerpo
+    let updates = [];
+    let params = [];
+
+    if (numero_tema !== undefined) {
+        updates.push("numero_tema = ?");
+        params.push(numero_tema);
+    }
+    if (titulo !== undefined) {
+        updates.push("titulo = ?");
+        params.push(titulo);
+    }
+    if (cancion_sugerida !== undefined) {
+        updates.push("cancion_sugerida = ?");
+        params.push(cancion_sugerida);
+    }
+
+    if (updates.length === 0) {
+        return res.status(400).json({ error: "No se proporcionaron campos para actualizar." });
+    }
+
+    params.push(id); // Añadir id_registro al final de los parámetros
+
+    try {
+        const query = `UPDATE temas_orador SET ${updates.join(', ')} WHERE id_registro = ?`;
+        const [result] = await pool.query(query, params);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "No se encontró el tema con ese ID de registro." });
+        }
+        res.json({ message: "Tema actualizado con éxito" });
+    } catch (err) {
+        console.error('Error al actualizar tema:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
 /////////////////////////// FIN BACKEND PAGINA oradores.html ////////////////////////////////////////
+
+/////////////////////////// BACKEND PAGINA visitantes.html ////////////////////////////////////////////
+/*ESTRUCTURA DE LA TABLA EN SQL:
+Tabla: reuniones
+Columnas:
+  - id_reunion: INT AUTO_INCREMENT, PRIMARY KEY (ID interno generado para identificar la reunion)
+  - dia_rp: INT NOT NULL, (Dia de la reunion: 1="Lunes", 2="Martes", etc)
+  - hora_reunion: TIME DEFAULT '09:00:00', (Hora a la que se hace la reunion, se establece cada año)
+  - congregacion: VARCHAR(100), (Nombre de la congregacion local)
+
+
+Tabla: dias_semana
+Columnas:
+  - id_dia INT PRIMARY KEY,
+  - nombre_dia VARCHAR(15) NOT NULL, {(1, 'Lunes'), (2, 'Martes'), (3, 'Miércoles'), (4, 'Jueves'), (5, 'Viernes'), (6, 'Sábado'), (7, 'Domingo')}
+*/
+
+// Ruta para obtener los datos de la reunión local
+app.get('/api/reunion-local', async (req, res) => {
+    try {
+        const query = `
+            SELECT r.id_reunion, r.dia_rp, r.hora_reunion, r.congregacion, d.nombre_dia 
+            FROM reuniones r 
+            JOIN dias_semana d ON r.dia_rp = d.id_dia 
+            LIMIT 1;
+        `;
+        const [rows] = await pool.query(query);
+        if (rows.length === 0) return res.status(404).json({ error: "Configuración de reunión no encontrada" });
+        res.json(rows[0]);
+    } catch (err) {
+        console.error('Error al obtener reunión local:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Ruta para obtener todos los días de la semana (para el dropdown)
+app.get('/api/dias-semana', async (req, res) => {
+    try {
+        const [rows] = await pool.query("SELECT * FROM dias_semana ORDER BY id_dia ASC");
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Ruta para actualizar los datos de la reunión local
+app.put('/api/reunion-local/:id', async (req, res) => {
+    const { id } = req.params;
+    const { dia_rp, hora_reunion, congregacion } = req.body;
+
+    try {
+        const query = `
+            UPDATE reuniones 
+            SET dia_rp = ?, hora_reunion = ?, congregacion = ? 
+            WHERE id_reunion = ?
+        `;
+        const [result] = await pool.query(query, [dia_rp, hora_reunion, congregacion, id]);
+        if (result.affectedRows === 0) return res.status(404).json({ error: "No se encontró el registro" });
+        res.json({ message: "Configuración actualizada correctamente" });
+    } catch (err) {
+        console.error('Error al actualizar reunión local:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/////////////////////////// FIN BACKEND PAGINA visitantes.html ////////////////////////////////////////
 
 // Iniciar el servidor
 app.listen(port, () => {

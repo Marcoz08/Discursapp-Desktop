@@ -171,7 +171,7 @@
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-6">
-                <h3 class="mb-0">Registro de discursos públicos</h3>
+                <h2 class="mb-0"><strong>Programa de discursantes visitantes</strong></h2>
               </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
@@ -189,10 +189,37 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <!-- Tu contenido personalizado comienza aquí -->
             <div class="row">
               <div class="col-12">
-                <p>Esta es una página limpia lista para tu proyecto.</p>
+                <!-- Sección de información de reunión local -->
+                <div class="card card-outline card-primary mb-4 shadow-sm">
+                  <div class="card-header border-0 pb-0">
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" id="btn-edit-local" title="Editar reunión local">
+                        <i class="bi bi-pencil-fill"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body p-3 pt-0">
+                    <h4 class="text-center"><strong>Reunión Pública</strong></h4>
+                    <p class="text-center text-muted">Información de la reunión de fin de semana</p>
+                    <div class="row align-items-center text-center">
+                      <div class="col-md-4 border-end-md">
+                        <i class="bi bi-calendar-event-fill text-primary me-2"></i>
+                        <strong>Día:</strong> <span id="local-dia" class="ms-1">--</span>
+                      </div>
+                      <div class="col-md-4 border-end-md">
+                        <i class="bi bi-clock-fill text-primary me-2"></i>
+                        <strong>Hora:</strong> <span id="local-hora" class="ms-1">--:--</span>
+                      </div>                      
+                      <div class="col-md-4">
+                        <i class="bi bi-house-door-fill text-primary me-2"></i>
+                        <strong>Congregación:</strong> <span id="local-congregacion" class="ms-1">--</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p class="text-muted small"><i class="bi bi-info-circle me-1"></i> Use esta sección para verificar los datos de la reunión local antes de programar visitas.</p>
               </div>
             </div>
             <!-- Fin de contenido personalizado -->
@@ -200,6 +227,41 @@
           <!--end::Container-->
         </div>
         <!--end::App Content-->
+
+        <!-- Modal para Editar Reunión Local -->
+        <div class="modal fade" id="editLocalModal" tabindex="-1" aria-labelledby="editLocalModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="editLocalModalLabel"><i class="bi bi-pencil-square me-2"></i>Editar reunión pública local</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="editLocalForm">
+                  <input type="hidden" id="edit-local-id">
+                  <div class="mb-3">
+                    <label for="edit-local-dia" class="form-label">Día de la reunión</label>
+                    <select class="form-select" id="edit-local-dia" required>
+                      <!-- Se carga dinámicamente -->
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="edit-local-hora" class="form-label">Hora</label>
+                    <input type="time" class="form-control" id="edit-local-hora" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="edit-local-congregacion" class="form-label">Congregación</label>
+                    <input type="text" class="form-control" id="edit-local-congregacion" required>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="btn-save-local" class="btn btn-primary">Guardar Cambios</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
       <!--end::App Main-->
 
@@ -219,7 +281,8 @@
       </footer>
       <!--end::Footer-->
 
-
+      <!-- Contenedor para notificaciones (Toasts) -->
+      <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1055;"></div>
     </div>
     <!--end::App Wrapper-->
     <!--begin::Script-->
@@ -270,6 +333,118 @@
       });
     </script>
     <!--end::OverlayScrollbars Configure-->
+
+    <script>
+      document.addEventListener('DOMContentLoaded', async function () {
+        const horaEl = document.getElementById('local-hora');
+        const diaEl = document.getElementById('local-dia');
+        const congEl = document.getElementById('local-congregacion');
+        let currentLocalData = null;
+
+        const editLocalModal = new bootstrap.Modal(document.getElementById('editLocalModal'));
+
+        async function fetchInfoLocal() {
+          try {
+            const response = await fetch('http://localhost:3000/api/reunion-local');
+            if (!response.ok) throw new Error('No se pudo obtener la información');
+            
+            currentLocalData = await response.json();
+            
+            // Formatear hora (de HH:mm:ss a 12h AM/PM)
+            const [h, m] = currentLocalData.hora_reunion.split(':');
+            const h24 = parseInt(h);
+            const ampm = h24 >= 12 ? 'PM' : 'AM';
+            const h12 = h24 % 12 || 12;
+            horaEl.textContent = `${h12.toString().padStart(2, '0')}:${m} ${ampm}`;
+            diaEl.textContent = currentLocalData.nombre_dia;
+            congEl.textContent = currentLocalData.congregacion;
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+
+        async function fetchDays() {
+          try {
+            const response = await fetch('http://localhost:3000/api/dias-semana');
+            const days = await response.json();
+            const select = document.getElementById('edit-local-dia');
+            select.innerHTML = days.map(d => `<option value="${d.id_dia}">${d.nombre_dia}</option>`).join('');
+          } catch (error) {
+            console.error('Error cargando días:', error);
+          }
+        }
+
+        document.getElementById('btn-edit-local').addEventListener('click', async () => {
+          if (!currentLocalData) return;
+          
+          await fetchDays();
+          
+          document.getElementById('edit-local-id').value = currentLocalData.id_reunion;
+          document.getElementById('edit-local-dia').value = currentLocalData.dia_rp;
+          document.getElementById('edit-local-hora').value = currentLocalData.hora_reunion.substring(0, 5);
+          document.getElementById('edit-local-congregacion').value = currentLocalData.congregacion;
+          
+          editLocalModal.show();
+        });
+
+        document.getElementById('btn-save-local').addEventListener('click', async () => {
+          const id = document.getElementById('edit-local-id').value;
+          const body = {
+            dia_rp: document.getElementById('edit-local-dia').value,
+            hora_reunion: document.getElementById('edit-local-hora').value,
+            congregacion: document.getElementById('edit-local-congregacion').value
+          };
+
+          try {
+            const response = await fetch(`http://localhost:3000/api/reunion-local/${id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(body)
+            });
+
+            if (response.ok) {
+              editLocalModal.hide();
+              showNotification('Datos de la reunión actualizados.', 'success');
+              fetchInfoLocal();
+            } else {
+              const errorData = await response.json();
+              showNotification(errorData.error || 'Error al actualizar.', 'danger');
+            }
+          } catch (error) {
+            showNotification('Error de conexión con el servidor.', 'danger');
+          }
+        });
+
+        function showNotification(message, type = 'success') {
+          const toastContainer = document.getElementById('toastContainer');
+          const toastId = 'toast-' + Date.now();
+          const bgClass = type === 'success' ? 'text-bg-success' : 'text-bg-danger';
+          const icon = type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill';
+          
+          const toastHTML = `
+            <div id="${toastId}" class="toast align-items-center ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="d-flex">
+                <div class="toast-body">
+                  <div class="d-flex align-items-center">
+                    <i class="bi ${icon} fs-5 me-2"></i>
+                    <div>${message}</div>
+                  </div>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+            </div>
+          `;
+          
+          toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+          const toastElement = document.getElementById(toastId);
+          const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
+          toast.show();
+          toastElement.addEventListener('hidden.bs.toast', () => toastElement.remove());
+        }
+
+        fetchInfoLocal();
+      });
+    </script>
 
     <!--end::Script-->
   </body>
