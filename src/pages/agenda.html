@@ -171,12 +171,12 @@
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-6">
-                <h3 class="mb-0">Registro de discursos públicos</h3>
+                <h2 class="mb-0"><strong>Agenda y acuerdos</strong></h2>
               </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Página de ejemplo</li>
+                  <li class="breadcrumb-item active" aria-current="page">Agenda</li>
                 </ol>
               </div>
             </div>
@@ -189,14 +189,120 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <!-- Tu contenido personalizado comienza aquí -->
             <div class="row">
               <div class="col-12">
-                <p>Esta es una página limpia lista para tu proyecto.</p>
+                <!-- Tarjeta Principal de la Agenda -->
+                <div class="card shadow-sm">
+                  <div class="card-header bg-white py-3">
+                    <div class="row align-items-center">
+                      <div class="col-md-6">
+                        <h3 class="card-title fw-bold text-primary">
+                          <i class="bi bi-journal-text me-2"></i>Calendario de roles
+                        </h3>
+                      </div>
+                      <div class="col-md-6 d-flex justify-content-md-end gap-2 mt-2 mt-md-0">
+                        <select id="select-anio-agenda" class="form-select form-select-sm" style="width: 100px;">
+                          <option value="2025" selected>2025</option>
+                          <option value="2026">2026</option>
+                          <option value="2027">2027</option>
+                        </select>
+                        <button class="btn btn-sm btn-primary" id="btn-new-agreement">
+                          <i class="bi bi-plus-circle me-1"></i> Nuevo Apunte
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-body p-0 table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th style="width: 10%;">Inicio</th>
+                          <th style="width: 10%;">Fin</th>
+                          <th style="width: 15%;">Meses Agendados</th>
+                          <th style="width: 18%;">Congregación</th>
+                          <th style="width: 10%;">Estatus</th>
+                          <th>Apuntes</th>
+                          <th class="text-center" style="width: 8%;">Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody id="agenda-table-body">
+                        <!-- Los datos se cargarán aquí dinámicamente -->
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="card-footer bg-white text-muted small">
+                    <i class="bi bi-info-circle me-1"></i> Use esta agenda para anotar acuerdos temporales o compromisos por confirmar antes de pasarlos a la programación oficial.
+                  </div>
+                </div>
               </div>
             </div>
-            <!-- Fin de contenido personalizado -->
           </div>
+
+          <!-- Modal para Registrar Nuevo Acuerdo -->
+          <div class="modal fade" id="addAgreementModal" tabindex="-1" aria-labelledby="addAgreementModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                  <h5 class="modal-title" id="addAgreementModalLabel"></h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form id="agreementForm">
+                    <input type="hidden" id="edit-rol-id">
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="fecha_ini" class="form-label fw-bold">Fecha de Inicio</label>
+                        <input type="date" id="fecha_ini" class="form-control" required>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="fecha_fin" class="form-label fw-bold">Fecha de Fin</label>
+                        <input type="date" id="fecha_fin" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-bold">Meses Agendados <span class="text-danger">*</span></label>
+                      <div class="row g-2" id="meses-checkboxes">
+                        <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input month-check" type="checkbox" value="1" id="m1"><label class="form-check-label" for="m1">Ene</label></div></div>
+                        <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input month-check" type="checkbox" value="2" id="m2"><label class="form-check-label" for="m2">Feb</label></div></div>
+                        <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input month-check" type="checkbox" value="3" id="m3"><label class="form-check-label" for="m3">Mar</label></div></div>
+                        <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input month-check" type="checkbox" value="4" id="m4"><label class="form-check-label" for="m4">Abr</label></div></div>
+                        <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input month-check" type="checkbox" value="5" id="m5"><label class="form-check-label" for="m5">May</label></div></div>
+                        <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input month-check" type="checkbox" value="6" id="m6"><label class="form-check-label" for="m6">Jun</label></div></div>
+                        <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input month-check" type="checkbox" value="7" id="m7"><label class="form-check-label" for="m7">Jul</label></div></div>
+                        <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input month-check" type="checkbox" value="8" id="m8"><label class="form-check-label" for="m8">Ago</label></div></div>
+                        <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input month-check" type="checkbox" value="9" id="m9"><label class="form-check-label" for="m9">Sep</label></div></div>
+                        <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input month-check" type="checkbox" value="10" id="m10"><label class="form-check-label" for="m10">Oct</label></div></div>
+                        <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input month-check" type="checkbox" value="11" id="m11"><label class="form-check-label" for="m11">Nov</label></div></div>
+                        <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input month-check" type="checkbox" value="12" id="m12"><label class="form-check-label" for="m12">Dic</label></div></div>
+                      </div>
+                      <small class="text-muted">Seleccione al menos un mes.</small>
+                    </div>
+                    <div class="mb-3">
+                      <label for="congregacion" class="form-label fw-bold">Congregación</label>
+                      <input type="text" id="congregacion" class="form-control" placeholder="Ej: Cong. Los Olivos" required>
+                    </div>
+                    <div class="mb-3">
+                      <label for="estatus" class="form-label fw-bold">Estatus Inicial</label>
+                      <select id="estatus" class="form-select">
+                        <option value="0">Pendiente</option>
+                        <option value="1">Confirmado</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="notas" class="form-label fw-bold">Apuntes</label>
+                      <textarea id="notas" class="form-control" rows="4" placeholder="Escribe aquí acuerdos, contactos o pendientes..."></textarea>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" id="btn-delete-agreement" class="btn btn-danger me-auto" style="display: none;">Eliminar</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="button" id="btn-save-agreement" class="btn btn-primary">Guardar en Agenda</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!--end::Container-->
         </div>
         <!--end::App Content-->
@@ -270,6 +376,175 @@
       });
     </script>
     <!--end::OverlayScrollbars Configure-->
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const tableBody = document.getElementById('agenda-table-body');
+        const selectAnio = document.getElementById('select-anio-agenda');
+        const btnNew = document.getElementById('btn-new-agreement');
+        const btnSave = document.getElementById('btn-save-agreement');
+        const btnDelete = document.getElementById('btn-delete-agreement');
+        const form = document.getElementById('agreementForm');
+        const modalTitle = document.getElementById('addAgreementModalLabel');
+        const agreementModal = new bootstrap.Modal(document.getElementById('addAgreementModal'));
+
+        let agendaDataRaw = []; // Almacenamos los datos para acceder a ellos al editar
+
+        // Limpiar checkboxes al cerrar modal
+        document.getElementById('addAgreementModal').addEventListener('hidden.bs.modal', () => {
+          document.querySelectorAll('.month-check').forEach(chk => chk.checked = false);
+          document.getElementById('edit-rol-id').value = '';
+          btnDelete.style.display = 'none';
+          form.reset();
+        });
+
+        // Establecer el año actual por defecto
+        const anioActual = new Date().getFullYear();
+        selectAnio.value = anioActual;
+
+        // Función para formatear fechas de YYYY-MM-DD a DD-mes-YYYY
+        function formatDate(dateStr) {
+          if (!dateStr) return '--';
+          const date = new Date(dateStr);
+          const day = String(date.getDate()).padStart(2, '0');
+          const months = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+          return `${day}-${months[date.getMonth()]}-${date.getFullYear()}`;
+        }
+
+        // Abrir modal para nuevo registro
+        btnNew.addEventListener('click', () => {
+          modalTitle.innerHTML = '<i class="bi bi-journal-plus me-2"></i>Nuevo Apunte de Acuerdo';
+          agreementModal.show();
+        });
+
+        // Función para abrir modal en modo edición
+        window.openEditModal = function(id) {
+          const item = agendaDataRaw.find(i => i.id_rol.toString() === id.toString());
+          if (!item) return;
+
+          modalTitle.innerHTML = '<i class="bi bi-pencil-square me-2"></i>Editar Acuerdo';
+          document.getElementById('edit-rol-id').value = item.id_rol;
+          document.getElementById('fecha_ini').value = item.fecha_ini.split('T')[0];
+          document.getElementById('fecha_fin').value = item.fecha_fin.split('T')[0];
+          document.getElementById('congregacion').value = item.congregacion;
+          document.getElementById('estatus').value = item.estatus;
+          document.getElementById('notas').value = item.notas;
+
+          // Marcar checkboxes de meses
+          if (item.meses_ids) {
+            const ids = item.meses_ids.split(',');
+            ids.forEach(idMes => {
+              const chk = document.getElementById(`m${idMes}`);
+              if (chk) chk.checked = true;
+            });
+          }
+
+          btnDelete.style.display = 'block';
+          agreementModal.show();
+        };
+
+        // Cargar datos de la agenda
+        async function fetchAgenda() {
+          const anio = selectAnio.value;
+          try {
+            const response = await fetch(`http://localhost:3000/api/agenda?anio=${anio}`);
+            agendaDataRaw = await response.json();
+            
+            tableBody.innerHTML = '';
+            agendaDataRaw.forEach(item => {
+              const tr = document.createElement('tr');
+              const badgeClass = item.estatus ? 'text-bg-success' : 'text-bg-secondary';
+              const statusLabel = item.estatus ? 'Confirmado' : 'Pendiente';
+              
+              tr.innerHTML = `
+                <td class="small">${formatDate(item.fecha_ini)}</td>
+                <td class="small">${formatDate(item.fecha_fin)}</td>
+                <td><span class="badge text-bg-info w-100">${item.meses_texto || 'S/M'}</span></td>
+                <td>${item.congregacion}</td>
+                <td><span class="badge ${badgeClass}">${statusLabel}</span></td>
+                <td class="text-muted small">${item.notas || ''}</td>
+                <td class="text-center">
+                  <button class="btn btn-sm btn-outline-secondary" onclick="openEditModal(${item.id_rol})" title="Editar"><i class="bi bi-pencil"></i></button>
+                </td>
+              `;
+              tableBody.appendChild(tr);
+            });
+          } catch (error) {
+            console.error('Error al cargar agenda:', error);
+          }
+        }
+
+        // Guardar nuevo acuerdo
+        btnSave.addEventListener('click', async () => {
+          const id = document.getElementById('edit-rol-id').value;
+          // Obtener meses seleccionados
+          const mesesSeleccionados = Array.from(document.querySelectorAll('.month-check:checked'))
+                                         .map(chk => parseInt(chk.value));
+
+          const formData = {
+            fecha_ini: document.getElementById('fecha_ini').value,
+            fecha_fin: document.getElementById('fecha_fin').value,
+            congregacion: document.getElementById('congregacion').value,
+            estatus: parseInt(document.getElementById('estatus').value),
+            notas: document.getElementById('notas').value,
+            meses: mesesSeleccionados
+          };
+
+          if (!formData.fecha_ini || !formData.fecha_fin || !formData.congregacion) {
+            alert('Por favor complete los campos obligatorios.');
+            return;
+          }
+
+          if (mesesSeleccionados.length === 0) {
+            alert('Debe seleccionar al menos un mes agendado.');
+            return;
+          }
+
+          try {
+            const url = id ? `http://localhost:3000/api/agenda/${id}` : 'http://localhost:3000/api/agenda';
+            const method = id ? 'PUT' : 'POST';
+
+            const response = await fetch(url, {
+              method: method,
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+              agreementModal.hide();
+              fetchAgenda();
+            }
+          } catch (error) {
+            console.error('Error al guardar:', error);
+          }
+        });
+
+        // Eliminar acuerdo
+        btnDelete.addEventListener('click', async () => {
+          const id = document.getElementById('edit-rol-id').value;
+          if (!id || !confirm('¿Está seguro de que desea eliminar este acuerdo?')) return;
+
+          try {
+            const response = await fetch(`http://localhost:3000/api/agenda/${id}`, {
+              method: 'DELETE'
+            });
+
+            if (response.ok) {
+              agreementModal.hide();
+              fetchAgenda();
+            }
+          } catch (error) {
+            console.error('Error al guardar:', error);
+          }
+        });
+
+        // Escuchar cambios en el selector de año
+        selectAnio.addEventListener('change', fetchAgenda);
+
+        // Carga inicial
+        fetchAgenda();
+      });
+    </script>
 
     <!--end::Script-->
   </body>

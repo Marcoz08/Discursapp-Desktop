@@ -337,6 +337,150 @@ app.put('/api/reunion-local/:id', async (req, res) => {
 
 /////////////////////////// FIN BACKEND PAGINA visitantes.html ////////////////////////////////////////
 
+/////////////////////////// BACKEND PAGINA agenda.html ////////////////////////////////////////////
+/*ESTRUCTURA DE LA TABLA EN SQL:
+Tabla: agenda (Almacena la informacion principal de los eventos, roles o asignaciones.)
+Columnas:
+  - id_rol: Tipo BIGINT UNSIGNED. Restricciones: PRIMARY KEY, AUTO_INCREMENT. Descripcion: Identificador unico del evento.
+  - fecha_ini: Tipo DATE. Descripcion: Fecha de inicio del evento (Formato AAAA-MM-DD).
+  - fecha_fin: Tipo DATE. Descripcion: Fecha de finalizacion del evento (Formato AAAA-MM-DD).
+  - congregacion: Tipo VARCHAR(255). Descripcion: Nombre o identificador de la congregacion asociada al evento.
+  - estatus: Tipo BOOLEAN (TINYINT). Restricciones: DEFAULT FALSE. Descripcion: Estado del evento. TRUE (1) significa Confirmado, FALSE (0) significa Pendiente.
+  - notas: Tipo TEXT. Descripcion: Espacio para anadir descripciones detalladas o notas de tamano mediano/largo.
+
+
+Tabla: meses
+Columnas:
+  - id_mes INT PRIMARY KEY,
+  - mes SERIAL, {(1, 'Enero'), (2, 'Febrero'), (3, 'Marzo'), (4, 'Abril'), (5, 'Mayo'), (6, 'Junio'), (7, 'Julio'), (8, 'Agosto'), (9, 'Septiembre'), (10, 'Octubre'), (11, 'Noviembre'), (12, 'Diciembre')}
+
+Tabla: agenda_meses (Es el puente que conecta los eventos de la agenda con los meses correspondientes, permitiendo asignar 1 o mas meses a un solo evento sin duplicar datos de la agenda.)
+Columnas:
+  - id_rol: Tipo BIGINT UNSIGNED. Restricciones: PRIMARY KEY (Compuesta), FOREIGN KEY. Descripcion: Referencia exacta al evento (id_rol) en la tabla agenda.
+  - id_mes: Tipo BIGINT UNSIGNED. Restricciones: PRIMARY KEY (Compuesta), FOREIGN KEY. Descripcion: Referencia exacta al mes (id_mes) en la tabla meses.
+
+*/
+
+// Ruta para obtener los registros de la agenda filtrados por año
+app.get('/api/agenda', async (req, res) => {
+    const { anio } = req.query;
+    try {
+        // Consultamos la agenda y unimos con los meses asociados para obtener el texto descriptivo
+        const query = `
+            SELECT a.*, 
+                   GROUP_CONCAT(m.mes SEPARATOR ' - ') as meses_texto,
+                   GROUP_CONCAT(m.id_mes) as meses_ids
+            FROM agenda a
+            LEFT JOIN agenda_meses am ON a.id_rol = am.id_rol
+            LEFT JOIN meses m ON am.id_mes = m.id_mes
+            WHERE YEAR(a.fecha_ini) = ? OR YEAR(a.fecha_fin) = ?
+            GROUP BY a.id_rol
+            ORDER BY a.fecha_ini ASC
+        `;
+        const [rows] = await pool.query(query, [anio, anio]);
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Ruta para guardar un nuevo acuerdo
+app.post('/api/agenda', async (req, res) => {
+    const { fecha_ini, fecha_fin, congregacion, estatus, notas, meses } = req.body;
+    const connection = await pool.getConnection();
+    try {
+        await connection.beginTransaction();
+
+        // 1. Guardamos la información principal en la tabla 'agenda'
+        const queryAgenda = `
+            INSERT INTO agenda (fecha_ini, fecha_fin, congregacion, estatus, notas)
+            VALUES (?, ?, ?, ?, ?)
+        `;
+        const [result] = await connection.query(queryAgenda, [
+            fecha_ini, 
+            fecha_fin, 
+            congregacion, 
+            estatus ? 1 : 0, 
+            notas
+        ]);
+
+        const id_rol = result.insertId;
+
+        // 2. Si hay meses seleccionados, los insertamos en la tabla relacional 'agenda_meses'
+        if (meses && meses.length > 0) {
+            const queryMeses = "INSERT INTO agenda_meses (id_rol, id_mes) VALUES ?";
+            const values = meses.map(id_mes => [id_rol, id_mes]);
+            await connection.query(queryMeses, [values]);
+        }
+
+        await connection.commit();
+        res.status(201).json({ message: "Acuerdo guardado", id_rol });
+    } catch (err) {
+        await connection.rollback();
+        console.error('Error al guardar acuerdo:', err);
+        res.status(500).json({ error: err.message });
+    } finally {
+        connection.release();
+    }
+});
+
+// Ruta para actualizar un acuerdo existente
+app.put('/api/agenda/:id', async (req, res) => {
+    const { id } = req.params;
+    const { fecha_ini, fecha_fin, congregacion, estatus, notas, meses } = req.body;
+    const connection = await pool.getConnection();
+    try {
+        await connection.beginTransaction();
+
+        const queryAgenda = `
+            UPDATE agenda 
+            SET fecha_ini = ?, fecha_fin = ?, congregacion = ?, estatus = ?, notas = ?
+            WHERE id_rol = ?
+        `;
+        await connection.query(queryAgenda, [fecha_ini, fecha_fin, congregacion, estatus ? 1 : 0, notas, id]);
+
+        // Actualizamos los meses: eliminamos los anteriores y añadimos los nuevos
+        await connection.query("DELETE FROM agenda_meses WHERE id_rol = ?", [id]);
+
+        if (meses && meses.length > 0) {
+            const queryMeses = "INSERT INTO agenda_meses (id_rol, id_mes) VALUES ?";
+            const values = meses.map(id_mes => [id, id_mes]);
+            await connection.query(queryMeses, [values]);
+        }
+
+        await connection.commit();
+        res.json({ message: "Acuerdo actualizado correctamente" });
+    } catch (err) {
+        await connection.rollback();
+        console.error('Error al actualizar acuerdo:', err);
+        res.status(500).json({ error: err.message });
+    } finally {
+        connection.release();
+    }
+});
+
+// Ruta para eliminar un acuerdo
+app.delete('/api/agenda/:id', async (req, res) => {
+    const { id } = req.params;
+    const connection = await pool.getConnection();
+    try {
+        await connection.beginTransaction();
+        // Primero eliminamos las relaciones en agenda_meses por la integridad referencial
+        await connection.query("DELETE FROM agenda_meses WHERE id_rol = ?", [id]);
+        await connection.query("DELETE FROM agenda WHERE id_rol = ?", [id]);
+        
+        await connection.commit();
+        res.json({ message: "Acuerdo eliminado correctamente" });
+    } catch (err) {
+        await connection.rollback();
+        res.status(500).json({ error: err.message });
+    } finally {
+        connection.release();
+    }
+});
+
+/////////////////////////// FIN BACKEND PAGINA visitantes.html ////////////////////////////////////////
+
 // Iniciar el servidor
 app.listen(port, () => {
     console.log(`Servidor corriendo en http://localhost:${port}`);

@@ -1,0 +1,35 @@
+[33mcommit 373844e3ab48e25946b57a1b8b2c34b9448504e9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: Marco Antonio Zatarain <marcozatarain_95@hotmail.com>
+Date:   Tue Apr 7 11:55:50 2026 -0700
+
+    feat: datos reunion publica en pag. vistantes.html
+
+[33mcommit f03dc1acef61adec725ebb4c9027f2adf2e729c1[m
+Author: Marco Antonio Zatarain <marcozatarain_95@hotmail.com>
+Date:   Thu Apr 2 09:35:52 2026 -0700
+
+    Pag. Oradores, feat: añadir, borrar y editar temas
+
+[33mcommit 677013d3eab9c017efd82682ed553c0b302ef05a[m
+Author: Marco Antonio Zatarain <marcozatarain_95@hotmail.com>
+Date:   Thu Apr 2 08:59:23 2026 -0700
+
+    Pagina oradores, feat: Se añadio la opcion de añadir nuevo orador y editar existentes
+
+[33mcommit 7cfacb483e24528677fbe8e8e4f1569e496e349c[m
+Author: Marco Antonio Zatarain <marcozatarain_95@hotmail.com>
+Date:   Wed Apr 1 12:02:33 2026 -0700
+
+    feat: se añadio opcion para eliminar oradores y cuadros de confirmacion, exito, error
+
+[33mcommit 0424ba215618561d66373a967c13dfb5083de3c8[m
+Author: Marco Antonio Zatarain <marcozatarain_95@hotmail.com>
+Date:   Tue Mar 31 21:46:44 2026 -0700
+
+    feat: oradores.html creacion de tabla para mostrar oradores y temas
+
+[33mcommit 648bb064bc42563ba76b66a9afb96f56492197bc[m
+Author: Marco Antonio Zatarain <marcozatarain_95@hotmail.com>
+Date:   Tue Mar 31 18:10:20 2026 -0700
+
+    feat: registros.html se añadio la opcion de editar fecha y titulo
