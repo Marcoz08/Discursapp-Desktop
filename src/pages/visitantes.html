@@ -234,16 +234,20 @@
                       </div>
                       <div class="col-md-6 d-flex justify-content-md-end gap-2 mt-2 mt-md-0">
                         <select id="select-mes" class="form-select form-select-sm" style="width: 130px;">
-                          <option value="0">Enero</option><option value="1">Febrero</option>
-                          <option value="2">Marzo</option><option value="3" selected>Abril</option>
-                          <option value="4">Mayo</option><option value="5">Junio</option>
-                          <option value="6">Julio</option><option value="7">Agosto</option>
-                          <option value="8">Septiembre</option><option value="9">Octubre</option>
-                          <option value="10">Noviembre</option><option value="11">Diciembre</option>
+                          <option value="0">Enero</option>
+                          <option value="1">Febrero</option>
+                          <option value="2">Marzo</option>
+                          <option value="3">Abril</option>
+                          <option value="4">Mayo</option>
+                          <option value="5">Junio</option>
+                          <option value="6">Julio</option>
+                          <option value="7">Agosto</option>
+                          <option value="8">Septiembre</option>
+                          <option value="9">Octubre</option>
+                          <option value="10">Noviembre</option>
+                          <option value="11">Diciembre</option>
                         </select>
                         <select id="select-anio" class="form-select form-select-sm" style="width: 100px;">
-                          <option value="2025" selected>2025</option>
-                          <option value="2026">2026</option>
                         </select>
                         <button class="btn btn-sm btn-success">
                           <i class="bi bi-cloud-check-fill me-1"></i> Guardar Todo
@@ -393,6 +397,24 @@
         const diaEl = document.getElementById('local-dia');
         const congEl = document.getElementById('local-congregacion');
         let currentLocalData = null;
+
+        const selectMes = document.getElementById('select-mes');
+        const selectAnio = document.getElementById('select-anio');
+
+        // Establecer mes y año actuales por defecto
+        const today = new Date();
+        const currentMonth = today.getMonth(); // 0-indexed
+        const currentYear = today.getFullYear();
+
+        selectMes.value = currentMonth.toString();
+
+        // Generar opciones de año dinámicamente (año actual y los dos siguientes)
+        selectAnio.innerHTML = ''; // Limpiar opciones existentes
+        for (let i = 0; i < 3; i++) {
+          const year = currentYear + i;
+          selectAnio.innerHTML += `<option value="${year}">${year}</option>`;
+        }
+        selectAnio.value = currentYear.toString();
 
         const editLocalModal = new bootstrap.Modal(document.getElementById('editLocalModal'));
 
