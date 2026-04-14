@@ -176,7 +176,7 @@
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Página de ejemplo</li>
+                  <li class="breadcrumb-item active" aria-current="page">visitantes</li>
                 </ol>
               </div>
             </div>
@@ -249,7 +249,10 @@
                         </select>
                         <select id="select-anio" class="form-select form-select-sm" style="width: 100px;">
                         </select>
-                        <button class="btn btn-sm btn-success">
+                        <button id="btn-edit-program" class="btn btn-sm btn-outline-primary">
+                          <i class="bi bi-pencil-fill me-1"></i> Editar
+                        </button>
+                        <button id="btn-save-program" class="btn btn-sm btn-success" style="display: none;">
                           <i class="bi bi-cloud-check-fill me-1"></i> Guardar Todo
                         </button>
                       </div>
@@ -263,16 +266,13 @@
                           <th class="text-center" style="width: 8%;">Num.</th>
                           <th style="width: 30%;">Título del Discurso</th>
                           <th class="text-center" style="width: 8%;">Canción</th>
+                          <th style="width: 15%;">Congregación</th>
                           <th class="text-center" style="width: 12%;">Hora</th>
                           <th class="text-center" style="width: 12%;">Fecha</th>
                         </tr>
                       </thead>
                       <tbody id="tabla-visitas-body">
-                        <!-- Ejemplo visual: 4 filas para el mes de abril -->
-                        <tr><td><input type="text" class="form-control form-control-sm" placeholder="Nombre del hermano"></td><td><input type="number" class="form-control form-control-sm text-center"></td><td><input type="text" class="form-control form-control-sm" placeholder="Tema del discurso"></td><td><input type="number" class="form-control form-control-sm text-center"></td><td><input type="time" class="form-control form-control-sm text-center" value="09:00"></td><td class="text-center fw-bold text-secondary">06-abr</td></tr>
-                        <tr><td><input type="text" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm text-center"></td><td><input type="text" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm text-center"></td><td><input type="time" class="form-control form-control-sm text-center" value="09:00"></td><td class="text-center fw-bold text-secondary">13-abr</td></tr>
-                        <tr><td><input type="text" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm text-center"></td><td><input type="text" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm text-center"></td><td><input type="time" class="form-control form-control-sm text-center" value="09:00"></td><td class="text-center fw-bold text-secondary">20-abr</td></tr>
-                        <tr><td><input type="text" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm text-center"></td><td><input type="text" class="form-control form-control-sm"></td><td><input type="number" class="form-control form-control-sm text-center"></td><td><input type="time" class="form-control form-control-sm text-center" value="09:00"></td><td class="text-center fw-bold text-secondary">27-abr</td></tr>
+                        <!-- Las filas se generan dinámicamente -->
                       </tbody>
                     </table>
                   </div>
@@ -396,13 +396,33 @@
         const horaEl = document.getElementById('local-hora');
         const diaEl = document.getElementById('local-dia');
         const congEl = document.getElementById('local-congregacion');
+        const tablaVisitasBody = document.getElementById('tabla-visitas-body');
         let currentLocalData = null;
+        let isEditingProgram = false;
 
         const selectMes = document.getElementById('select-mes');
         const selectAnio = document.getElementById('select-anio');
+        const btnEditProgram = document.getElementById('btn-edit-program');
+        const btnSaveProgram = document.getElementById('btn-save-program');
 
         // Establecer mes y año actuales por defecto
         const today = new Date();
+
+        // Lógica para alternar el modo edición
+        btnEditProgram.addEventListener('click', () => {
+          isEditingProgram = !isEditingProgram;
+          if (isEditingProgram) {
+            btnEditProgram.innerHTML = '<i class="bi bi-x-circle-fill me-1"></i> Cancelar';
+            btnEditProgram.className = 'btn btn-sm btn-outline-danger';
+            btnSaveProgram.style.display = 'block';
+          } else {
+            btnEditProgram.innerHTML = '<i class="bi bi-pencil-fill me-1"></i> Editar';
+            btnEditProgram.className = 'btn btn-sm btn-outline-primary';
+            btnSaveProgram.style.display = 'none';
+          }
+          updateProgramacionTable();
+        });
+
         const currentMonth = today.getMonth(); // 0-indexed
         const currentYear = today.getFullYear();
 
@@ -415,6 +435,119 @@
           selectAnio.innerHTML += `<option value="${year}">${year}</option>`;
         }
         selectAnio.value = currentYear.toString();
+
+        // Función para generar las filas de la tabla según el mes/año y el día de reunión
+        async function updateProgramacionTable() {
+          if (!currentLocalData) return;
+
+          const mes = parseInt(selectMes.value);
+          const anio = parseInt(selectAnio.value);
+          const targetDay = currentLocalData.dia_rp % 7; // Convertir 7 (Dom) a 0 para JS
+          const defaultTime = currentLocalData.hora_reunion.substring(0, 5);
+          const mesesShort = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+
+          try {
+            // Obtener la programación guardada para este mes/año
+            const response = await fetch(`http://localhost:3000/api/visitantes-programacion?mes=${mes}&anio=${anio}`);
+            const programacion = await response.json();
+
+            tablaVisitasBody.innerHTML = '';
+
+            // Usamos las 12:00 PM para evitar desfases por cambios de horario (DST) en la medianoche
+            let date = new Date(anio, mes, 1, 12, 0, 0);
+            while (date.getMonth() === mes) {
+              if (date.getDay() === targetDay) {
+                const dayNum = date.getDate().toString().padStart(2, '0');
+                const monthNum = (date.getMonth() + 1).toString().padStart(2, '0');
+                const fullDateStr = `${anio}-${monthNum}-${dayNum}`; // Formato YYYY-MM-DD para comparar
+                const displayDateStr = `${dayNum}-${mesesShort[mes]}`;
+                
+                // Buscar si hay datos guardados para esta fecha específica
+                const dataRow = programacion.find(p => {
+                  const pDate = new Date(p.fecha_discurso);
+                  // Ajustar por zona horaria para obtener la fecha local correcta en formato string
+                  const pDateStr = new Date(pDate.getTime() - pDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+                  return pDateStr === fullDateStr;
+                });
+
+                const tr = document.createElement('tr');
+                tr.dataset.fecha = fullDateStr; // Guardamos la fecha real para el guardado
+
+                if (isEditingProgram) {
+                  tr.innerHTML = `
+                    <td><input type="text" class="form-control form-control-sm" placeholder="Nombre" value="${dataRow?.nombre || ''}"></td>
+                    <td><input type="number" class="form-control form-control-sm text-center" value="${dataRow?.num_bosquejo || ''}"></td>
+                    <td><input type="text" class="form-control form-control-sm" placeholder="Tema" value="${dataRow?.tema || ''}"></td>
+                    <td><input type="number" class="form-control form-control-sm text-center" value="${dataRow?.cancion || ''}"></td>
+                    <td><input type="text" class="form-control form-control-sm" placeholder="Congregación" value="${dataRow?.congregacion || ''}"></td>
+                    <td class="text-center text-muted">${defaultTime}</td>
+                    <td class="text-center fw-bold text-secondary">${displayDateStr}</td>
+                  `;
+                } else {
+                  tr.innerHTML = `
+                    <td>
+                      <i class="bi bi-person-circle text-primary me-2"></i>
+                      <strong>${dataRow?.nombre || '<span class="text-muted">Vacante</span>'}</strong>
+                    </td>
+                    <td class="text-center"><span class="badge text-bg-light border">${dataRow?.num_bosquejo || '--'}</span></td>
+                    <td>${dataRow?.tema || '<span class="text-muted italic">Sin asignar</span>'}</td>
+                    <td class="text-center">${dataRow?.cancion ? 'Cant. ' + dataRow.cancion : '--'}</td>
+                    <td><small class="text-muted">${dataRow?.congregacion || '--'}</small></td>
+                    <td class="text-center text-muted"><small>${defaultTime}</small></td>
+                    <td class="text-center fw-bold text-secondary">${displayDateStr}</td>
+                  `;
+                }
+                tablaVisitasBody.appendChild(tr);
+              }
+              date.setDate(date.getDate() + 1);
+            }
+          } catch (error) {
+            console.error('Error al cargar la programación:', error);
+          }
+        }
+
+        // Función para guardar todos los cambios de la tabla
+        btnSaveProgram.addEventListener('click', async () => {
+          const rows = document.querySelectorAll('#tabla-visitas-body tr');
+          const programacion = [];
+          const mes = selectMes.value;
+          const anio = selectAnio.value;
+
+          rows.forEach(row => {
+            const inputs = row.querySelectorAll('input');
+            if (inputs.length > 0) {
+              programacion.push({
+                nombre: inputs[0].value,
+                num_bosquejo: inputs[1].value,
+                tema: inputs[2].value,
+                cancion: inputs[3].value,
+                congregacion: inputs[4].value,
+                fecha_discurso: row.dataset.fecha
+              });
+            }
+          });
+
+          try {
+            const response = await fetch('http://localhost:3000/api/visitantes-programacion', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ mes, anio, programacion })
+            });
+
+            if (response.ok) {
+              showNotification('Programación mensual guardada con éxito.', 'success');
+              btnEditProgram.click(); // Salir del modo edición automáticamente
+            } else {
+              showNotification('Hubo un error al intentar guardar.', 'danger');
+            }
+          } catch (error) {
+            showNotification('Error de conexión con el servidor.', 'danger');
+          }
+        });
+
+        // Escuchar cambios en los selectores de mes y año
+        selectMes.addEventListener('change', updateProgramacionTable);
+        selectAnio.addEventListener('change', updateProgramacionTable);
 
         const editLocalModal = new bootstrap.Modal(document.getElementById('editLocalModal'));
 
@@ -433,6 +566,9 @@
             horaEl.textContent = `${h12.toString().padStart(2, '0')}:${m} ${ampm}`;
             diaEl.textContent = currentLocalData.nombre_dia;
             congEl.textContent = currentLocalData.congregacion;
+
+            // Una vez que tenemos los datos locales, generamos la tabla inicial
+            updateProgramacionTable();
           } catch (error) {
             console.error('Error:', error);
           }

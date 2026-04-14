@@ -285,6 +285,18 @@ Tabla: dias_semana
 Columnas:
   - id_dia INT PRIMARY KEY,
   - nombre_dia VARCHAR(15) NOT NULL, {(1, 'Lunes'), (2, 'Martes'), (3, 'Miércoles'), (4, 'Jueves'), (5, 'Viernes'), (6, 'Sábado'), (7, 'Domingo')}
+
+Tabla: oradores_visitantes
+Columnas:
+  - id_visitante: INT AUTO_INCREMENT, PRIMARY KEY (ID interno generado para identificar el discursante visitante)
+  - nombre: VARCHAR(55) (almacena el nombre del discursante)
+  - num_bosquejo: VARCHAR(5) (almacena el numero de bosquejo)
+  - tema: VARCHAR(255) (Almacena el titulo del discurso)
+  - cancion: VARCHAR(5) (almacena el numero de cancion)
+  - telefono: (VARCHAR) (14) (almacena el numero de telefono)
+  - fecha_discurso: DATE (Almacena la fecha en la que se programo el discurso)
+  - congregacion: VARCHART(20) (congregacion de origen del orador)
+
 */
 
 // Ruta para obtener los datos de la reunión local
@@ -332,6 +344,61 @@ app.put('/api/reunion-local/:id', async (req, res) => {
     } catch (err) {
         console.error('Error al actualizar reunión local:', err);
         res.status(500).json({ error: err.message });
+    }
+});
+
+// Ruta para obtener la programación de visitantes filtrada por mes y año
+app.get('/api/visitantes-programacion', async (req, res) => {
+    const { mes, anio } = req.query; // mes llega como 0-11 desde el frontend
+    try {
+        const query = `
+            SELECT * FROM oradores_visitantes 
+            WHERE MONTH(fecha_discurso) = ? AND YEAR(fecha_discurso) = ?
+        `;
+        // MONTH() en SQL es 1-12, sumamos 1 al mes recibido
+        const [rows] = await pool.query(query, [parseInt(mes) + 1, anio]);
+        res.json(rows);
+    } catch (err) {
+        console.error('Error al obtener programación de visitantes:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Ruta para guardar o actualizar la programación completa de un mes
+app.post('/api/visitantes-programacion', async (req, res) => {
+    const { mes, anio, programacion } = req.body; // mes llega como 0-11
+    const connection = await pool.getConnection();
+    try {
+        await connection.beginTransaction();
+
+        // 1. Limpiamos registros previos para ese mes y año para evitar duplicidad al sobreescribir
+        await connection.query(
+            "DELETE FROM oradores_visitantes WHERE MONTH(fecha_discurso) = ? AND YEAR(fecha_discurso) = ?",
+            [parseInt(mes) + 1, anio]
+        );
+
+        // 2. Preparamos los valores para la inserción masiva
+        // Filtramos para no guardar filas completamente vacías
+        const values = programacion
+            .filter(p => p.nombre && p.nombre.trim() !== "")
+            .map(p => [
+                p.nombre, p.num_bosquejo || null, p.tema || null, 
+                p.cancion || null, p.fecha_discurso, p.congregacion || null
+            ]);
+
+        if (values.length > 0) {
+            const query = "INSERT INTO oradores_visitantes (nombre, num_bosquejo, tema, cancion, fecha_discurso, congregacion) VALUES ?";
+            await connection.query(query, [values]);
+        }
+
+        await connection.commit();
+        res.json({ message: "Programación actualizada correctamente" });
+    } catch (err) {
+        await connection.rollback();
+        console.error('Error al guardar programación:', err);
+        res.status(500).json({ error: err.message });
+    } finally {
+        connection.release();
     }
 });
 
