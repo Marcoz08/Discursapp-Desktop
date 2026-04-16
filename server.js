@@ -296,6 +296,7 @@ Columnas:
   - telefono: (VARCHAR) (14) (almacena el numero de telefono)
   - fecha_discurso: DATE (Almacena la fecha en la que se programo el discurso)
   - congregacion: VARCHART(20) (congregacion de origen del orador)
+  - asistio: BOOLEAN (TRUE si asistio, FALSE si no se presento)
 
 */
 
@@ -383,11 +384,11 @@ app.post('/api/visitantes-programacion', async (req, res) => {
             .filter(p => p.nombre && p.nombre.trim() !== "")
             .map(p => [
                 p.nombre, p.num_bosquejo || null, p.tema || null, 
-                p.cancion || null, p.fecha_discurso, p.congregacion || null
+                p.cancion || null, p.fecha_discurso, p.congregacion || null, p.asistio || 0
             ]);
 
         if (values.length > 0) {
-            const query = "INSERT INTO oradores_visitantes (nombre, num_bosquejo, tema, cancion, fecha_discurso, congregacion) VALUES ?";
+            const query = "INSERT INTO oradores_visitantes (nombre, num_bosquejo, tema, cancion, fecha_discurso, congregacion, asistio) VALUES ?";
             await connection.query(query, [values]);
         }
 
@@ -540,6 +541,32 @@ app.delete('/api/agenda/:id', async (req, res) => {
         res.json({ message: "Acuerdo eliminado correctamente" });
     } catch (err) {
         await connection.rollback();
+        res.status(500).json({ error: err.message });
+    } finally {
+        connection.release();
+    }
+});
+
+// Ruta para confirmar asistencia de un orador visitante y actualizar historial del bosquejo
+app.post('/api/confirmar-asistencia', async (req, res) => {
+    const { num, fecha } = req.body;
+    if (!num || !fecha) return res.status(400).json({ error: "Datos incompletos" });
+
+    const connection = await pool.getConnection();
+    try {
+        await connection.beginTransaction();
+
+        // 1. Actualizamos lista_bosquejos moviendo la fecha actual al historial y poniendo la nueva fecha
+        await connection.query("UPDATE lista_bosquejos SET fecha_ant = fecha_ult, fecha_ult = ? WHERE num = ?", [fecha, num]);
+
+        // 2. Marcamos como asistido en la tabla de programación de visitantes
+        await connection.query("UPDATE oradores_visitantes SET asistio = TRUE WHERE num_bosquejo = ? AND fecha_discurso = ?", [num, fecha]);
+
+        await connection.commit();
+        res.json({ message: "Asistencia confirmada e historial actualizado" });
+    } catch (err) {
+        await connection.rollback();
+        console.error('Error al confirmar asistencia:', err);
         res.status(500).json({ error: err.message });
     } finally {
         connection.release();

@@ -249,6 +249,9 @@
                         </select>
                         <select id="select-anio" class="form-select form-select-sm" style="width: 100px;">
                         </select>
+                        <button id="btn-export-pdf" class="btn btn-sm btn-outline-danger">
+                          <i class="bi bi-file-earmark-pdf-fill me-1"></i> Exportar a PDF
+                        </button>
                         <button id="btn-edit-program" class="btn btn-sm btn-outline-primary">
                           <i class="bi bi-pencil-fill me-1"></i> Editar
                         </button>
@@ -265,10 +268,12 @@
                           <th style="width: 20%;">Discursante</th>
                           <th class="text-center" style="width: 8%;">Num.</th>
                           <th style="width: 30%;">Título del Discurso</th>
+                          <th style="width: 40px;"></th>
                           <th class="text-center" style="width: 8%;">Canción</th>
                           <th style="width: 15%;">Congregación</th>
                           <th class="text-center" style="width: 12%;">Hora</th>
                           <th class="text-center" style="width: 12%;">Fecha</th>
+                          <th class="text-center" style="width: 10%;">Asistió</th>
                         </tr>
                       </thead>
                       <tbody id="tabla-visitas-body">
@@ -319,6 +324,25 @@
             </div>
           </div>
         </div>
+
+        <!-- Modal para Confirmar Asistencia -->
+        <div class="modal fade" id="confirmAttendanceModal" tabindex="-1" aria-labelledby="confirmAttendanceModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="confirmAttendanceModalLabel"><i class="bi bi-check-circle-fill me-2"></i>Confirmar Asistencia</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                ¿Desea confirmar que el discursante asistió y presentó el tema asignado?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="btn-confirm-attendance-final" class="btn btn-success">Confirmar</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
       <!--end::App Main-->
 
@@ -340,6 +364,10 @@
 
       <!-- Contenedor para notificaciones (Toasts) -->
       <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1055;"></div>
+
+      <!-- Datalist para el autocompletado de temas -->
+      <datalist id="bosquejos-list"></datalist>
+
     </div>
     <!--end::App Wrapper-->
     <!--begin::Script-->
@@ -397,12 +425,14 @@
         const diaEl = document.getElementById('local-dia');
         const congEl = document.getElementById('local-congregacion');
         const tablaVisitasBody = document.getElementById('tabla-visitas-body');
+        let bosquejosList = []; // Almacenará la lista de bosquejos para el autocompletado
         let currentLocalData = null;
         let isEditingProgram = false;
 
         const selectMes = document.getElementById('select-mes');
         const selectAnio = document.getElementById('select-anio');
         const btnEditProgram = document.getElementById('btn-edit-program');
+        const btnExportPdf = document.getElementById('btn-export-pdf');
         const btnSaveProgram = document.getElementById('btn-save-program');
 
         // Establecer mes y año actuales por defecto
@@ -415,10 +445,12 @@
             btnEditProgram.innerHTML = '<i class="bi bi-x-circle-fill me-1"></i> Cancelar';
             btnEditProgram.className = 'btn btn-sm btn-outline-danger';
             btnSaveProgram.style.display = 'block';
+            btnExportPdf.style.display = 'none';
           } else {
             btnEditProgram.innerHTML = '<i class="bi bi-pencil-fill me-1"></i> Editar';
             btnEditProgram.className = 'btn btn-sm btn-outline-primary';
             btnSaveProgram.style.display = 'none';
+            btnExportPdf.style.display = 'block';
           }
           updateProgramacionTable();
         });
@@ -435,6 +467,40 @@
           selectAnio.innerHTML += `<option value="${year}">${year}</option>`;
         }
         selectAnio.value = currentYear.toString();
+
+        // Función para obtener el icono de estatus basado en la lógica de semáforo
+        function getStatusIcon(num, asistio = false) {
+          if (asistio) {
+            return '<i class="bi bi-p-circle-fill text-success fs-5" title="Discurso presentado"></i>';
+          }
+          if (!num) return '';
+          // Buscar el bosquejo en la lista cargada (comparación flexible de número)
+          const b = bosquejosList.find(item => item.num == num);
+          if (!b) return '';
+
+          const now = new Date();
+          const threeMonthsAgo = new Date();
+          threeMonthsAgo.setMonth(now.getMonth() - 3);
+          const sixMonthsAgo = new Date();
+          sixMonthsAgo.setMonth(now.getMonth() - 6);
+
+          if (!b.fecha_ult) {
+            // Verde + Palomita: Disponible
+            return '<i class="bi bi-check-circle-fill text-success fs-5" title="Disponible"></i>';
+          } else {
+            const lastDate = new Date(b.fecha_ult);
+            if (lastDate >= threeMonthsAgo) {
+              // Rojo + X: Muy reciente
+              return '<i class="bi bi-x-circle-fill text-danger fs-5" title="Muy reciente (menos de 3 meses)"></i>';
+            } else if (lastDate >= sixMonthsAgo) {
+              // Naranja + X: Reciente
+              return '<i class="bi bi-x-circle-fill fs-5" style="color: #fd7e14;" title="Reciente (entre 3 y 6 meses)"></i>';
+            } else {
+              // Amarillo + P: Presentado hace mucho tiempo
+              return '<i class="bi bi-p-circle-fill text-warning fs-5" title="Presentado hace más de 6 meses"></i>';
+            }
+          }
+        }
 
         // Función para generar las filas de la tabla según el mes/año y el día de reunión
         async function updateProgramacionTable() {
@@ -472,29 +538,45 @@
 
                 const tr = document.createElement('tr');
                 tr.dataset.fecha = fullDateStr; // Guardamos la fecha real para el guardado
+                const isConfirmed = dataRow?.asistio === 1 || dataRow?.asistio === true;
+                tr.dataset.asistio = isConfirmed ? 1 : 0;
 
                 if (isEditingProgram) {
                   tr.innerHTML = `
                     <td><input type="text" class="form-control form-control-sm" placeholder="Nombre" value="${dataRow?.nombre || ''}"></td>
-                    <td><input type="number" class="form-control form-control-sm text-center" value="${dataRow?.num_bosquejo || ''}"></td>
-                    <td><input type="text" class="form-control form-control-sm" placeholder="Tema" value="${dataRow?.tema || ''}"></td>
+                    <td><input type="number" class="form-control form-control-sm text-center num-input" value="${dataRow?.num_bosquejo || ''}"></td>
+                    <td><input type="text" class="form-control form-control-sm tema-input" list="bosquejos-list" placeholder="Tema" value="${dataRow?.tema || ''}"></td>
+                    <td class="text-center status-cell">${getStatusIcon(dataRow?.num_bosquejo, isConfirmed)}</td>
                     <td><input type="number" class="form-control form-control-sm text-center" value="${dataRow?.cancion || ''}"></td>
                     <td><input type="text" class="form-control form-control-sm" placeholder="Congregación" value="${dataRow?.congregacion || ''}"></td>
                     <td class="text-center text-muted">${defaultTime}</td>
                     <td class="text-center fw-bold text-secondary">${displayDateStr}</td>
+                    <td class="text-center">--</td>
                   `;
                 } else {
+                  if (isConfirmed) tr.classList.add('table-success'); // Fondo verde suave
+
                   tr.innerHTML = `
                     <td>
                       <i class="bi bi-person-circle text-primary me-2"></i>
-                      <strong>${dataRow?.nombre || '<span class="text-muted">Vacante</span>'}</strong>
+                      <strong>${dataRow?.nombre || '<span class="text-muted">Sin asignar</span>'}</strong>
                     </td>
                     <td class="text-center"><span class="badge text-bg-light border">${dataRow?.num_bosquejo || '--'}</span></td>
                     <td>${dataRow?.tema || '<span class="text-muted italic">Sin asignar</span>'}</td>
+                    <td class="text-center">${getStatusIcon(dataRow?.num_bosquejo, isConfirmed)}</td>
                     <td class="text-center">${dataRow?.cancion ? 'Cant. ' + dataRow.cancion : '--'}</td>
                     <td><small class="text-muted">${dataRow?.congregacion || '--'}</small></td>
                     <td class="text-center text-muted"><small>${defaultTime}</small></td>
                     <td class="text-center fw-bold text-secondary">${displayDateStr}</td>
+                    <td class="text-center">
+                      ${dataRow?.num_bosquejo ? `
+                        <button class="btn btn-sm btn-outline-success btn-confirm-attendance" 
+                          data-num="${dataRow.num_bosquejo}" 
+                          data-fecha="${fullDateStr}"
+                          title="Confirmar asistencia">
+                          <i class="bi bi-check-lg"></i> Confirmar
+                        </button>` : '--'}
+                    </td>
                   `;
                 }
                 tablaVisitasBody.appendChild(tr);
@@ -522,7 +604,8 @@
                 tema: inputs[2].value,
                 cancion: inputs[3].value,
                 congregacion: inputs[4].value,
-                fecha_discurso: row.dataset.fecha
+                fecha_discurso: row.dataset.fecha,
+                asistio: parseInt(row.dataset.asistio) || 0
               });
             }
           });
@@ -539,6 +622,75 @@
               btnEditProgram.click(); // Salir del modo edición automáticamente
             } else {
               showNotification('Hubo un error al intentar guardar.', 'danger');
+            }
+          } catch (error) {
+            showNotification('Error de conexión con el servidor.', 'danger');
+          }
+        });
+
+        // Lógica para autocompletar el número de bosquejo al seleccionar un tema de la lista
+        tablaVisitasBody.addEventListener('input', (e) => {
+          if (e.target.classList.contains('tema-input')) {
+            const selectedTitle = e.target.value;
+            const bosquejo = bosquejosList.find(b => b.titulo === selectedTitle);
+            const row = e.target.closest('tr');
+            const isConfirmed = parseInt(row.dataset.asistio) === 1;
+            const numInput = row.querySelector('.num-input');
+            const statusCell = row.querySelector('.status-cell');
+
+            if (bosquejo) {
+              if (numInput) numInput.value = bosquejo.num;
+              if (statusCell) statusCell.innerHTML = getStatusIcon(bosquejo.num, isConfirmed);
+            } else {
+              // Si el título no coincide o se borra, se limpia el estatus
+              if (statusCell) statusCell.innerHTML = '';
+            }
+          }
+          
+          // También actualizar si se cambia el número directamente
+          if (e.target.classList.contains('num-input')) {
+            const num = e.target.value;
+            const row = e.target.closest('tr');
+            const isConfirmed = parseInt(row.dataset.asistio) === 1;
+            const statusCell = row.querySelector('.status-cell');
+            if (statusCell) {
+              statusCell.innerHTML = getStatusIcon(num, isConfirmed);
+            }
+          }
+        });
+
+        // Lógica para confirmar asistencia
+        const confirmAttendanceModal = new bootstrap.Modal(document.getElementById('confirmAttendanceModal'));
+        const btnConfirmAttendanceFinal = document.getElementById('btn-confirm-attendance-final');
+        let pendingAttendanceData = null;
+
+        tablaVisitasBody.addEventListener('click', (e) => {
+          const confirmBtn = e.target.closest('.btn-confirm-attendance');
+          if (confirmBtn) {
+            pendingAttendanceData = {
+              num: confirmBtn.dataset.num,
+              fecha: confirmBtn.dataset.fecha
+            };
+            confirmAttendanceModal.show();
+          }
+        });
+
+        btnConfirmAttendanceFinal.addEventListener('click', async () => {
+          if (!pendingAttendanceData) return;
+          try {
+            const response = await fetch(`http://localhost:3000/api/confirmar-asistencia`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(pendingAttendanceData)
+            });
+
+            if (response.ok) {
+              confirmAttendanceModal.hide();
+              showNotification('Asistencia confirmada y registro actualizado.', 'success');
+              fetchBosquejosList(); // Refrescar iconos semáforo para ver el cambio de estatus
+            } else {
+              const error = await response.json();
+              showNotification(error.error || 'Error al confirmar asistencia', 'danger');
             }
           } catch (error) {
             showNotification('Error de conexión con el servidor.', 'danger');
@@ -571,6 +723,20 @@
             updateProgramacionTable();
           } catch (error) {
             console.error('Error:', error);
+          }
+        }
+
+        async function fetchBosquejosList() {
+          try {
+            const response = await fetch('http://localhost:3000/api/bosquejos');
+            if (!response.ok) throw new Error('Error al obtener lista de bosquejos');
+            
+            bosquejosList = await response.json();
+            const datalist = document.getElementById('bosquejos-list');
+            datalist.innerHTML = bosquejosList.map(b => `<option value="${b.titulo}">`).join('');
+            updateProgramacionTable(); // Actualizar iconos una vez cargada la lista
+          } catch (error) {
+            console.error('Error al cargar la lista de bosquejos:', error);
           }
         }
 
@@ -654,6 +820,7 @@
         }
 
         fetchInfoLocal();
+        fetchBosquejosList();
       });
     </script>
 
