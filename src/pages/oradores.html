@@ -222,6 +222,7 @@
                       <thead>
                         <tr>
                           <th>Orador</th>
+                          <th style="width: 25%;">Orador</th>
                           <th>Privilegio</th>
                           <th>Congregación</th>
                           <th class="text-center">Núm.</th>
@@ -416,6 +417,9 @@
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
     <script src="../../dist/js/adminlte.js"></script>
+    <!-- jspdf y autotable para exportación a PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.6.0/jspdf.plugin.autotable.min.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -501,6 +505,7 @@
             }
           });
 
+          let oratorIndex = 0;
           groupedMap.forEach(orador => {
             const numTemas = orador.temas.length > 0 ? orador.temas.length : 1; // Al menos 1 fila para el orador
             
@@ -522,6 +527,10 @@
               <td rowspan="${numTemas}"><strong>${orador.nombre}</strong></td>
               <td rowspan="${numTemas}"><span class="badge ${privilegioBadge}">${privilegioText}</span>${aprobadoIcon}</td>
               <td rowspan="${numTemas}">${orador.congregacion || 'El Castillo'}</td>
+              <td rowspan="${numTemas}" class="fw-bold align-middle">
+                <i class="bi bi-person-fill text-secondary me-2"></i>${orador.nombre}
+              </td>
+              <td rowspan="${numTemas}" class="align-middle"><span class="badge ${privilegioBadge}">${privilegioText}</span>${aprobadoIcon}</td>
               <td class="text-center">${orador.temas[0]?.numero_tema || '--'}</td>
               <td>${orador.temas[0]?.titulo || '<i class="text-muted">Sin tema registrado</i>'}</td>
               <td>${orador.temas[0]?.cancion_sugerida ? 'Cant. ' + orador.temas[0].cancion_sugerida : '--'}</td>
@@ -557,6 +566,7 @@
               });
               tableBody.appendChild(row);
             });
+            oratorIndex++;
           });
         }
 
@@ -577,6 +587,122 @@
         document.getElementById('btn-refresh').addEventListener('click', () => {
           fetchOradores();
           showNotification('Listado de oradores actualizado.', 'success');
+        });
+
+        // Lógica para exportar a PDF el listado de oradores y temas
+        document.getElementById('btn-export-pdf').addEventListener('click', () => {
+          if (oradoresData.length === 0) {
+            showNotification('No hay datos para exportar.', 'danger');
+            return;
+          }
+
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF('p', 'mm', 'a4'); // Orientación vertical, milímetros, tamaño A4
+
+          // Configuración de encabezado
+          doc.setFontSize(16);
+          doc.setTextColor(31, 48, 86); // Color corporativo #1F3056
+          doc.text('REGISTRO DE ORADORES LOCALES Y TEMAS', 105, 15, { align: 'center' });
+          
+          doc.setFontSize(10);
+          doc.setTextColor(100);
+          doc.text(`Congregación: El Castillo`, 14, 25);
+          doc.text(`Fecha de reporte: ${new Date().toLocaleDateString()}`, 14, 30);
+
+          // Agrupamos los temas por orador siguiendo la misma lógica de la tabla web
+          const groupedMap = new Map();
+          oradoresData.forEach(item => {
+            const speakerKey = item.id_orador || item.nombre;
+            if (!groupedMap.has(speakerKey)) {
+              groupedMap.set(speakerKey, {
+                nombre: item.nombre,
+                privilegio: item.privilegio ? 'Anciano' : 'Siervo Ministerial',
+                temas: []
+              });
+            }
+            if (item.numero_tema || item.titulo) {
+              groupedMap.get(speakerKey).temas.push({
+                num: item.numero_tema || '--',
+                titulo: item.titulo || 'Sin título registrado',
+                cancion: item.cancion_sugerida ? 'Cant. ' + item.cancion_sugerida : '--'
+              });
+            }
+          });
+
+          const tableRows = [];
+          const oratorGroupTracking = []; // Rastreador para saber qué filas pertenecen a qué orador
+          let oratorIndex = 0;
+
+          groupedMap.forEach(orador => {
+            if (orador.temas.length === 0) {
+              tableRows.push([orador.nombre, orador.privilegio, '--', 'Sin temas registrados', '--']);
+              oratorGroupTracking.push(oratorIndex);
+            } else {
+              orador.temas.forEach((tema, index) => {
+                // Para simular el rowspan, solo incluimos los datos del orador en la primera fila de su bloque
+                if (index === 0) {
+                  tableRows.push([orador.nombre, orador.privilegio, tema.num, tema.titulo, tema.cancion]);
+                } else {
+                  tableRows.push(['', '', tema.num, tema.titulo, tema.cancion]);
+                }
+                oratorGroupTracking.push(oratorIndex);
+              });
+            }
+            oratorIndex++;
+          });
+
+          // Generación de la tabla en el PDF
+          doc.autoTable({
+            startY: 35,
+            head: [['Orador', 'Privilegio', 'Núm.', 'Título del Discurso', 'Canción']],
+            body: tableRows,
+            theme: 'grid',
+            headStyles: { fillColor: [31, 48, 86], textColor: [255, 255, 255], fontStyle: 'bold' },
+            styles: { fontSize: 10, cellPadding: 3, valign: 'middle', lineColor: [0, 0, 0], lineWidth: 0 },
+            columnStyles: {
+              0: { cellWidth: 40, fontStyle: 'bold' },
+              1: { cellWidth: 35 },
+              2: { halign: 'center', cellWidth: 15 },
+              4: { halign: 'center', cellWidth: 20 }
+            },
+            didParseCell: function(data) {
+              if (data.section === 'body') {
+                const groupIdx = oratorGroupTracking[data.row.index];
+                // Aplicar fondo gris muy tenue a oradores impares para generar contraste de grupos
+                if (groupIdx % 2 !== 0) {
+                  data.cell.styles.fillColor = [235, 235, 235];
+                }
+              }
+            },
+            didDrawCell: function(data) {
+              if (data.section === 'body') {
+                const groupIdx = oratorGroupTracking[data.row.index];
+                const prevGroupIdx = data.row.index > 0 ? oratorGroupTracking[data.row.index - 1] : -1;
+                const nextGroupIdx = oratorGroupTracking[data.row.index + 1];
+                
+                doc.setDrawColor(0, 0, 0);
+                doc.setLineWidth(0.6); // Grosor para bordes de grupo
+
+                // Dibujar borde superior si es el inicio de un bloque de orador
+                if (prevGroupIdx !== groupIdx) {
+                  doc.line(data.cell.x, data.cell.y, data.cell.x + data.cell.width, data.cell.y);
+                }
+                // Dibujar borde inferior si es el fin de un bloque o la última fila
+                if (nextGroupIdx !== groupIdx || data.row.index === tableRows.length - 1) {
+                  doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x + data.cell.width, data.cell.y + data.cell.height);
+                }
+                // Bordes laterales gruesos para encerrar el bloque
+                if (data.column.index === 0) {
+                  doc.line(data.cell.x, data.cell.y, data.cell.x, data.cell.y + data.cell.height);
+                }
+                if (data.column.index === data.table.columns.length - 1) {
+                  doc.line(data.cell.x + data.cell.width, data.cell.y, data.cell.x + data.cell.width, data.cell.y + data.cell.height);
+                }
+              }
+            }
+          });
+
+          doc.save(`Oradores_y_Temas_${new Date().toISOString().split('T')[0]}.pdf`);
         });
 
         // Lógica para el botón "Añadir orador"
