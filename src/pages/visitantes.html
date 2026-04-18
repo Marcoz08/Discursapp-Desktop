@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -325,6 +325,50 @@
           </div>
         </div>
 
+        <!-- Modal para Configurar Exportación PDF -->
+        <div class="modal fade" id="configPdfModal" tabindex="-1" aria-labelledby="configPdfModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="configPdfModalLabel">
+                  <i class="bi bi-file-earmark-pdf-fill me-2"></i>Configurar documento
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label for="pdf-select-anio" class="form-label fw-bold">Año a exportar</label>
+                  <select id="pdf-select-anio" class="form-select"></select>
+                </div>
+                <label class="form-label fw-bold">Seleccione los meses:</label>
+                <div class="row g-2 mt-1" id="pdf-meses-checks">
+                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="0" id="pdf-m0"><label class="form-check-label" for="pdf-m0">Ene</label></div></div>
+                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="1" id="pdf-m1"><label class="form-check-label" for="pdf-m1">Feb</label></div></div>
+                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="2" id="pdf-m2"><label class="form-check-label" for="pdf-m2">Mar</label></div></div>
+                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="3" id="pdf-m3"><label class="form-check-label" for="pdf-m3">Abr</label></div></div>
+                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="4" id="pdf-m4"><label class="form-check-label" for="pdf-m4">May</label></div></div>
+                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="5" id="pdf-m5"><label class="form-check-label" for="pdf-m5">Jun</label></div></div>
+                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="6" id="pdf-m6"><label class="form-check-label" for="pdf-m6">Jul</label></div></div>
+                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="7" id="pdf-m7"><label class="form-check-label" for="pdf-m7">Ago</label></div></div>
+                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="8" id="pdf-m8"><label class="form-check-label" for="pdf-m8">Sep</label></div></div>
+                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="9" id="pdf-m9"><label class="form-check-label" for="pdf-m9">Oct</label></div></div>
+                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="10" id="pdf-m10"><label class="form-check-label" for="pdf-m10">Nov</label></div></div>
+                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="11" id="pdf-m11"><label class="form-check-label" for="pdf-m11">Dic</label></div></div>
+                </div>
+                <div class="mt-3 text-end">
+                   <button type="button" id="btn-pdf-select-all" class="btn btn-xs btn-link p-0 text-decoration-none">Seleccionar todos</button>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="btn-generate-pdf-final" class="btn btn-danger">
+                  <i class="bi bi-file-pdf me-1"></i> Generar PDF
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Modal para Confirmar Asistencia -->
         <div class="modal fade" id="confirmAttendanceModal" tabindex="-1" aria-labelledby="confirmAttendanceModalLabel" aria-hidden="true">
           <div class="modal-dialog">
@@ -388,6 +432,9 @@
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
     <script src="../../dist/js/adminlte.js"></script>
+    <!-- jspdf y autotable para exportación a PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.6.0/jspdf.plugin.autotable.min.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -467,6 +514,123 @@
           selectAnio.innerHTML += `<option value="${year}">${year}</option>`;
         }
         selectAnio.value = currentYear.toString();
+
+        // --- Lógica para Exportación a PDF ---
+        const configPdfModal = new bootstrap.Modal(document.getElementById('configPdfModal'));
+        const pdfSelectAnio = document.getElementById('pdf-select-anio');
+        const btnPdfSelectAll = document.getElementById('btn-pdf-select-all');
+        const btnGeneratePdfFinal = document.getElementById('btn-generate-pdf-final');
+
+        // Poblar select de año del modal PDF con las mismas opciones que el principal
+        pdfSelectAnio.innerHTML = selectAnio.innerHTML;
+        pdfSelectAnio.value = selectAnio.value;
+
+        btnExportPdf.addEventListener('click', () => {
+          configPdfModal.show();
+        });
+
+        // Lógica de "Seleccionar todos / Desmarcar todos"
+        btnPdfSelectAll.addEventListener('click', () => {
+          const checks = document.querySelectorAll('.pdf-month-check');
+          const allChecked = Array.from(checks).every(c => c.checked);
+          checks.forEach(c => c.checked = !allChecked);
+          btnPdfSelectAll.textContent = allChecked ? 'Seleccionar todos' : 'Desmarcar todos';
+        });
+
+        btnGeneratePdfFinal.addEventListener('click', async () => {
+          const anio = pdfSelectAnio.value;
+          const mesesSeleccionados = Array.from(document.querySelectorAll('.pdf-month-check:checked'))
+                                          .map(c => parseInt(c.value));
+
+          if (mesesSeleccionados.length === 0) {
+            showNotification('Por favor seleccione al menos un mes.', 'danger');
+            return;
+          }
+
+          await generateProgramacionPDF(anio, mesesSeleccionados);
+          configPdfModal.hide();
+        });
+
+        async function generateProgramacionPDF(anio, meses) {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF('p', 'mm', 'a4');
+          const mesesNombres = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+          const targetDay = currentLocalData.dia_rp % 7;
+          const defaultTime = currentLocalData.hora_reunion.substring(0, 5);
+          
+          let currentY = 15; 
+
+          for (const mes of meses) {
+            // Obtener datos del mes desde el servidor
+            const response = await fetch(`http://localhost:3000/api/visitantes-programacion?mes=${mes}&anio=${anio}`);
+            const programData = await response.json();
+
+            const tableRows = [];
+            let date = new Date(anio, mes, 1, 12, 0, 0);
+            while (date.getMonth() === mes) {
+              if (date.getDay() === targetDay) {
+                const dayNum = date.getDate().toString().padStart(2, '0');
+                const monthNum = (date.getMonth() + 1).toString().padStart(2, '0');
+                const fullDateStr = `${anio}-${monthNum}-${dayNum}`;
+                
+                const dataRow = programData.find(p => {
+                  const pDate = new Date(p.fecha_discurso);
+                  const pDateStr = new Date(pDate.getTime() - pDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+                  return pDateStr === fullDateStr;
+                });
+
+                tableRows.push([
+                  dataRow?.nombre || '--',
+                  dataRow?.num_bosquejo || '--',
+                  dataRow?.tema || 'Sin asignar',
+                  dataRow?.cancion || '--',
+                  dataRow?.congregacion || '--',
+                  `${dayNum}/${monthNum}`
+                ]);
+              }
+              date.setDate(date.getDate() + 1);
+            }
+
+            // Estimar la altura de la sección del mes actual para evitar que se parta entre hojas
+            // Encabezado (~20mm) + Tabla (cabecera + filas, aprox 10mm cada una)
+            const estimatedHeight = 25 + (tableRows.length + 1) * 10;
+
+            // Si el contenido no cabe en la hoja actual (considerando un margen inferior), añadir una página nueva
+            if (currentY + estimatedHeight > 280) {
+              doc.addPage();
+              currentY = 15;
+            }
+
+            // Título y encabezado por mes con posición dinámica usando currentY
+            doc.setFontSize(16);
+            doc.setTextColor(31, 48, 86);
+            doc.text(`PROGRAMA DE DISCURSOS PÚBLICOS - ${mesesNombres[mes]} ${anio}`, 105, currentY, { align: 'center' });
+            
+            doc.setFontSize(11);
+            doc.setTextColor(80);
+            doc.text(`Congregación: ${currentLocalData.congregacion}`, 14, currentY + 10);
+            doc.text(`Día y hora: ${currentLocalData.nombre_dia} - ${defaultTime}`, 14, currentY + 16);
+
+            doc.autoTable({
+              startY: currentY + 22,
+              head: [['Discursante', 'Núm.', 'Título del Discurso', 'Cant.', 'Congregación', 'Fecha']],
+              body: tableRows,
+              theme: 'grid',
+              headStyles: { fillColor: [31, 48, 86], textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center' },
+              styles: { fontSize: 10, cellPadding: 4, valign: 'middle' },
+              columnStyles: {
+                1: { halign: 'center', cellWidth: 15 },
+                3: { halign: 'center', cellWidth: 15 },
+                5: { halign: 'center', cellWidth: 20, fontStyle: 'bold' }
+              }
+            });
+
+            // Actualizar la posición vertical para la siguiente tabla con un espacio de separación
+            currentY = doc.lastAutoTable.finalY + 15;
+          }
+
+          doc.save(`Programa_Visitantes_${anio}.pdf`);
+        }
 
         // Función para obtener el icono de estatus basado en la lógica de semáforo
         function getStatusIcon(num, asistio = false) {
