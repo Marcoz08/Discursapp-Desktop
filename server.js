@@ -415,7 +415,9 @@ Columnas:
   - congregacion: Tipo VARCHAR(255). Descripcion: Nombre o identificador de la congregacion asociada al evento.
   - estatus: Tipo BOOLEAN (TINYINT). Restricciones: DEFAULT FALSE. Descripcion: Estado del evento. TRUE (1) significa Confirmado, FALSE (0) significa Pendiente.
   - notas: Tipo TEXT. Descripcion: Espacio para anadir descripciones detalladas o notas de tamano mediano/largo.
-
+  - hora_reunion:Tipo TIME NULL Descripcion: almacena la hora en la se tienen la reunion
+  - dia_rp: INT Descripcion: guarda el dia que tienen la reunion de fin de semana, almacenara un numero 6 o 7 y se relaciona con la tabla dias_semana
+  - direccion: Tipo VARCHAR(255) guarda la ubicacion de la congregacion
 
 Tabla: meses
 Columnas:
@@ -454,22 +456,25 @@ app.get('/api/agenda', async (req, res) => {
 
 // Ruta para guardar un nuevo acuerdo
 app.post('/api/agenda', async (req, res) => {
-    const { fecha_ini, fecha_fin, congregacion, estatus, notas, meses } = req.body;
+    const { fecha_ini, fecha_fin, congregacion, estatus, notas, meses, hora_reunion, dia_rp, direccion } = req.body;
     const connection = await pool.getConnection();
     try {
         await connection.beginTransaction();
 
         // 1. Guardamos la información principal en la tabla 'agenda'
         const queryAgenda = `
-            INSERT INTO agenda (fecha_ini, fecha_fin, congregacion, estatus, notas)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO agenda (fecha_ini, fecha_fin, congregacion, estatus, notas, hora_reunion, dia_rp, direccion)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
         const [result] = await connection.query(queryAgenda, [
             fecha_ini, 
             fecha_fin, 
             congregacion, 
             estatus ? 1 : 0, 
-            notas
+            notas,
+            hora_reunion || null,
+            dia_rp || null,
+            direccion || null
         ]);
 
         const id_rol = result.insertId;
@@ -495,17 +500,28 @@ app.post('/api/agenda', async (req, res) => {
 // Ruta para actualizar un acuerdo existente
 app.put('/api/agenda/:id', async (req, res) => {
     const { id } = req.params;
-    const { fecha_ini, fecha_fin, congregacion, estatus, notas, meses } = req.body;
+    const { fecha_ini, fecha_fin, congregacion, estatus, notas, meses, hora_reunion, dia_rp, direccion } = req.body;
     const connection = await pool.getConnection();
     try {
         await connection.beginTransaction();
 
         const queryAgenda = `
             UPDATE agenda 
-            SET fecha_ini = ?, fecha_fin = ?, congregacion = ?, estatus = ?, notas = ?
+            SET fecha_ini = ?, fecha_fin = ?, congregacion = ?, estatus = ?, notas = ?, 
+                hora_reunion = ?, dia_rp = ?, direccion = ?
             WHERE id_rol = ?
         `;
-        await connection.query(queryAgenda, [fecha_ini, fecha_fin, congregacion, estatus ? 1 : 0, notas, id]);
+        await connection.query(queryAgenda, [
+            fecha_ini, 
+            fecha_fin, 
+            congregacion, 
+            estatus ? 1 : 0, 
+            notas, 
+            hora_reunion || null,
+            dia_rp || null,
+            direccion || null,
+            id
+        ]);
 
         // Actualizamos los meses: eliminamos los anteriores y añadimos los nuevos
         await connection.query("DELETE FROM agenda_meses WHERE id_rol = ?", [id]);
@@ -573,7 +589,95 @@ app.post('/api/confirmar-asistencia', async (req, res) => {
     }
 });
 
-/////////////////////////// FIN BACKEND PAGINA visitantes.html ////////////////////////////////////////
+/////////////////////////// BACKEND PAGINA salidas.html ////////////////////////////////////////
+/*ESTRUCTURA DE LA TABLA EN SQL:
+Tabla: salidas_discursar (Almacena el orador y los datos necesarios para sus salida a discursar)
+Columnas:
+  - id_registro: Tipo: INT NOT NULL Descipcion: (Dato proveniente de la tabla temas_orador, nos regresa el nombre del orador "id_orador", numero_tema, titulo y cancion sugerida)
+  - id_rol: Tipo INT Descripcion: Se relaciona con la tabla agenda y nos dice a cual rol pertenece la salida.
+  - fecha_salida: Tipo DATE Descripcion: Nos indica la fecha programada para la salida a discursar.
+  - id_orador: Tipo INT Descripcion: se relaciona con tabla oradores, nos da los datos del discursante
+*/
+
+// Ruta para obtener programación de salidas (JOIN relacional)
+app.get('/api/salidas-programacion', async (req, res) => {
+    const { mes, anio } = req.query;
+    try {
+        const query = `
+            SELECT 
+                s.id_registro, s.id_rol, s.fecha_salida, s.id_orador,
+                o.nombre AS nombre_orador,
+                t.numero_tema AS num_bosquejo,
+                t.titulo AS tema,
+                t.cancion_sugerida AS cancion
+            FROM salidas_discursar s
+            JOIN oradores o ON s.id_orador = o.id_orador
+            JOIN temas_orador t ON s.id_registro = t.id_registro
+            WHERE MONTH(s.fecha_salida) = ? AND YEAR(s.fecha_salida) = ?
+        `;
+        const [rows] = await pool.query(query, [parseInt(mes) + 1, anio]);
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Ruta para guardar/actualizar programación de salidas
+app.post('/api/salidas-programacion', async (req, res) => {
+    const { mes, anio, programacion } = req.body;
+    const connection = await pool.getConnection();
+    try {
+        await connection.beginTransaction();
+        // Limpiar registros del mes para evitar duplicados
+        await connection.query(
+            "DELETE FROM salidas_discursar WHERE MONTH(fecha_salida) = ? AND YEAR(fecha_salida) = ?",
+            [parseInt(mes) + 1, anio]
+        );
+
+        const values = programacion.map(p => [
+            p.id_registro, p.id_rol, p.fecha_salida, p.id_orador
+        ]);
+
+        if (values.length > 0) {
+            const query = "INSERT INTO salidas_discursar (id_registro, id_rol, fecha_salida, id_orador) VALUES ?";
+            await connection.query(query, [values]);
+        }
+        await connection.commit();
+        res.json({ message: "Programación de salidas actualizada correctamente" });
+    } catch (err) {
+        await connection.rollback();
+        console.error('Error al guardar salidas:', err);
+        res.status(500).json({ error: err.message });
+    } finally { connection.release(); }
+});
+
+
+// Ruta para obtener el acuerdo confirmado para una salida específica (mes/año)
+app.get('/api/agenda/confirmada', async (req, res) => {
+    const { mes, anio } = req.query; // mes llega como 0-11 desde el frontend
+    try {
+        const query = `
+            SELECT a.id_rol, a.congregacion, a.fecha_ini, a.fecha_fin, a.notas, a.dia_rp, a.hora_reunion, d.nombre_dia
+            FROM agenda a
+            JOIN agenda_meses am ON a.id_rol = am.id_rol
+            LEFT JOIN dias_semana d ON a.dia_rp = d.id_dia
+            WHERE am.id_mes = ? 
+              AND (YEAR(a.fecha_ini) = ? OR YEAR(a.fecha_fin) = ?)
+              AND a.estatus = 1
+            LIMIT 1
+        `;
+        // En la BD los meses son 1-12, por eso sumamos 1 a 'mes'
+        const [rows] = await pool.query(query, [parseInt(mes) + 1, anio, anio]);
+        
+        // Si no hay resultados, devolvemos null de forma explícita
+        res.json(rows.length > 0 ? rows[0] : null);
+    } catch (err) {
+        console.error('Error al obtener rol confirmado:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+/////////////////////////// FIN BACKEND PAGINA salidas.html ////////////////////////////////////////
 
 // Iniciar el servidor
 app.listen(port, () => {
