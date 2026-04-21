@@ -249,6 +249,7 @@
               </form>
             </div>
             <div class="modal-footer">
+              <button type="button" id="clear-date-btn" class="btn btn-outline-danger me-auto">Borrar fecha</button>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
               <button type="button" id="save-date-btn" class="btn btn-primary">Guardar Cambios</button>
             </div>
@@ -523,6 +524,33 @@
           toast.show();
           toastElement.addEventListener('hidden.bs.toast', () => toastElement.remove());
         }
+
+        // Lógica para borrar la fecha (dejar como disponible)
+        document.getElementById('clear-date-btn').addEventListener('click', async () => {
+          const id = document.getElementById('edit-id').value;
+          
+          if (!confirm('¿Está seguro de que desea borrar la última fecha de presentación de este bosquejo?')) return;
+
+          try {
+            const response = await fetch(`http://localhost:3000/api/bosquejos/${id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ fecha_ult: null })
+            });
+
+            if (response.ok) {
+              const modalInstance = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+              modalInstance.hide();
+              showNotification('La fecha ha sido borrada. El bosquejo ahora aparece como disponible.', 'success');
+              fetchBosquejos(); // Recargar tabla
+            } else {
+              const errorData = await response.json();
+              showNotification(errorData.error || 'Error al intentar borrar la fecha', 'danger', response.status);
+            }
+          } catch (error) {
+            showNotification('Error de conexión con el servidor.', 'danger', 'FETCH_ERROR');
+          }
+        });
 
         // Guardar cambios
         document.getElementById('save-date-btn').addEventListener('click', async () => {
