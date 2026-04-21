@@ -677,6 +677,57 @@ app.get('/api/agenda/confirmada', async (req, res) => {
     }
 });
 
+// Endpoint para el dashboard: Obtener el visitante de la semana actual
+app.get('/api/dashboard/visitante-semana', async (req, res) => {
+    try {
+        const query = `
+            SELECT nombre, tema, fecha_discurso 
+            FROM oradores_visitantes 
+            WHERE YEARWEEK(fecha_discurso, 1) = YEARWEEK(CURDATE(), 1)
+            LIMIT 1
+        `;
+        const [rows] = await pool.query(query);
+        res.json(rows.length > 0 ? rows[0] : null);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Endpoint para el dashboard: Obtener la salida de la semana actual
+app.get('/api/dashboard/salida-semana', async (req, res) => {
+    try {
+        const query = `
+            SELECT o.nombre, t.titulo, s.fecha_salida
+            FROM salidas_discursar s
+            JOIN oradores o ON s.id_orador = o.id_orador
+            JOIN temas_orador t ON s.id_registro = t.id_registro
+            WHERE YEARWEEK(s.fecha_salida, 1) = YEARWEEK(CURDATE(), 1)
+            LIMIT 1
+        `;
+        const [rows] = await pool.query(query);
+        res.json(rows.length > 0 ? rows[0] : null);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Endpoint para el dashboard: Obtener los últimos 5 discursos presentados
+app.get('/api/dashboard/ultimos-discursos', async (req, res) => {
+    try {
+        const query = `
+            SELECT num, titulo, fecha_ult 
+            FROM lista_bosquejos 
+            WHERE fecha_ult IS NOT NULL 
+            ORDER BY fecha_ult DESC 
+            LIMIT 5
+        `;
+        const [rows] = await pool.query(query);
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 /////////////////////////// FIN BACKEND PAGINA salidas.html ////////////////////////////////////////
 
 // Iniciar el servidor
