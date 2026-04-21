@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>AdminLTE v4 | Dashboard</title>
+    <title>Discursapp | Dashboard</title>
 
     <!--begin::Accessibility Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
@@ -664,7 +664,7 @@
 
           // Configuración de encabezado
           doc.setFontSize(16);
-          doc.setTextColor(31, 48, 86); // Color corporativo #1F3056
+          doc.setTextColor(0, 119, 182); // Color corporativo #0077B6
           doc.text('REGISTRO DE ORADORES LOCALES Y TEMAS', 105, 15, { align: 'center' });
           
           doc.setFontSize(10);
@@ -724,7 +724,7 @@
             head: [['Orador', 'Privilegio', 'Núm.', 'Título del Discurso', 'Canción']],
             body: tableRows,
             theme: 'grid',
-            headStyles: { fillColor: [31, 48, 86], textColor: [255, 255, 255], fontStyle: 'bold' },
+            headStyles: { fillColor: [0, 119, 182], textColor: [255, 255, 255], fontStyle: 'bold' },
             styles: { fontSize: 10, cellPadding: 3, valign: 'middle', lineColor: [0, 0, 0], lineWidth: 0 },
             columnStyles: {
               0: { cellWidth: 40, fontStyle: 'bold' },
@@ -737,7 +737,7 @@
                 const groupIdx = oratorGroupTracking[data.row.index];
                 // Aplicar fondo gris muy tenue a oradores impares para generar contraste de grupos
                 if (groupIdx % 2 !== 0) {
-                  data.cell.styles.fillColor = [235, 235, 235];
+                  data.cell.styles.fillColor = [202, 240, 248];
                 }
               }
             },

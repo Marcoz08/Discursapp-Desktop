@@ -3,7 +3,7 @@
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>AdminLTE v4 | Dashboard</title>
+    <title>Discursapp | Dashboard</title>
 
     <!--begin::Accessibility Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
@@ -603,7 +603,7 @@
 
             // Título y encabezado por mes con posición dinámica usando currentY
             doc.setFontSize(16);
-            doc.setTextColor(31, 48, 86);
+            doc.setTextColor(0, 119, 182);
             doc.text(`PROGRAMA DE DISCURSOS PÚBLICOS - ${mesesNombres[mes]} ${anio}`, 105, currentY, { align: 'center' });
             
             doc.setFontSize(11);
@@ -616,8 +616,9 @@
               head: [['Discursante', 'Núm.', 'Título del Discurso', 'Cant.', 'Congregación', 'Fecha']],
               body: tableRows,
               theme: 'grid',
-              headStyles: { fillColor: [31, 48, 86], textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center' },
+              headStyles: { fillColor: [0, 119, 182], textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center' },
               styles: { fontSize: 10, cellPadding: 4, valign: 'middle' },
+              alternateRowStyles: { fillColor: [202, 240, 248] },
               columnStyles: {
                 1: { halign: 'center', cellWidth: 15 },
                 3: { halign: 'center', cellWidth: 15 },
