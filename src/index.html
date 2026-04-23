@@ -3,7 +3,7 @@
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Discursapp | Dashboard</title>
+    <title>DiscursApp | Dashboard</title>
 
     <!--begin::Accessibility Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
@@ -13,25 +13,22 @@
     <!--end::Accessibility Meta Tags-->
 
     <!--begin::Primary Meta Tags-->
-    <meta name="title" content="Administrador de roles de discursos" />
-    <meta name="author" content="Marco Antonio Zatarain" />
+    <meta name="title" content="DiscursApp | Dashboard" />
+    <meta name="author" content="MarcoZ" />
     <meta
       name="description"
-      content="Aplicación web diseñada para asistir el manejo de los discursos públicos dentro de las congregaciones de los Testigos de Jehova"
+      content="DiscursApp - Sistema de gestión y coordinación de discursos. Basado en AdminLTE v4."
     />
     <meta
       name="keywords"
-      content="coordinar discursos, agenda de roles, discursos públicos, visitas entre congregaciones"
+      content="discursos, coordinación, oratoria, discursapp, admin dashboard, gestión"
     />
     <!--end::Primary Meta Tags-->
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../assets/discursapp_favicon.ico" />
 
     <!--begin::Accessibility Features-->
     <!-- Skip links will be dynamically added by accessibility.js -->
     <meta name="supported-color-schemes" content="light dark" />
-    <link rel="preload" href="../css/adminlte.css" as="style" />
+    <link rel="preload" href="./css/adminlte.css" as="style" />
     <!--end::Accessibility Features-->
 
     <!--begin::Fonts-->
@@ -62,8 +59,24 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
 
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="../css/adminlte.css" />
+    <link rel="stylesheet" href="./css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
+
+    <!-- apexcharts -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
+      integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
+      crossorigin="anonymous"
+    />
+
+    <!-- jsvectormap -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
+      integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4="
+      crossorigin="anonymous"
+    />
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -71,7 +84,7 @@
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
       <!--begin::Header-->
-      <nav class="app-header navbar navbar-expand" style="background-color: #fbfbfb;">
+      <nav class="app-header navbar navbar-expand bg-body">
         <!--begin::Container-->
         <div class="container-fluid">
           <!--begin::Start Navbar Links-->
@@ -98,7 +111,7 @@
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
             <img
-              src="../assets/img/AdminLTELogo.png"
+              src="./assets/img/AdminLTELogo.png"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
             />
@@ -123,37 +136,37 @@
               id="navigation"
             >
               <li class="nav-item">
-                <a href="./index.html" class="nav-link active">
+                <a href="./dist/index.html" class="nav-link active">
                   <i class="nav-icon bi bi-house-door-fill"></i>
                   <p>Dashboard</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="./registros.html" class="nav-link">
+                <a href="./src/pages/registros.html" class="nav-link">
                   <i class="nav-icon bi bi-card-list"></i>
                   <p>Registro de bosquejos</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="./visitantes.html" class="nav-link">
+                <a href="./index.html" class="nav-link">
                   <i class="nav-icon bi bi-journal-bookmark-fill"></i>
                   <p>Nos visitan</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="./salidas.html" class="nav-link">
+                <a href="./index.html" class="nav-link">
                   <i class="nav-icon bi bi-arrow-up-right-square-fill"></i>
                   <p>Salidas</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="./agenda.html" class="nav-link">
+                <a href="./index.html" class="nav-link">
                   <i class="nav-icon bi bi-calendar-check-fill"></i>
                   <p>Agenda de roles</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="./oradores.html" class="nav-link">
+                <a href="./index.html" class="nav-link">
                   <i class="nav-icon bi bi-people-fill"></i>
                   <p>Oradores locales</p>
                 </a>
@@ -192,58 +205,33 @@
         <div class="app-content">
           <!--begin::Container-->
           <div class="container-fluid">
-            <!--begin::Row: Información de la semana -->
-            <div class="row">
-              <div class="col-lg-6 col-12">
-                <!-- Tarjeta Visitante -->
-                <div class="small-box text-bg-info">
-                  <div class="inner">
-                    <p class="mb-1"><i class="bi bi-geo-fill me-1"></i> Nos visita esta semana:</p>
-                    <h3 id="week-visitor-name" class="fs-2">Cargando...</h3>
-                    <p id="week-visitor-theme" class="text-truncate" style="max-width: 90%;">--</p>
-                  </div>
-                  <div class="small-box-icon">
-                    <i class="bi bi-person-video3"></i>
-                  </div>
-                  <a href="./visitantes.html" class="small-box-footer link-light link-underline-opacity-0">
-                    Ver programa de visitas <i class="bi bi-arrow-right-circle ms-1"></i>
-                  </a>
-                </div>
-              </div>
-              <div class="col-lg-6 col-12">
-                <!-- Tarjeta Salida -->
-                <div class="small-box" style="background-color: #6610f2; color: white;">
-                  <div class="inner">
-                    <p class="mb-1"><i class="bi bi-arrow-up-right-circle-fill me-1"></i> Sale a discursar:</p>
-                    <h3 id="week-exit-name" class="fs-2">Cargando...</h3>
-                    <p id="week-exit-theme" class="text-truncate" style="max-width: 90%;">--</p>
-                  </div>
-                  <div class="small-box-icon">
-                    <i class="bi bi-megaphone-fill"></i>
-                  </div>
-                  <a href="./salidas.html" class="small-box-footer link-light link-underline-opacity-0">
-                    Ver registro de salidas <i class="bi bi-arrow-right-circle ms-1"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <!--end::Row-->
-            <!--begin::Row: Rol status -->
+            <!--begin::Row-->
             <div class="row">
               <!--begin::Col-->
               <div class="col-lg-3 col-6">
                 <!--begin::Small Box Widget 1-->
                 <div class="small-box text-bg-primary">
                   <div class="inner">
-                    <h3 id="current-role-cong">Cargando...</h3>
-                    <p id="current-role-label">Rol actual</p>
+                    <h3>150</h3>
+
+                    <p>New Orders</p>
                   </div>
-                  <i class="small-box-icon bi bi-calendar-event-fill"></i>
+                  <svg
+                    class="small-box-icon"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"
+                    ></path>
+                  </svg>
                   <a
-                    href="./agenda.html"
+                    href="#"
                     class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
                   >
-                    Ver agenda <i class="bi bi-link-45deg"></i>
+                    More info <i class="bi bi-link-45deg"></i>
                   </a>
                 </div>
                 <!--end::Small Box Widget 1-->
@@ -253,15 +241,26 @@
                 <!--begin::Small Box Widget 2-->
                 <div class="small-box text-bg-success">
                   <div class="inner">
-                    <h3 id="next-role-cong">Cargando...</h3>
-                    <p id="next-role-label">Rol Siguiente</p>
+                    <h3>53<sup class="fs-5">%</sup></h3>
+
+                    <p>Bounce Rate</p>
                   </div>
-                  <i class="small-box-icon bi bi-calendar-week-fill"></i>
+                  <svg
+                    class="small-box-icon"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M18.375 2.25c-1.035 0-1.875.84-1.875 1.875v15.75c0 1.035.84 1.875 1.875 1.875h.75c1.035 0 1.875-.84 1.875-1.875V4.125c0-1.036-.84-1.875-1.875-1.875h-.75zM9.75 8.625c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-.75a1.875 1.875 0 01-1.875-1.875V8.625zM3 13.125c0-1.036.84-1.875 1.875-1.875h.75c1.036 0 1.875.84 1.875 1.875v6.75c0 1.035-.84 1.875-1.875 1.875h-.75A1.875 1.875 0 013 19.875v-6.75z"
+                    ></path>
+                  </svg>
                   <a
-                    href="./agenda.html"
+                    href="#"
                     class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
                   >
-                    Ver agenda <i class="bi bi-link-45deg"></i>
+                    More info <i class="bi bi-link-45deg"></i>
                   </a>
                 </div>
                 <!--end::Small Box Widget 2-->
@@ -271,15 +270,26 @@
                 <!--begin::Small Box Widget 3-->
                 <div class="small-box text-bg-warning">
                   <div class="inner">
-                    <h3 id="total-speakers">--</h3>
-                    <p>Discursantes locales</p>
+                    <h3>44</h3>
+
+                    <p>User Registrations</p>
                   </div>
-                  <i class="small-box-icon bi bi-people-fill"></i>
+                  <svg
+                    class="small-box-icon"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M6.25 6.375a4.125 4.125 0 118.25 0 4.125 4.125 0 01-8.25 0zM3.25 19.125a7.125 7.125 0 0114.25 0v.003l-.001.119a.75.75 0 01-.363.63 13.067 13.067 0 01-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 01-.364-.63l-.001-.122zM19.75 7.5a.75.75 0 00-1.5 0v2.25H16a.75.75 0 000 1.5h2.25v2.25a.75.75 0 001.5 0v-2.25H22a.75.75 0 000-1.5h-2.25V7.5z"
+                    ></path>
+                  </svg>
                   <a
-                    href="./oradores.html"
+                    href="#"
                     class="small-box-footer link-dark link-underline-opacity-0 link-underline-opacity-50-hover"
                   >
-                    Ver detalles <i class="bi bi-link-45deg"></i>
+                    More info <i class="bi bi-link-45deg"></i>
                   </a>
                 </div>
                 <!--end::Small Box Widget 3-->
@@ -289,15 +299,33 @@
                 <!--begin::Small Box Widget 4-->
                 <div class="small-box text-bg-danger">
                   <div class="inner">
-                    <h3 id="total-bosquejos">--</h3>
-                    <p>Bosquejos en catálogo</p>
+                    <h3>65</h3>
+
+                    <p>Unique Visitors</p>
                   </div>
-                  <i class="small-box-icon bi bi-book-fill"></i>
+                  <svg
+                    class="small-box-icon"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      fill-rule="evenodd"
+                      d="M2.25 13.5a8.25 8.25 0 018.25-8.25.75.75 0 01.75.75v6.75H18a.75.75 0 01.75.75 8.25 8.25 0 01-16.5 0z"
+                    ></path>
+                    <path
+                      clip-rule="evenodd"
+                      fill-rule="evenodd"
+                      d="M12.75 3a.75.75 0 01.75-.75 8.25 8.25 0 018.25 8.25.75.75 0 01-.75.75h-7.5a.75.75 0 01-.75-.75V3z"
+                    ></path>
+                  </svg>
                   <a
-                    href="./registros.html"
+                    href="#"
                     class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
                   >
-                    Ver registros <i class="bi bi-link-45deg"></i>
+                    More info <i class="bi bi-link-45deg"></i>
                   </a>
                 </div>
                 <!--end::Small Box Widget 4-->
@@ -305,44 +333,67 @@
               <!--end::Col-->
             </div>
             <!--end::Row-->
-            <!--begin::Row: Últimos discursos presentados -->
+            <!--begin::Row-->
             <div class="row">
-              <div class="col-lg-9 col-12">
-                <div class="card shadow-sm mb-4">
-                  <div class="card-header border-0 py-3">
-                    <h3 class="card-title fw-bold text-secondary">
-                      <i class="bi bi-clock-history me-2"></i>Últimos discursos presentados
-                    </h3>
+              <!-- Start col -->
+              <div class="col-lg-7 connectedSortable">
+                <div class="card mb-4">
+                  <div class="card-header">
+                    <h3 class="card-title">Sales Value</h3>
                   </div>
-                  <div class="card-body p-0">
-                    <div class="table-responsive">
-                      <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                          <tr>
-                            <th style="width: 80px;" class="text-center">Núm.</th>
-                            <th>Título del Discurso</th>
-                            <th style="width: 180px;">Fecha de presentación</th>
-                          </tr>
-                        </thead>
-                        <tbody id="recent-speeches-body">
-                          <tr>
-                            <td colspan="3" class="text-center p-4">
-                              <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Cargando...</span>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+
+                  <div class="card-body">
+                    <div id="revenue-chart"></div>
+                  </div>
+                </div>
+                <!-- /.card -->
+              </div>
+              <!-- /.Start col -->
+
+              <!-- Start col -->
+              <div class="col-lg-5 connectedSortable">
+                <div class="card text-white bg-primary bg-gradient border-primary mb-4">
+                  <div class="card-header border-0">
+                    <h3 class="card-title">Sales Value</h3>
+                    <div class="card-tools">
+                      <button
+                        type="button"
+                        class="btn btn-primary btn-sm"
+                        data-lte-toggle="card-collapse"
+                      >
+                        <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
+                        <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
+                      </button>
                     </div>
                   </div>
-                  <div class="card-footer bg-white text-end">
-                    <a href="./registros.html" class="small text-decoration-none">Ver historial completo <i class="bi bi-arrow-right ms-1"></i></a>
+                  <div class="card-body">
+                    <div id="world-map" style="height: 220px"></div>
+                  </div>
+                  <div class="card-footer border-0">
+                    <!--begin::Row-->
+                    <div class="row">
+                      <div class="col-4 text-center">
+                        <div id="sparkline-1" class="text-dark"></div>
+                        <div class="text-white">Visitors</div>
+                      </div>
+                      <div class="col-4 text-center">
+                        <div id="sparkline-2" class="text-dark"></div>
+                        <div class="text-white">Online</div>
+                      </div>
+                      <div class="col-4 text-center">
+                        <div id="sparkline-3" class="text-dark"></div>
+                        <div class="text-white">Sales</div>
+                      </div>
+                    </div>
+                    <!--end::Row-->
                   </div>
                 </div>
               </div>
+              <!-- /.Start col -->
             </div>
-            <!--end::Row-->
+            <!-- /.row (main row) -->
+          </div>
+          <!--end::Container-->
         </div>
         <!--end::App Content-->
       </main>
@@ -384,7 +435,7 @@
       crossorigin="anonymous"
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
-    <script src="../js/adminlte.js"></script>
+    <script src="./js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
@@ -415,125 +466,6 @@
       });
     </script>
     <!--end::OverlayScrollbars Configure-->
-
-    <script>
-      document.addEventListener('DOMContentLoaded', async function () {
-        const currentYear = new Date().getFullYear();
-        
-        // Actualizar estadísticas generales (Oradores y Bosquejos)
-        async function updateStats() {
-          try {
-            const [resOradores, resBosquejos] = await Promise.all([
-              fetch('http://localhost:3000/api/oradores-temas'),
-              fetch('http://localhost:3000/api/bosquejos')
-            ]);
-
-            if (resOradores.ok) {
-              const data = await resOradores.json();
-              // Contamos oradores únicos por ID
-              const unique = new Set(data.filter(o => o.aprobado === 1).map(o => o.id_orador)).size;
-              document.getElementById('total-speakers').textContent = unique;
-            }
-            if (resBosquejos.ok) {
-              const data = await resBosquejos.json();
-              document.getElementById('total-bosquejos').textContent = data.length;
-            }
-          } catch (e) { console.error('Error stats:', e); }
-        }
-
-        // Actualizar información de roles (Actual y Siguiente)
-        async function updateRoles() {
-          try {
-            const response = await fetch(`http://localhost:3000/api/agenda?anio=${currentYear}`);
-            const agenda = await response.json();
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            // Rol Actual: hoy está dentro del rango de fechas
-            const current = agenda.find(item => {
-              const start = new Date(item.fecha_ini);
-              const end = new Date(item.fecha_fin);
-              return today >= start && today <= end;
-            });
-
-            // Siguiente Rol: primera fecha de inicio en el futuro
-            const next = agenda.find(item => new Date(item.fecha_ini) > today);
-
-            document.getElementById('current-role-cong').textContent = current ? current.congregacion : "Sin rol activo";
-            document.getElementById('next-role-cong').textContent = next ? next.congregacion : "Sin programación";
-          } catch (e) { 
-            console.error('Error roles:', e);
-          }
-        }
-
-        // Actualizar tarjetas de la semana (Visitante y Salida)
-        async function updateWeeklyCards() {
-          try {
-            const [resVisitor, resExit] = await Promise.all([
-              fetch('http://localhost:3000/api/dashboard/visitante-semana'),
-              fetch('http://localhost:3000/api/dashboard/salida-semana')
-            ]);
-
-            if (resVisitor.ok) {
-              const data = await resVisitor.json();
-              document.getElementById('week-visitor-name').textContent = data ? data.nombre : "Sin visita";
-              document.getElementById('week-visitor-theme').textContent = data ? `TEMA: ${data.tema}` : "No hay orador programado para esta semana.";
-            }
-
-            if (resExit.ok) {
-              const data = await resExit.json();
-              document.getElementById('week-exit-name').textContent = data ? data.nombre : "Sin salida";
-              document.getElementById('week-exit-theme').textContent = data ? `TEMA: ${data.titulo}` : "Ningún orador local sale esta semana.";
-            }
-          } catch (e) {
-            console.error('Error al cargar info semanal:', e);
-            document.getElementById('week-visitor-name').textContent = "Error";
-            document.getElementById('week-exit-name').textContent = "Error";
-          }
-        }
-
-        // Actualizar tabla de últimos discursos
-        async function updateRecentSpeeches() {
-          const container = document.getElementById('recent-speeches-body');
-          container.innerHTML = `
-            <tr>
-              <td colspan="3" class="text-center p-4">
-                <div class="spinner-border text-primary" role="status"></div>
-              </td>
-            </tr>`;
-          try {
-            const response = await fetch('http://localhost:3000/api/dashboard/ultimos-discursos');
-            if (response.ok) {
-              const data = await response.json();
-              container.innerHTML = '';
-              
-              if (data.length === 0) {
-                container.innerHTML = '<tr><td colspan="3" class="text-center p-4 text-muted italic">No hay registros de presentaciones recientes.</td></tr>';
-                return;
-              }
-
-              data.forEach(item => {
-                const d = new Date(item.fecha_ult);
-                const dateStr = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0].split('-').reverse().join('-');
-                
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                  <td class="text-center fw-bold text-primary">${item.num}</td>
-                  <td>${item.titulo}</td>
-                  <td class="text-secondary"><i class="bi bi-calendar-check me-2"></i>${dateStr}</td>
-                `;
-                container.appendChild(tr);
-              });
-            }
-          } catch (e) { console.error('Error al cargar discursos recientes:', e); }
-        }
-
-        updateStats();
-        updateRoles();
-        updateWeeklyCards();
-        updateRecentSpeeches();
-      });
-    </script>
 
     <!-- OPTIONAL SCRIPTS -->
 

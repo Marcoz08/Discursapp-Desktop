@@ -41,7 +41,8 @@ ad.js
 CLAUDE.md
 github-issue-response.md
 
-# Bases de datos locales
+# Bases de datos y configuraciones locales
 *.sqlite
 *.sqlite3
 *.db
+.env
