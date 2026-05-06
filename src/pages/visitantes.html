@@ -26,7 +26,7 @@
     <!--end::Primary Meta Tags-->
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="../assets/discursapp_favicon.ico" />
 
     <!--begin::Accessibility Features-->
     <!-- Skip links will be dynamically added by accessibility.js -->
@@ -98,9 +98,11 @@
           <a href="./index.html" class="brand-link">
             <!--begin::Brand Image-->
             <img
-              src="../assets/img/AdminLTELogo.png"
+              src="../assets/logo_discursapp_blanco.svg"
               alt="AdminLTE Logo"
               class="brand-image opacity-75 shadow"
+              width="32"
+              height="32"
             />
             <!--end::Brand Image-->
             <!--begin::Brand Text-->
@@ -359,7 +361,7 @@
                   <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="11" id="pdf-m11"><label class="form-check-label" for="pdf-m11">Dic</label></div></div>
                 </div>
                 <div class="mt-3 text-end">
-                   <button type="button" id="btn-pdf-select-all" class="btn btn-xs btn-link p-0 text-decoration-none">Seleccionar todos</button>
+                  <button type="button" id="btn-pdf-select-all" class="btn btn-xs btn-link p-0 text-decoration-none">Seleccionar todos</button>
                 </div>
               </div>
               <div class="modal-footer">
@@ -394,8 +396,9 @@
       <!--end::App Main-->
 
       <!--begin::Footer-->
-      <footer class="app-footer text-center">
+      <footer class="app-footer">
         <!--begin::To the end-->
+        <div class="float-end d-none d-sm-inline">v1.0.0</div>
         <!--end::To the end-->
         <!--begin::Copyright-->
         <strong>
@@ -476,6 +479,18 @@
         const congEl = document.getElementById('local-congregacion');
         const tablaVisitasBody = document.getElementById('tabla-visitas-body');
         let bosquejosList = []; // Almacenará la lista de bosquejos para el autocompletado
+        
+        // Mapeo constante para asignar identificadores a los dias de la semana
+        const diasSemanaMap = {
+          1: 'Lunes',
+          2: 'Martes',
+          3: 'Miércoles',
+          4: 'Jueves',
+          5: 'Viernes',
+          6: 'Sábado',
+          7: 'Domingo'
+        };
+
         let currentLocalData = null;
         let isEditingProgram = false;
 
@@ -908,21 +923,17 @@
           }
         }
 
-        async function fetchDays() {
-          try {
-            const response = await fetch('http://localhost:3000/api/dias-semana');
-            const days = await response.json();
-            const select = document.getElementById('edit-local-dia');
-            select.innerHTML = days.map(d => `<option value="${d.id_dia}">${d.nombre_dia}</option>`).join('');
-          } catch (error) {
-            console.error('Error cargando días:', error);
-          }
+        function fetchDays() {
+          const select = document.getElementById('edit-local-dia');
+          select.innerHTML = Object.entries(diasSemanaMap)
+            .map(([id, nombre]) => `<option value="${id}">${nombre}</option>`)
+            .join('');
         }
 
         document.getElementById('btn-edit-local').addEventListener('click', async () => {
           if (!currentLocalData) return;
           
-          await fetchDays();
+          fetchDays();
           
           document.getElementById('edit-local-id').value = currentLocalData.id_reunion;
           document.getElementById('edit-local-dia').value = currentLocalData.dia_rp;

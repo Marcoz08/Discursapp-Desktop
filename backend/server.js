@@ -25,13 +25,35 @@ Columnas:
 app.use(cors()); // Habilita CORS para que tu navegador no bloquee las peticiones al API
 app.use(bodyParser.json()); // Configura el servidor para entender datos en formato JSON
 
-// Conexión a la base de datos MySQL en Railway
-const dbUrl = process.env.DATABASE_URL;
+// --- CONFIGURACIÓN DE CONEXIÓN (Manual) ---
 
-// Creamos un "pool" de conexiones. Es más eficiente que una conexión única porque reutiliza conexiones abiertas.
-const pool = mysql.createPool(dbUrl);
+// OPCIÓN A: Localhost (XAMPP)
+const dbConfig = {
+    host: 'localhost',
+    user: 'root',
+    password: '', // Sin contraseña según tu configuración
+    database: 'discursapp',
+    port: 3306
+};
 
-console.log('Servidor configurado para conectar a la base de datos en la nube.');
+// OPCIÓN B: Railway (Producción) - Descomenta para usar en la nube
+// const dbConfig = process.env.DATABASE_URL;
+
+const pool = mysql.createPool(dbConfig);
+// -------------------------------------------
+
+// Mapeo constante de días de la semana para evitar JOINs con tablas innecesarias
+const diasSemanaMap = {
+    1: 'Lunes',
+    2: 'Martes',
+    3: 'Miércoles',
+    4: 'Jueves',
+    5: 'Viernes',
+    6: 'Sábado',
+    7: 'Domingo'
+};
+
+console.log(typeof dbConfig === 'string' ? '🔌 Servidor en modo: PRODUCCIÓN (Railway)' : '💻 Servidor en modo: LOCAL (XAMPP)');
 
 // Rutas API
 
@@ -306,27 +328,14 @@ Columnas:
 // Ruta para obtener los datos de la reunión local
 app.get('/api/reunion-local', async (req, res) => {
     try {
-        const query = `
-            SELECT r.id_reunion, r.dia_rp, r.hora_reunion, r.congregacion, d.nombre_dia 
-            FROM reuniones r 
-            JOIN dias_semana d ON r.dia_rp = d.id_dia 
-            LIMIT 1;
-        `;
-        const [rows] = await pool.query(query);
+        const [rows] = await pool.query("SELECT * FROM reuniones LIMIT 1");
         if (rows.length === 0) return res.status(404).json({ error: "Configuración de reunión no encontrada" });
+        
+        // Añadimos el nombre del día dinámicamente desde el mapa
+        rows[0].nombre_dia = diasSemanaMap[rows[0].dia_rp] || "No definido";
         res.json(rows[0]);
     } catch (err) {
         console.error('Error al obtener reunión local:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
-
-// Ruta para obtener todos los días de la semana (para el dropdown)
-app.get('/api/dias-semana', async (req, res) => {
-    try {
-        const [rows] = await pool.query("SELECT * FROM dias_semana ORDER BY id_dia ASC");
-        res.json(rows);
-    } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
@@ -660,10 +669,9 @@ app.get('/api/agenda/confirmada', async (req, res) => {
     const { mes, anio } = req.query; // mes llega como 0-11 desde el frontend
     try {
         const query = `
-            SELECT a.id_rol, a.congregacion, a.fecha_ini, a.fecha_fin, a.notas, a.dia_rp, a.hora_reunion, d.nombre_dia
+            SELECT a.id_rol, a.congregacion, a.fecha_ini, a.fecha_fin, a.notas, a.dia_rp, a.hora_reunion
             FROM agenda a
             JOIN agenda_meses am ON a.id_rol = am.id_rol
-            LEFT JOIN dias_semana d ON a.dia_rp = d.id_dia
             WHERE am.id_mes = ? 
               AND (YEAR(a.fecha_ini) = ? OR YEAR(a.fecha_fin) = ?)
               AND a.estatus = 1
@@ -671,6 +679,10 @@ app.get('/api/agenda/confirmada', async (req, res) => {
         `;
         // En la BD los meses son 1-12, por eso sumamos 1 a 'mes'
         const [rows] = await pool.query(query, [parseInt(mes) + 1, anio, anio]);
+
+        if (rows.length > 0) {
+            rows[0].nombre_dia = diasSemanaMap[rows[0].dia_rp] || "No definido";
+        }
         
         // Si no hay resultados, devolvemos null de forma explícita
         res.json(rows.length > 0 ? rows[0] : null);
