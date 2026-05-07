@@ -1,7 +1,7 @@
 {
   "name": "discursapp",
   "description": "Aplicación web para coordinar discursos",
-  "version": "1.0.0",
+  "version": "1.2.0c",
   "type": "module",
   "main": "backend/server.js",
   "scripts": {
