@@ -6,10 +6,21 @@
     <title>Discursapp | Dashboard</title>
 
     <!--begin::Accessibility Meta Tags-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
     <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
+    <meta
+      name="theme-color"
+      content="#007bff"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#1a1a1a"
+      media="(prefers-color-scheme: dark)"
+    />
     <!--end::Accessibility Meta Tags-->
 
     <!--begin::Primary Meta Tags-->
@@ -26,7 +37,11 @@
     <!--end::Primary Meta Tags-->
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../assets/discursapp_favicon.ico" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="../assets/discursapp_favicon.ico"
+    />
 
     <!--begin::Accessibility Features-->
     <!-- Skip links will be dynamically added by accessibility.js -->
@@ -64,6 +79,9 @@
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
+    <!--begin::Theme Manager-->
+    <script src="../js/theme.js"></script>
+    <!--end::Theme Manager-->
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -77,7 +95,12 @@
           <!--begin::Start Navbar Links-->
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+              <a
+                class="nav-link"
+                data-lte-toggle="sidebar"
+                href="#"
+                role="button"
+              >
                 <i class="bi bi-list"></i>
               </a>
             </li>
@@ -91,7 +114,11 @@
       </nav>
       <!--end::Header-->
       <!--begin::Sidebar-->
-      <aside class="app-sidebar shadow" data-bs-theme="dark" style="background-color: #1F3056;">
+      <aside
+        class="app-sidebar shadow"
+        data-bs-theme="dark"
+        style="background-color: #1f3056"
+      >
         <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
@@ -160,7 +187,19 @@
                   <p>Oradores locales</p>
                 </a>
               </li>
-                                        
+              <li
+                class="nav-item mt-auto"
+                style="
+                  border-top: 3px solid rgba(255, 255, 255, 0.1);
+                  padding-top: 0.5rem;
+                  margin-top: 1rem;
+                "
+              >
+                <a href="./configuracion.html" class="nav-link">
+                  <i class="nav-icon bi bi-gear-fill"></i>
+                  <p>Configuración</p>
+                </a>
+              </li>
             </ul>
             <!--end::Sidebar Menu-->
           </nav>
@@ -177,12 +216,16 @@
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-6">
-                <h2 class="mb-0"><strong>Programa de discursantes visitantes</strong></h2>
+                <h2 class="mb-0">
+                  <strong>Programa de discursantes visitantes</strong>
+                </h2>
               </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">visitantes</li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    visitantes
+                  </li>
                 </ol>
               </div>
             </div>
@@ -201,45 +244,70 @@
                 <div class="card card-outline card-primary mb-4 shadow-sm">
                   <div class="card-header border-0 pb-0">
                     <div class="card-tools">
-                      <button type="button" class="btn btn-tool" id="btn-edit-local" title="Editar reunión local">
+                      <button
+                        type="button"
+                        class="btn btn-tool"
+                        id="btn-edit-local"
+                        title="Editar reunión local"
+                      >
                         <i class="bi bi-pencil-fill"></i>
                       </button>
                     </div>
                   </div>
                   <div class="card-body p-3 pt-0">
-                    <h4 class="text-center"><strong>Reunión Pública</strong></h4>
-                    <p class="text-center text-muted">Información de la reunión de fin de semana</p>
+                    <h4 class="text-center">
+                      <strong>Reunión Pública</strong>
+                    </h4>
+                    <p class="text-center text-muted">
+                      Información de la reunión de fin de semana
+                    </p>
                     <div class="row align-items-center text-center">
                       <div class="col-md-4 border-end-md">
-                        <i class="bi bi-calendar-event-fill text-primary me-2"></i>
-                        <strong>Día:</strong> <span id="local-dia" class="ms-1">--</span>
+                        <i
+                          class="bi bi-calendar-event-fill text-primary me-2"
+                        ></i>
+                        <strong>Día:</strong>
+                        <span id="local-dia" class="ms-1">--</span>
                       </div>
                       <div class="col-md-4 border-end-md">
                         <i class="bi bi-clock-fill text-primary me-2"></i>
-                        <strong>Hora:</strong> <span id="local-hora" class="ms-1">--:--</span>
-                      </div>                      
+                        <strong>Hora:</strong>
+                        <span id="local-hora" class="ms-1">--:--</span>
+                      </div>
                       <div class="col-md-4">
                         <i class="bi bi-house-door-fill text-primary me-2"></i>
-                        <strong>Congregación:</strong> <span id="local-congregacion" class="ms-1">--</span>
+                        <strong>Congregación:</strong>
+                        <span id="local-congregacion" class="ms-1">--</span>
                       </div>
                     </div>
                   </div>
                 </div>
-                <p class="text-muted small"><i class="bi bi-info-circle me-1"></i> Use esta sección para verificar los datos de la reunión local antes de programar visitas.</p>
+                <p class="text-muted small">
+                  <i class="bi bi-info-circle me-1"></i> Use esta sección para
+                  verificar los datos de la reunión local antes de programar
+                  visitas.
+                </p>
               </div>
 
               <div class="col-12 mt-4">
                 <!-- Tabla de Visitas Mensuales (Estructura Visual) -->
                 <div class="card shadow-sm">
-                  <div class="card-header bg-white py-3">
+                  <div class="card-header bg-body py-3">
                     <div class="row align-items-center">
                       <div class="col-md-6">
                         <h3 class="card-title fw-bold text-primary">
-                          <i class="bi bi-calendar3 me-2"></i>Programación Mensual
+                          <i class="bi bi-calendar3 me-2"></i>Programación
+                          Mensual
                         </h3>
                       </div>
-                      <div class="col-md-6 d-flex justify-content-md-end gap-2 mt-2 mt-md-0">
-                        <select id="select-mes" class="form-select form-select-sm" style="width: 130px;">
+                      <div
+                        class="col-md-6 d-flex justify-content-md-end gap-2 mt-2 mt-md-0"
+                      >
+                        <select
+                          id="select-mes"
+                          class="form-select form-select-sm"
+                          style="width: 130px"
+                        >
                           <option value="0">Enero</option>
                           <option value="1">Febrero</option>
                           <option value="2">Marzo</option>
@@ -253,33 +321,50 @@
                           <option value="10">Noviembre</option>
                           <option value="11">Diciembre</option>
                         </select>
-                        <select id="select-anio" class="form-select form-select-sm" style="width: 100px;">
-                        </select>
-                        <button id="btn-export-pdf" class="btn btn-sm btn-outline-danger">
-                          <i class="bi bi-file-earmark-pdf-fill me-1"></i> Exportar a PDF
+                        <select
+                          id="select-anio"
+                          class="form-select form-select-sm"
+                          style="width: 100px"
+                        ></select>
+                        <button
+                          id="btn-export-pdf"
+                          class="btn btn-sm btn-outline-danger"
+                        >
+                          <i class="bi bi-file-earmark-pdf-fill me-1"></i>
+                          Exportar a PDF
                         </button>
-                        <button id="btn-edit-program" class="btn btn-sm btn-outline-primary">
+                        <button
+                          id="btn-edit-program"
+                          class="btn btn-sm btn-outline-primary"
+                        >
                           <i class="bi bi-pencil-fill me-1"></i> Editar
                         </button>
-                        <button id="btn-save-program" class="btn btn-sm btn-success" style="display: none;">
-                          <i class="bi bi-cloud-check-fill me-1"></i> Guardar Todo
+                        <button
+                          id="btn-save-program"
+                          class="btn btn-sm btn-success"
+                          style="display: none"
+                        >
+                          <i class="bi bi-cloud-check-fill me-1"></i> Guardar
+                          Todo
                         </button>
                       </div>
                     </div>
                   </div>
                   <div class="card-body p-0 table-responsive">
                     <table class="table table-hover align-middle mb-0">
-                      <thead class="table-light">
+                      <thead>
                         <tr>
-                          <th style="width: 20%;">Discursante</th>
-                          <th class="text-center" style="width: 8%;">Num.</th>
-                          <th style="width: 30%;">Título del Discurso</th>
-                          <th style="width: 40px;"></th>
-                          <th class="text-center" style="width: 8%;">Canción</th>
-                          <th style="width: 15%;">Congregación</th>
-                          <th class="text-center" style="width: 12%;">Hora</th>
-                          <th class="text-center" style="width: 12%;">Fecha</th>
-                          <th class="text-center" style="width: 10%;">Asistió</th>
+                          <th style="width: 20%">Discursante</th>
+                          <th class="text-center" style="width: 8%">Num.</th>
+                          <th style="width: 30%">Título del Discurso</th>
+                          <th style="width: 40px"></th>
+                          <th class="text-center" style="width: 8%">Canción</th>
+                          <th style="width: 15%">Congregación</th>
+                          <th class="text-center" style="width: 12%">Hora</th>
+                          <th class="text-center" style="width: 12%">Fecha</th>
+                          <th class="text-center" style="width: 10%">
+                            Asistió
+                          </th>
                         </tr>
                       </thead>
                       <tbody id="tabla-visitas-body">
@@ -297,77 +382,259 @@
         <!--end::App Content-->
 
         <!-- Modal para Editar Reunión Local -->
-        <div class="modal fade" id="editLocalModal" tabindex="-1" aria-labelledby="editLocalModalLabel" aria-hidden="true">
+        <div
+          class="modal fade"
+          id="editLocalModal"
+          tabindex="-1"
+          aria-labelledby="editLocalModalLabel"
+          aria-hidden="true"
+        >
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="editLocalModalLabel"><i class="bi bi-pencil-square me-2"></i>Editar reunión pública local</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="editLocalModalLabel">
+                  <i class="bi bi-pencil-square me-2"></i>Editar reunión pública
+                  local
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
               </div>
               <div class="modal-body">
                 <form id="editLocalForm">
-                  <input type="hidden" id="edit-local-id">
+                  <input type="hidden" id="edit-local-id" />
                   <div class="mb-3">
-                    <label for="edit-local-dia" class="form-label">Día de la reunión</label>
+                    <label for="edit-local-dia" class="form-label"
+                      >Día de la reunión</label
+                    >
                     <select class="form-select" id="edit-local-dia" required>
                       <!-- Se carga dinámicamente -->
                     </select>
                   </div>
                   <div class="mb-3">
                     <label for="edit-local-hora" class="form-label">Hora</label>
-                    <input type="time" class="form-control" id="edit-local-hora" required>
+                    <input
+                      type="time"
+                      class="form-control"
+                      id="edit-local-hora"
+                      required
+                    />
                   </div>
                   <div class="mb-3">
-                    <label for="edit-local-congregacion" class="form-label">Congregación</label>
-                    <input type="text" class="form-control" id="edit-local-congregacion" required>
+                    <label for="edit-local-congregacion" class="form-label"
+                      >Congregación</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="edit-local-congregacion"
+                      required
+                    />
                   </div>
                 </form>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" id="btn-save-local" class="btn btn-primary">Guardar Cambios</button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  id="btn-save-local"
+                  class="btn btn-primary"
+                >
+                  Guardar Cambios
+                </button>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Modal para Configurar Exportación PDF -->
-        <div class="modal fade" id="configPdfModal" tabindex="-1" aria-labelledby="configPdfModalLabel" aria-hidden="true">
+        <div
+          class="modal fade"
+          id="configPdfModal"
+          tabindex="-1"
+          aria-labelledby="configPdfModalLabel"
+          aria-hidden="true"
+        >
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header bg-danger text-white">
                 <h5 class="modal-title" id="configPdfModalLabel">
-                  <i class="bi bi-file-earmark-pdf-fill me-2"></i>Configurar documento
+                  <i class="bi bi-file-earmark-pdf-fill me-2"></i>Configurar
+                  documento
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
               </div>
               <div class="modal-body">
                 <div class="mb-3">
-                  <label for="pdf-select-anio" class="form-label fw-bold">Año a exportar</label>
+                  <label for="pdf-select-anio" class="form-label fw-bold"
+                    >Año a exportar</label
+                  >
                   <select id="pdf-select-anio" class="form-select"></select>
                 </div>
                 <label class="form-label fw-bold">Seleccione los meses:</label>
                 <div class="row g-2 mt-1" id="pdf-meses-checks">
-                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="0" id="pdf-m0"><label class="form-check-label" for="pdf-m0">Ene</label></div></div>
-                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="1" id="pdf-m1"><label class="form-check-label" for="pdf-m1">Feb</label></div></div>
-                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="2" id="pdf-m2"><label class="form-check-label" for="pdf-m2">Mar</label></div></div>
-                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="3" id="pdf-m3"><label class="form-check-label" for="pdf-m3">Abr</label></div></div>
-                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="4" id="pdf-m4"><label class="form-check-label" for="pdf-m4">May</label></div></div>
-                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="5" id="pdf-m5"><label class="form-check-label" for="pdf-m5">Jun</label></div></div>
-                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="6" id="pdf-m6"><label class="form-check-label" for="pdf-m6">Jul</label></div></div>
-                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="7" id="pdf-m7"><label class="form-check-label" for="pdf-m7">Ago</label></div></div>
-                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="8" id="pdf-m8"><label class="form-check-label" for="pdf-m8">Sep</label></div></div>
-                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="9" id="pdf-m9"><label class="form-check-label" for="pdf-m9">Oct</label></div></div>
-                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="10" id="pdf-m10"><label class="form-check-label" for="pdf-m10">Nov</label></div></div>
-                  <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="11" id="pdf-m11"><label class="form-check-label" for="pdf-m11">Dic</label></div></div>
+                  <div class="col-4 col-sm-3">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input pdf-month-check"
+                        type="checkbox"
+                        value="0"
+                        id="pdf-m0"
+                      /><label class="form-check-label" for="pdf-m0">Ene</label>
+                    </div>
+                  </div>
+                  <div class="col-4 col-sm-3">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input pdf-month-check"
+                        type="checkbox"
+                        value="1"
+                        id="pdf-m1"
+                      /><label class="form-check-label" for="pdf-m1">Feb</label>
+                    </div>
+                  </div>
+                  <div class="col-4 col-sm-3">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input pdf-month-check"
+                        type="checkbox"
+                        value="2"
+                        id="pdf-m2"
+                      /><label class="form-check-label" for="pdf-m2">Mar</label>
+                    </div>
+                  </div>
+                  <div class="col-4 col-sm-3">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input pdf-month-check"
+                        type="checkbox"
+                        value="3"
+                        id="pdf-m3"
+                      /><label class="form-check-label" for="pdf-m3">Abr</label>
+                    </div>
+                  </div>
+                  <div class="col-4 col-sm-3">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input pdf-month-check"
+                        type="checkbox"
+                        value="4"
+                        id="pdf-m4"
+                      /><label class="form-check-label" for="pdf-m4">May</label>
+                    </div>
+                  </div>
+                  <div class="col-4 col-sm-3">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input pdf-month-check"
+                        type="checkbox"
+                        value="5"
+                        id="pdf-m5"
+                      /><label class="form-check-label" for="pdf-m5">Jun</label>
+                    </div>
+                  </div>
+                  <div class="col-4 col-sm-3">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input pdf-month-check"
+                        type="checkbox"
+                        value="6"
+                        id="pdf-m6"
+                      /><label class="form-check-label" for="pdf-m6">Jul</label>
+                    </div>
+                  </div>
+                  <div class="col-4 col-sm-3">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input pdf-month-check"
+                        type="checkbox"
+                        value="7"
+                        id="pdf-m7"
+                      /><label class="form-check-label" for="pdf-m7">Ago</label>
+                    </div>
+                  </div>
+                  <div class="col-4 col-sm-3">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input pdf-month-check"
+                        type="checkbox"
+                        value="8"
+                        id="pdf-m8"
+                      /><label class="form-check-label" for="pdf-m8">Sep</label>
+                    </div>
+                  </div>
+                  <div class="col-4 col-sm-3">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input pdf-month-check"
+                        type="checkbox"
+                        value="9"
+                        id="pdf-m9"
+                      /><label class="form-check-label" for="pdf-m9">Oct</label>
+                    </div>
+                  </div>
+                  <div class="col-4 col-sm-3">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input pdf-month-check"
+                        type="checkbox"
+                        value="10"
+                        id="pdf-m10"
+                      /><label class="form-check-label" for="pdf-m10"
+                        >Nov</label
+                      >
+                    </div>
+                  </div>
+                  <div class="col-4 col-sm-3">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input pdf-month-check"
+                        type="checkbox"
+                        value="11"
+                        id="pdf-m11"
+                      /><label class="form-check-label" for="pdf-m11"
+                        >Dic</label
+                      >
+                    </div>
+                  </div>
                 </div>
                 <div class="mt-3 text-end">
-                  <button type="button" id="btn-pdf-select-all" class="btn btn-xs btn-link p-0 text-decoration-none">Seleccionar todos</button>
+                  <button
+                    type="button"
+                    id="btn-pdf-select-all"
+                    class="btn btn-xs btn-link p-0 text-decoration-none"
+                  >
+                    Seleccionar todos
+                  </button>
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" id="btn-generate-pdf-final" class="btn btn-danger">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  id="btn-generate-pdf-final"
+                  class="btn btn-danger"
+                >
                   <i class="bi bi-file-pdf me-1"></i> Generar PDF
                 </button>
               </div>
@@ -376,19 +643,46 @@
         </div>
 
         <!-- Modal para Confirmar Asistencia -->
-        <div class="modal fade" id="confirmAttendanceModal" tabindex="-1" aria-labelledby="confirmAttendanceModalLabel" aria-hidden="true">
+        <div
+          class="modal fade"
+          id="confirmAttendanceModal"
+          tabindex="-1"
+          aria-labelledby="confirmAttendanceModalLabel"
+          aria-hidden="true"
+        >
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header bg-success text-white">
-                <h5 class="modal-title" id="confirmAttendanceModalLabel"><i class="bi bi-check-circle-fill me-2"></i>Confirmar Asistencia</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="confirmAttendanceModalLabel">
+                  <i class="bi bi-check-circle-fill me-2"></i>Confirmar
+                  Asistencia
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
               </div>
               <div class="modal-body">
-                ¿Desea confirmar que el discursante asistió y presentó el tema asignado?
+                ¿Desea confirmar que el discursante asistió y presentó el tema
+                asignado?
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" id="btn-confirm-attendance-final" class="btn btn-success">Confirmar</button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  id="btn-confirm-attendance-final"
+                  class="btn btn-success"
+                >
+                  Confirmar
+                </button>
               </div>
             </div>
           </div>
@@ -402,23 +696,26 @@
         <div class="float-end d-none d-sm-inline">v1.2.0c</div>
         <!--end::To the end-->
         <!--begin::Copyright-->
-        <strong>
-          Copyright &copy; 2026&nbsp;
-        </strong>
+        <strong> Copyright &copy; 2026&nbsp; </strong>
         Developed by
-        <strong> 
-          <a href="https://github.com/Marcoz08" class="text-decoration-none">MarcoZ</a>.
+        <strong>
+          <a href="https://github.com/Marcoz08" class="text-decoration-none"
+            >MarcoZ</a
+          >.
         </strong>
         <!--end::Copyright-->
       </footer>
       <!--end::Footer-->
 
       <!-- Contenedor para notificaciones (Toasts) -->
-      <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1055;"></div>
+      <div
+        class="toast-container position-fixed bottom-0 end-0 p-3"
+        id="toastContainer"
+        style="z-index: 1055"
+      ></div>
 
       <!-- Datalist para el autocompletado de temas -->
       <datalist id="bosquejos-list"></datalist>
-
     </div>
     <!--end::App Wrapper-->
     <!--begin::Script-->
@@ -444,13 +741,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.6.0/jspdf.plugin.autotable.min.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
-      const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+      const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
       const Default = {
-        scrollbarTheme: 'os-theme-light',
-        scrollbarAutoHide: 'leave',
+        scrollbarTheme: "os-theme-light",
+        scrollbarAutoHide: "leave",
         scrollbarClickScroll: true,
       };
-      document.addEventListener('DOMContentLoaded', function () {
+      document.addEventListener("DOMContentLoaded", function () {
         const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
 
         // Disable OverlayScrollbars on mobile devices to prevent touch interference
@@ -474,49 +771,51 @@
     <!--end::OverlayScrollbars Configure-->
 
     <script>
-      document.addEventListener('DOMContentLoaded', async function () {
-        const horaEl = document.getElementById('local-hora');
-        const diaEl = document.getElementById('local-dia');
-        const congEl = document.getElementById('local-congregacion');
-        const tablaVisitasBody = document.getElementById('tabla-visitas-body');
+      document.addEventListener("DOMContentLoaded", async function () {
+        const horaEl = document.getElementById("local-hora");
+        const diaEl = document.getElementById("local-dia");
+        const congEl = document.getElementById("local-congregacion");
+        const tablaVisitasBody = document.getElementById("tabla-visitas-body");
         let bosquejosList = []; // Almacenará la lista de bosquejos para el autocompletado
-        
+
         // Mapeo constante para asignar identificadores a los dias de la semana
         const diasSemanaMap = {
-          1: 'Lunes',
-          2: 'Martes',
-          3: 'Miércoles',
-          4: 'Jueves',
-          5: 'Viernes',
-          6: 'Sábado',
-          7: 'Domingo'
+          1: "Lunes",
+          2: "Martes",
+          3: "Miércoles",
+          4: "Jueves",
+          5: "Viernes",
+          6: "Sábado",
+          7: "Domingo",
         };
 
         let currentLocalData = null;
         let isEditingProgram = false;
 
-        const selectMes = document.getElementById('select-mes');
-        const selectAnio = document.getElementById('select-anio');
-        const btnEditProgram = document.getElementById('btn-edit-program');
-        const btnExportPdf = document.getElementById('btn-export-pdf');
-        const btnSaveProgram = document.getElementById('btn-save-program');
+        const selectMes = document.getElementById("select-mes");
+        const selectAnio = document.getElementById("select-anio");
+        const btnEditProgram = document.getElementById("btn-edit-program");
+        const btnExportPdf = document.getElementById("btn-export-pdf");
+        const btnSaveProgram = document.getElementById("btn-save-program");
 
         // Establecer mes y año actuales por defecto
         const today = new Date();
 
         // Lógica para alternar el modo edición
-        btnEditProgram.addEventListener('click', () => {
+        btnEditProgram.addEventListener("click", () => {
           isEditingProgram = !isEditingProgram;
           if (isEditingProgram) {
-            btnEditProgram.innerHTML = '<i class="bi bi-x-circle-fill me-1"></i> Cancelar';
-            btnEditProgram.className = 'btn btn-sm btn-outline-danger';
-            btnSaveProgram.style.display = 'block';
-            btnExportPdf.style.display = 'none';
+            btnEditProgram.innerHTML =
+              '<i class="bi bi-x-circle-fill me-1"></i> Cancelar';
+            btnEditProgram.className = "btn btn-sm btn-outline-danger";
+            btnSaveProgram.style.display = "block";
+            btnExportPdf.style.display = "none";
           } else {
-            btnEditProgram.innerHTML = '<i class="bi bi-pencil-fill me-1"></i> Editar';
-            btnEditProgram.className = 'btn btn-sm btn-outline-primary';
-            btnSaveProgram.style.display = 'none';
-            btnExportPdf.style.display = 'block';
+            btnEditProgram.innerHTML =
+              '<i class="bi bi-pencil-fill me-1"></i> Editar';
+            btnEditProgram.className = "btn btn-sm btn-outline-primary";
+            btnSaveProgram.style.display = "none";
+            btnExportPdf.style.display = "block";
           }
           updateProgramacionTable();
         });
@@ -527,7 +826,7 @@
         selectMes.value = currentMonth.toString();
 
         // Generar opciones de año dinámicamente (año actual y los dos siguientes)
-        selectAnio.innerHTML = ''; // Limpiar opciones existentes
+        selectAnio.innerHTML = ""; // Limpiar opciones existentes
         for (let i = 0; i < 3; i++) {
           const year = currentYear + i;
           selectAnio.innerHTML += `<option value="${year}">${year}</option>`;
@@ -535,34 +834,41 @@
         selectAnio.value = currentYear.toString();
 
         // --- Lógica para Exportación a PDF ---
-        const configPdfModal = new bootstrap.Modal(document.getElementById('configPdfModal'));
-        const pdfSelectAnio = document.getElementById('pdf-select-anio');
-        const btnPdfSelectAll = document.getElementById('btn-pdf-select-all');
-        const btnGeneratePdfFinal = document.getElementById('btn-generate-pdf-final');
+        const configPdfModal = new bootstrap.Modal(
+          document.getElementById("configPdfModal"),
+        );
+        const pdfSelectAnio = document.getElementById("pdf-select-anio");
+        const btnPdfSelectAll = document.getElementById("btn-pdf-select-all");
+        const btnGeneratePdfFinal = document.getElementById(
+          "btn-generate-pdf-final",
+        );
 
         // Poblar select de año del modal PDF con las mismas opciones que el principal
         pdfSelectAnio.innerHTML = selectAnio.innerHTML;
         pdfSelectAnio.value = selectAnio.value;
 
-        btnExportPdf.addEventListener('click', () => {
+        btnExportPdf.addEventListener("click", () => {
           configPdfModal.show();
         });
 
         // Lógica de "Seleccionar todos / Desmarcar todos"
-        btnPdfSelectAll.addEventListener('click', () => {
-          const checks = document.querySelectorAll('.pdf-month-check');
-          const allChecked = Array.from(checks).every(c => c.checked);
-          checks.forEach(c => c.checked = !allChecked);
-          btnPdfSelectAll.textContent = allChecked ? 'Seleccionar todos' : 'Desmarcar todos';
+        btnPdfSelectAll.addEventListener("click", () => {
+          const checks = document.querySelectorAll(".pdf-month-check");
+          const allChecked = Array.from(checks).every((c) => c.checked);
+          checks.forEach((c) => (c.checked = !allChecked));
+          btnPdfSelectAll.textContent = allChecked
+            ? "Seleccionar todos"
+            : "Desmarcar todos";
         });
 
-        btnGeneratePdfFinal.addEventListener('click', async () => {
+        btnGeneratePdfFinal.addEventListener("click", async () => {
           const anio = pdfSelectAnio.value;
-          const mesesSeleccionados = Array.from(document.querySelectorAll('.pdf-month-check:checked'))
-                                          .map(c => parseInt(c.value));
+          const mesesSeleccionados = Array.from(
+            document.querySelectorAll(".pdf-month-check:checked"),
+          ).map((c) => parseInt(c.value));
 
           if (mesesSeleccionados.length === 0) {
-            showNotification('Por favor seleccione al menos un mes.', 'danger');
+            showNotification("Por favor seleccione al menos un mes.", "danger");
             return;
           }
 
@@ -572,38 +878,55 @@
 
         async function generateProgramacionPDF(anio, meses) {
           const { jsPDF } = window.jspdf;
-          const doc = new jsPDF('p', 'mm', 'a4');
-          const mesesNombres = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+          const doc = new jsPDF("p", "mm", "a4");
+          const mesesNombres = [
+            "ENERO",
+            "FEBRERO",
+            "MARZO",
+            "ABRIL",
+            "MAYO",
+            "JUNIO",
+            "JULIO",
+            "AGOSTO",
+            "SEPTIEMBRE",
+            "OCTUBRE",
+            "NOVIEMBRE",
+            "DICIEMBRE",
+          ];
           const targetDay = currentLocalData.dia_rp % 7;
           const defaultTime = currentLocalData.hora_reunion.substring(0, 5);
-          
-          let currentY = 15; 
+
+          let currentY = 15;
 
           for (const mes of meses) {
             // Obtener datos del mes desde el servidor
-            const response = await fetch(`http://localhost:3000/api/visitantes-programacion?mes=${mes}&anio=${anio}`);
+            const response = await fetch(
+              `http://localhost:3000/api/visitantes-programacion?mes=${mes}&anio=${anio}`,
+            );
             const programData = await response.json();
 
             const tableRows = [];
             let date = new Date(anio, mes, 1, 12, 0, 0);
             while (date.getMonth() === mes) {
               if (date.getDay() === targetDay) {
-                const dayNum = date.getDate().toString().padStart(2, '0');
-                const monthNum = (date.getMonth() + 1).toString().padStart(2, '0');
+                const dayNum = date.getDate().toString().padStart(2, "0");
+                const monthNum = (date.getMonth() + 1)
+                  .toString()
+                  .padStart(2, "0");
                 const fullDateStr = `${anio}-${monthNum}-${dayNum}`;
-                
-                const dataRow = programData.find(p => {
-                  const pDateStr = p.fecha_discurso.split('T')[0];
+
+                const dataRow = programData.find((p) => {
+                  const pDateStr = p.fecha_discurso.split("T")[0];
                   return pDateStr === fullDateStr;
                 });
 
                 tableRows.push([
-                  dataRow?.nombre || '--',
-                  dataRow?.num_bosquejo || '--',
-                  dataRow?.tema || 'Sin asignar',
-                  dataRow?.cancion || '--',
-                  dataRow?.congregacion || '--',
-                  `${dayNum}/${monthNum}`
+                  dataRow?.nombre || "--",
+                  dataRow?.num_bosquejo || "--",
+                  dataRow?.tema || "Sin asignar",
+                  dataRow?.cancion || "--",
+                  dataRow?.congregacion || "--",
+                  `${dayNum}/${monthNum}`,
                 ]);
               }
               date.setDate(date.getDate() + 1);
@@ -622,26 +945,53 @@
             // Título y encabezado por mes con posición dinámica usando currentY
             doc.setFontSize(16);
             doc.setTextColor(0, 119, 182);
-            doc.text(`PROGRAMA DE DISCURSOS PÚBLICOS - ${mesesNombres[mes]} ${anio}`, 105, currentY, { align: 'center' });
-            
+            doc.text(
+              `PROGRAMA DE DISCURSOS PÚBLICOS - ${mesesNombres[mes]} ${anio}`,
+              105,
+              currentY,
+              { align: "center" },
+            );
+
             doc.setFontSize(11);
             doc.setTextColor(80);
-            doc.text(`Congregación: ${currentLocalData.congregacion}`, 14, currentY + 10);
-            doc.text(`Día y hora: ${currentLocalData.nombre_dia} - ${defaultTime}`, 14, currentY + 16);
+            doc.text(
+              `Congregación: ${currentLocalData.congregacion}`,
+              14,
+              currentY + 10,
+            );
+            doc.text(
+              `Día y hora: ${currentLocalData.nombre_dia} - ${defaultTime}`,
+              14,
+              currentY + 16,
+            );
 
             doc.autoTable({
               startY: currentY + 22,
-              head: [['Discursante', 'Núm.', 'Título del Discurso', 'Cant.', 'Congregación', 'Fecha']],
+              head: [
+                [
+                  "Discursante",
+                  "Núm.",
+                  "Título del Discurso",
+                  "Cant.",
+                  "Congregación",
+                  "Fecha",
+                ],
+              ],
               body: tableRows,
-              theme: 'grid',
-              headStyles: { fillColor: [0, 119, 182], textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center' },
-              styles: { fontSize: 10, cellPadding: 4, valign: 'middle' },
+              theme: "grid",
+              headStyles: {
+                fillColor: [0, 119, 182],
+                textColor: [255, 255, 255],
+                fontStyle: "bold",
+                halign: "center",
+              },
+              styles: { fontSize: 10, cellPadding: 4, valign: "middle" },
               alternateRowStyles: { fillColor: [202, 240, 248] },
               columnStyles: {
-                1: { halign: 'center', cellWidth: 15 },
-                3: { halign: 'center', cellWidth: 15 },
-                5: { halign: 'center', cellWidth: 20, fontStyle: 'bold' }
-              }
+                1: { halign: "center", cellWidth: 15 },
+                3: { halign: "center", cellWidth: 15 },
+                5: { halign: "center", cellWidth: 20, fontStyle: "bold" },
+              },
             });
 
             // Actualizar la posición vertical para la siguiente tabla con un espacio de separación
@@ -656,10 +1006,10 @@
           if (asistio) {
             return '<i class="bi bi-p-circle-fill text-success fs-5" title="Discurso presentado"></i>';
           }
-          if (!num) return '';
+          if (!num) return "";
           // Buscar el bosquejo en la lista cargada (comparación flexible de número)
-          const b = bosquejosList.find(item => item.num == num);
-          if (!b) return '';
+          const b = bosquejosList.find((item) => item.num == num);
+          if (!b) return "";
 
           const now = new Date();
           const threeMonthsAgo = new Date();
@@ -693,70 +1043,92 @@
           const anio = parseInt(selectAnio.value);
           const targetDay = currentLocalData.dia_rp % 7; // Convertir 7 (Dom) a 0 para JS
           const defaultTime = currentLocalData.hora_reunion.substring(0, 5);
-          const mesesShort = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+          const mesesShort = [
+            "ene",
+            "feb",
+            "mar",
+            "abr",
+            "may",
+            "jun",
+            "jul",
+            "ago",
+            "sep",
+            "oct",
+            "nov",
+            "dic",
+          ];
 
           try {
             // Obtener la programación guardada para este mes/año
-            const response = await fetch(`http://localhost:3000/api/visitantes-programacion?mes=${mes}&anio=${anio}`);
+            const response = await fetch(
+              `http://localhost:3000/api/visitantes-programacion?mes=${mes}&anio=${anio}`,
+            );
             const programacion = await response.json();
 
-            tablaVisitasBody.innerHTML = '';
+            tablaVisitasBody.innerHTML = "";
 
             // Usamos las 12:00 PM para evitar desfases por cambios de horario (DST) en la medianoche
             let date = new Date(anio, mes, 1, 12, 0, 0);
             while (date.getMonth() === mes) {
               if (date.getDay() === targetDay) {
-                const dayNum = date.getDate().toString().padStart(2, '0');
-                const monthNum = (date.getMonth() + 1).toString().padStart(2, '0');
+                const dayNum = date.getDate().toString().padStart(2, "0");
+                const monthNum = (date.getMonth() + 1)
+                  .toString()
+                  .padStart(2, "0");
                 const fullDateStr = `${anio}-${monthNum}-${dayNum}`; // Formato YYYY-MM-DD para comparar
                 const displayDateStr = `${dayNum}-${mesesShort[mes]}`;
-                
+
                 // Buscar si hay datos guardados para esta fecha específica
-                const dataRow = programacion.find(p => {
-                  const pDateStr = p.fecha_discurso.split('T')[0];
+                const dataRow = programacion.find((p) => {
+                  const pDateStr = p.fecha_discurso.split("T")[0];
                   return pDateStr === fullDateStr;
                 });
 
-                const tr = document.createElement('tr');
+                const tr = document.createElement("tr");
                 tr.dataset.fecha = fullDateStr; // Guardamos la fecha real para el guardado
-                const isConfirmed = dataRow?.asistio === 1 || dataRow?.asistio === true;
+                const isConfirmed =
+                  dataRow?.asistio === 1 || dataRow?.asistio === true;
                 tr.dataset.asistio = isConfirmed ? 1 : 0;
 
                 if (isEditingProgram) {
                   tr.innerHTML = `
-                    <td><input type="text" class="form-control form-control-sm" placeholder="Nombre" value="${dataRow?.nombre || ''}"></td>
-                    <td><input type="number" class="form-control form-control-sm text-center num-input" value="${dataRow?.num_bosquejo || ''}"></td>
-                    <td><input type="text" class="form-control form-control-sm tema-input" list="bosquejos-list" placeholder="Tema" value="${dataRow?.tema || ''}"></td>
+                    <td><input type="text" class="form-control form-control-sm" placeholder="Nombre" value="${dataRow?.nombre || ""}"></td>
+                    <td><input type="number" class="form-control form-control-sm text-center num-input" value="${dataRow?.num_bosquejo || ""}"></td>
+                    <td><input type="text" class="form-control form-control-sm tema-input" list="bosquejos-list" placeholder="Tema" value="${dataRow?.tema || ""}"></td>
                     <td class="text-center status-cell">${getStatusIcon(dataRow?.num_bosquejo, isConfirmed)}</td>
-                    <td><input type="number" class="form-control form-control-sm text-center" value="${dataRow?.cancion || ''}"></td>
-                    <td><input type="text" class="form-control form-control-sm" placeholder="Congregación" value="${dataRow?.congregacion || ''}"></td>
+                    <td><input type="number" class="form-control form-control-sm text-center" value="${dataRow?.cancion || ""}"></td>
+                    <td><input type="text" class="form-control form-control-sm" placeholder="Congregación" value="${dataRow?.congregacion || ""}"></td>
                     <td class="text-center text-muted">${defaultTime}</td>
                     <td class="text-center fw-bold text-secondary">${displayDateStr}</td>
                     <td class="text-center">--</td>
                   `;
                 } else {
-                  if (isConfirmed) tr.classList.add('table-success'); // Fondo verde suave
+                  if (isConfirmed) tr.classList.add("table-success"); // Fondo verde suave
 
                   tr.innerHTML = `
                     <td>
                       <i class="bi bi-person-circle text-primary me-2"></i>
                       <strong>${dataRow?.nombre || '<span class="text-muted">Sin asignar</span>'}</strong>
                     </td>
-                    <td class="text-center"><span class="badge text-bg-light border">${dataRow?.num_bosquejo || '--'}</span></td>
+                    <td class="text-center"><span class="badge text-bg-light border">${dataRow?.num_bosquejo || "--"}</span></td>
                     <td>${dataRow?.tema || '<span class="text-muted italic">Sin asignar</span>'}</td>
                     <td class="text-center">${getStatusIcon(dataRow?.num_bosquejo, isConfirmed)}</td>
-                    <td class="text-center">${dataRow?.cancion ? 'Cant. ' + dataRow.cancion : '--'}</td>
-                    <td><small class="text-muted">${dataRow?.congregacion || '--'}</small></td>
+                    <td class="text-center">${dataRow?.cancion ? "Cant. " + dataRow.cancion : "--"}</td>
+                    <td><small class="text-muted">${dataRow?.congregacion || "--"}</small></td>
                     <td class="text-center text-muted"><small>${defaultTime}</small></td>
                     <td class="text-center fw-bold text-secondary">${displayDateStr}</td>
                     <td class="text-center">
-                      ${dataRow?.num_bosquejo ? `
+                      ${
+                        dataRow?.num_bosquejo
+                          ? `
                         <button class="btn btn-sm btn-outline-success btn-confirm-attendance" 
                           data-num="${dataRow.num_bosquejo}" 
                           data-fecha="${fullDateStr}"
                           title="Confirmar asistencia">
                           <i class="bi bi-check-lg"></i> Confirmar
-                        </button>` : '--'}
+                        </button>`
+                          : "--"
+                      }
                     </td>
                   `;
                 }
@@ -765,19 +1137,19 @@
               date.setDate(date.getDate() + 1);
             }
           } catch (error) {
-            console.error('Error al cargar la programación:', error);
+            console.error("Error al cargar la programación:", error);
           }
         }
 
         // Función para guardar todos los cambios de la tabla
-        btnSaveProgram.addEventListener('click', async () => {
-          const rows = document.querySelectorAll('#tabla-visitas-body tr');
+        btnSaveProgram.addEventListener("click", async () => {
+          const rows = document.querySelectorAll("#tabla-visitas-body tr");
           const programacion = [];
           const mes = selectMes.value;
           const anio = selectAnio.value;
 
-          rows.forEach(row => {
-            const inputs = row.querySelectorAll('input');
+          rows.forEach((row) => {
+            const inputs = row.querySelectorAll("input");
             if (inputs.length > 0) {
               programacion.push({
                 nombre: inputs[0].value,
@@ -786,54 +1158,63 @@
                 cancion: inputs[3].value,
                 congregacion: inputs[4].value,
                 fecha_discurso: row.dataset.fecha,
-                asistio: parseInt(row.dataset.asistio) || 0
+                asistio: parseInt(row.dataset.asistio) || 0,
               });
             }
           });
 
           try {
-            const response = await fetch('http://localhost:3000/api/visitantes-programacion', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ mes, anio, programacion })
-            });
+            const response = await fetch(
+              "http://localhost:3000/api/visitantes-programacion",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ mes, anio, programacion }),
+              },
+            );
 
             if (response.ok) {
-              showNotification('Programación mensual guardada con éxito.', 'success');
+              showNotification(
+                "Programación mensual guardada con éxito.",
+                "success",
+              );
               btnEditProgram.click(); // Salir del modo edición automáticamente
             } else {
-              showNotification('Hubo un error al intentar guardar.', 'danger');
+              showNotification("Hubo un error al intentar guardar.", "danger");
             }
           } catch (error) {
-            showNotification('Error de conexión con el servidor.', 'danger');
+            showNotification("Error de conexión con el servidor.", "danger");
           }
         });
 
         // Lógica para autocompletar el número de bosquejo al seleccionar un tema de la lista
-        tablaVisitasBody.addEventListener('input', (e) => {
-          if (e.target.classList.contains('tema-input')) {
+        tablaVisitasBody.addEventListener("input", (e) => {
+          if (e.target.classList.contains("tema-input")) {
             const selectedTitle = e.target.value;
-            const bosquejo = bosquejosList.find(b => b.titulo === selectedTitle);
-            const row = e.target.closest('tr');
+            const bosquejo = bosquejosList.find(
+              (b) => b.titulo === selectedTitle,
+            );
+            const row = e.target.closest("tr");
             const isConfirmed = parseInt(row.dataset.asistio) === 1;
-            const numInput = row.querySelector('.num-input');
-            const statusCell = row.querySelector('.status-cell');
+            const numInput = row.querySelector(".num-input");
+            const statusCell = row.querySelector(".status-cell");
 
             if (bosquejo) {
               if (numInput) numInput.value = bosquejo.num;
-              if (statusCell) statusCell.innerHTML = getStatusIcon(bosquejo.num, isConfirmed);
+              if (statusCell)
+                statusCell.innerHTML = getStatusIcon(bosquejo.num, isConfirmed);
             } else {
               // Si el título no coincide o se borra, se limpia el estatus
-              if (statusCell) statusCell.innerHTML = '';
+              if (statusCell) statusCell.innerHTML = "";
             }
           }
-          
+
           // También actualizar si se cambia el número directamente
-          if (e.target.classList.contains('num-input')) {
+          if (e.target.classList.contains("num-input")) {
             const num = e.target.value;
-            const row = e.target.closest('tr');
+            const row = e.target.closest("tr");
             const isConfirmed = parseInt(row.dataset.asistio) === 1;
-            const statusCell = row.querySelector('.status-cell');
+            const statusCell = row.querySelector(".status-cell");
             if (statusCell) {
               statusCell.innerHTML = getStatusIcon(num, isConfirmed);
             }
@@ -841,140 +1222,183 @@
         });
 
         // Lógica para confirmar asistencia
-        const confirmAttendanceModal = new bootstrap.Modal(document.getElementById('confirmAttendanceModal'));
-        const btnConfirmAttendanceFinal = document.getElementById('btn-confirm-attendance-final');
+        const confirmAttendanceModal = new bootstrap.Modal(
+          document.getElementById("confirmAttendanceModal"),
+        );
+        const btnConfirmAttendanceFinal = document.getElementById(
+          "btn-confirm-attendance-final",
+        );
         let pendingAttendanceData = null;
 
-        tablaVisitasBody.addEventListener('click', (e) => {
-          const confirmBtn = e.target.closest('.btn-confirm-attendance');
+        tablaVisitasBody.addEventListener("click", (e) => {
+          const confirmBtn = e.target.closest(".btn-confirm-attendance");
           if (confirmBtn) {
             pendingAttendanceData = {
               num: confirmBtn.dataset.num,
-              fecha: confirmBtn.dataset.fecha
+              fecha: confirmBtn.dataset.fecha,
             };
             confirmAttendanceModal.show();
           }
         });
 
-        btnConfirmAttendanceFinal.addEventListener('click', async () => {
+        btnConfirmAttendanceFinal.addEventListener("click", async () => {
           if (!pendingAttendanceData) return;
           try {
-            const response = await fetch(`http://localhost:3000/api/confirmar-asistencia`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(pendingAttendanceData)
-            });
+            const response = await fetch(
+              `http://localhost:3000/api/confirmar-asistencia`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(pendingAttendanceData),
+              },
+            );
 
             if (response.ok) {
               confirmAttendanceModal.hide();
-              showNotification('Asistencia confirmada y registro actualizado.', 'success');
+              showNotification(
+                "Asistencia confirmada y registro actualizado.",
+                "success",
+              );
               fetchBosquejosList(); // Refrescar iconos semáforo para ver el cambio de estatus
             } else {
               const error = await response.json();
-              showNotification(error.error || 'Error al confirmar asistencia', 'danger');
+              showNotification(
+                error.error || "Error al confirmar asistencia",
+                "danger",
+              );
             }
           } catch (error) {
-            showNotification('Error de conexión con el servidor.', 'danger');
+            showNotification("Error de conexión con el servidor.", "danger");
           }
         });
 
         // Escuchar cambios en los selectores de mes y año
-        selectMes.addEventListener('change', updateProgramacionTable);
-        selectAnio.addEventListener('change', updateProgramacionTable);
+        selectMes.addEventListener("change", updateProgramacionTable);
+        selectAnio.addEventListener("change", updateProgramacionTable);
 
-        const editLocalModal = new bootstrap.Modal(document.getElementById('editLocalModal'));
+        const editLocalModal = new bootstrap.Modal(
+          document.getElementById("editLocalModal"),
+        );
 
         async function fetchInfoLocal() {
           try {
-            const response = await fetch('http://localhost:3000/api/reunion-local');
-            if (!response.ok) throw new Error('No se pudo obtener la información');
-            
+            const response = await fetch(
+              "http://localhost:3000/api/reunion-local",
+            );
+            if (!response.ok)
+              throw new Error("No se pudo obtener la información");
+
             currentLocalData = await response.json();
-            
+
             // Formatear hora (de HH:mm:ss a 12h AM/PM)
-            const [h, m] = currentLocalData.hora_reunion.split(':');
+            const [h, m] = currentLocalData.hora_reunion.split(":");
             const h24 = parseInt(h);
-            const ampm = h24 >= 12 ? 'PM' : 'AM';
+            const ampm = h24 >= 12 ? "PM" : "AM";
             const h12 = h24 % 12 || 12;
-            horaEl.textContent = `${h12.toString().padStart(2, '0')}:${m} ${ampm}`;
+            horaEl.textContent = `${h12.toString().padStart(2, "0")}:${m} ${ampm}`;
             diaEl.textContent = currentLocalData.nombre_dia;
             congEl.textContent = currentLocalData.congregacion;
 
             // Una vez que tenemos los datos locales, generamos la tabla inicial
             updateProgramacionTable();
           } catch (error) {
-            console.error('Error:', error);
+            console.error("Error:", error);
           }
         }
 
         async function fetchBosquejosList() {
           try {
-            const response = await fetch('http://localhost:3000/api/bosquejos');
-            if (!response.ok) throw new Error('Error al obtener lista de bosquejos');
-            
+            const response = await fetch("http://localhost:3000/api/bosquejos");
+            if (!response.ok)
+              throw new Error("Error al obtener lista de bosquejos");
+
             bosquejosList = await response.json();
-            const datalist = document.getElementById('bosquejos-list');
-            datalist.innerHTML = bosquejosList.map(b => `<option value="${b.titulo}">`).join('');
+            const datalist = document.getElementById("bosquejos-list");
+            datalist.innerHTML = bosquejosList
+              .map((b) => `<option value="${b.titulo}">`)
+              .join("");
             updateProgramacionTable(); // Actualizar iconos una vez cargada la lista
           } catch (error) {
-            console.error('Error al cargar la lista de bosquejos:', error);
+            console.error("Error al cargar la lista de bosquejos:", error);
           }
         }
 
         function fetchDays() {
-          const select = document.getElementById('edit-local-dia');
+          const select = document.getElementById("edit-local-dia");
           select.innerHTML = Object.entries(diasSemanaMap)
             .map(([id, nombre]) => `<option value="${id}">${nombre}</option>`)
-            .join('');
+            .join("");
         }
 
-        document.getElementById('btn-edit-local').addEventListener('click', async () => {
-          if (!currentLocalData) return;
-          
-          fetchDays();
-          
-          document.getElementById('edit-local-id').value = currentLocalData.id_reunion;
-          document.getElementById('edit-local-dia').value = currentLocalData.dia_rp;
-          document.getElementById('edit-local-hora').value = currentLocalData.hora_reunion.substring(0, 5);
-          document.getElementById('edit-local-congregacion').value = currentLocalData.congregacion;
-          
-          editLocalModal.show();
-        });
+        document
+          .getElementById("btn-edit-local")
+          .addEventListener("click", async () => {
+            if (!currentLocalData) return;
 
-        document.getElementById('btn-save-local').addEventListener('click', async () => {
-          const id = document.getElementById('edit-local-id').value;
-          const body = {
-            dia_rp: document.getElementById('edit-local-dia').value,
-            hora_reunion: document.getElementById('edit-local-hora').value,
-            congregacion: document.getElementById('edit-local-congregacion').value
-          };
+            fetchDays();
 
-          try {
-            const response = await fetch(`http://localhost:3000/api/reunion-local/${id}`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(body)
-            });
+            document.getElementById("edit-local-id").value =
+              currentLocalData.id_reunion;
+            document.getElementById("edit-local-dia").value =
+              currentLocalData.dia_rp;
+            document.getElementById("edit-local-hora").value =
+              currentLocalData.hora_reunion.substring(0, 5);
+            document.getElementById("edit-local-congregacion").value =
+              currentLocalData.congregacion;
 
-            if (response.ok) {
-              editLocalModal.hide();
-              showNotification('Datos de la reunión actualizados.', 'success');
-              fetchInfoLocal();
-            } else {
-              const errorData = await response.json();
-              showNotification(errorData.error || 'Error al actualizar.', 'danger');
+            editLocalModal.show();
+          });
+
+        document
+          .getElementById("btn-save-local")
+          .addEventListener("click", async () => {
+            const id = document.getElementById("edit-local-id").value;
+            const body = {
+              dia_rp: document.getElementById("edit-local-dia").value,
+              hora_reunion: document.getElementById("edit-local-hora").value,
+              congregacion: document.getElementById("edit-local-congregacion")
+                .value,
+            };
+
+            try {
+              const response = await fetch(
+                `http://localhost:3000/api/reunion-local/${id}`,
+                {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(body),
+                },
+              );
+
+              if (response.ok) {
+                editLocalModal.hide();
+                showNotification(
+                  "Datos de la reunión actualizados.",
+                  "success",
+                );
+                fetchInfoLocal();
+              } else {
+                const errorData = await response.json();
+                showNotification(
+                  errorData.error || "Error al actualizar.",
+                  "danger",
+                );
+              }
+            } catch (error) {
+              showNotification("Error de conexión con el servidor.", "danger");
             }
-          } catch (error) {
-            showNotification('Error de conexión con el servidor.', 'danger');
-          }
-        });
+          });
 
-        function showNotification(message, type = 'success') {
-          const toastContainer = document.getElementById('toastContainer');
-          const toastId = 'toast-' + Date.now();
-          const bgClass = type === 'success' ? 'text-bg-success' : 'text-bg-danger';
-          const icon = type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill';
-          
+        function showNotification(message, type = "success") {
+          const toastContainer = document.getElementById("toastContainer");
+          const toastId = "toast-" + Date.now();
+          const bgClass =
+            type === "success" ? "text-bg-success" : "text-bg-danger";
+          const icon =
+            type === "success"
+              ? "bi-check-circle-fill"
+              : "bi-exclamation-triangle-fill";
+
           const toastHTML = `
             <div id="${toastId}" class="toast align-items-center ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
               <div class="d-flex">
@@ -988,12 +1412,14 @@
               </div>
             </div>
           `;
-          
-          toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+
+          toastContainer.insertAdjacentHTML("beforeend", toastHTML);
           const toastElement = document.getElementById(toastId);
           const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
           toast.show();
-          toastElement.addEventListener('hidden.bs.toast', () => toastElement.remove());
+          toastElement.addEventListener("hidden.bs.toast", () =>
+            toastElement.remove(),
+          );
         }
 
         fetchInfoLocal();

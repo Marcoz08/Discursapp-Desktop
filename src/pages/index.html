@@ -64,6 +64,9 @@
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
+    <!--begin::Theme Manager-->
+    <script src="../js/theme.js"></script>
+    <!--end::Theme Manager-->
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -71,7 +74,7 @@
     <!--begin::App Wrapper-->
     <div class="app-wrapper">
       <!--begin::Header-->
-      <nav class="app-header navbar navbar-expand" style="background-color: #fbfbfb;">
+      <nav class="app-header navbar navbar-expand bg-body">
         <!--begin::Container-->
         <div class="container-fluid">
           <!--begin::Start Navbar Links-->
@@ -163,7 +166,12 @@
                   <p>Oradores locales</p>
                 </a>
               </li>
-                                        
+              <li class="nav-item mt-auto" style="border-top: 3px solid rgba(255,255,255,0.1); padding-top: 0.5rem; margin-top: 1rem;">
+                <a href="./configuracion.html" class="nav-link">
+                  <i class="nav-icon bi bi-gear-fill"></i>
+                  <p>Configuración</p>
+                </a>
+              </li>
             </ul>
             <!--end::Sidebar Menu-->
           </nav>
@@ -323,7 +331,7 @@
                   <div class="card-body p-0">
                     <div class="table-responsive">
                       <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
+                        <thead>
                           <tr>
                             <th style="width: 80px;" class="text-center">Núm.</th>
                             <th>Título del Discurso</th>
@@ -342,7 +350,7 @@
                       </table>
                     </div>
                   </div>
-                  <div class="card-footer bg-white text-end">
+                  <div class="card-footer text-end">
                     <a href="./registros.html" class="small text-decoration-none">Ver historial completo <i class="bi bi-arrow-right ms-1"></i></a>
                   </div>
                 </div>

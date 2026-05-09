@@ -6,10 +6,21 @@
     <title>Discursapp | Dashboard</title>
 
     <!--begin::Accessibility Meta Tags-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
     <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
+    <meta
+      name="theme-color"
+      content="#007bff"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#1a1a1a"
+      media="(prefers-color-scheme: dark)"
+    />
     <!--end::Accessibility Meta Tags-->
 
     <!--begin::Primary Meta Tags-->
@@ -26,7 +37,11 @@
     <!--end::Primary Meta Tags-->
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../assets/discursapp_favicon.ico" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="../assets/discursapp_favicon.ico"
+    />
 
     <!--begin::Accessibility Features-->
     <!-- Skip links will be dynamically added by accessibility.js -->
@@ -64,6 +79,15 @@
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
+    <!--begin::Theme Manager-->
+    <script src="../js/theme.js"></script>
+    <style>
+      [data-bs-theme="dark"] .table.table-head-fixed thead tr:nth-child(1) th {
+        background-color: var(--bs-body-bg);
+        border-bottom-color: var(--bs-border-color);
+      }
+    </style>
+    <!--end::Theme Manager-->
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -77,7 +101,12 @@
           <!--begin::Start Navbar Links-->
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+              <a
+                class="nav-link"
+                data-lte-toggle="sidebar"
+                href="#"
+                role="button"
+              >
                 <i class="bi bi-list"></i>
               </a>
             </li>
@@ -91,7 +120,11 @@
       </nav>
       <!--end::Header-->
       <!--begin::Sidebar-->
-      <aside class="app-sidebar shadow" data-bs-theme="dark" style="background-color: #1F3056;">
+      <aside
+        class="app-sidebar shadow"
+        data-bs-theme="dark"
+        style="background-color: #1f3056"
+      >
         <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
@@ -160,7 +193,19 @@
                   <p>Oradores locales</p>
                 </a>
               </li>
-                                        
+              <li
+                class="nav-item mt-auto"
+                style="
+                  border-top: 3px solid rgba(255, 255, 255, 0.1);
+                  padding-top: 0.5rem;
+                  margin-top: 1rem;
+                "
+              >
+                <a href="./configuracion.html" class="nav-link">
+                  <i class="nav-icon bi bi-gear-fill"></i>
+                  <p>Configuración</p>
+                </a>
+              </li>
             </ul>
             <!--end::Sidebar Menu-->
           </nav>
@@ -177,12 +222,16 @@
             <!--begin::Row-->
             <div class="row">
               <div class="col-sm-6">
-                <h2 class="mb-0"><strong> Información de oradores locales</strong></h2>
+                <h2 class="mb-0">
+                  <strong> Información de oradores locales</strong>
+                </h2>
               </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Oradores</li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Oradores
+                  </li>
                 </ol>
               </div>
             </div>
@@ -199,22 +248,42 @@
               <div class="col-12">
                 <div class="card">
                   <div class="card-header">
-                    <h3 class="card-title">Listado de Oradores y temas</h3>
+                    <h3 class="card-title">Listado de oradores y temas</h3>
                     <div class="card-tools d-flex">
                       <!-- Botón de refrescar manual -->
-                      <button id="btn-refresh" class="btn btn-sm btn-outline-secondary me-2" title="Refrescar">
+                      <button
+                        id="btn-refresh"
+                        class="btn btn-sm btn-outline-secondary me-2"
+                        title="Refrescar"
+                      >
                         <i class="bi bi-arrow-clockwise"></i>
                       </button>
                       <!-- Botón para abrir el futuro formulario de nuevo orador -->
-                      <button id="btn-add-speaker" class="btn btn-sm btn-primary me-2">
-                        <i class="bi bi-person-plus-fill me-1"></i> Añadir orador
+                      <button
+                        id="btn-add-speaker"
+                        class="btn btn-sm btn-primary me-2"
+                      >
+                        <i class="bi bi-person-plus-fill me-1"></i> Añadir
+                        orador
                       </button>
                       <!-- Botón para exportar el listado a PDF -->
-                      <button id="btn-export-pdf" class="btn btn-sm btn-outline-danger me-2">
-                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> Exportar a PDF
+                      <button
+                        id="btn-export-pdf"
+                        class="btn btn-sm btn-outline-danger me-2"
+                      >
+                        <i class="bi bi-file-earmark-pdf-fill me-1"></i>
+                        Exportar a PDF
                       </button>
-                      <div class="input-group input-group-sm" style="width: 250px;">
-                        <input type="text" id="search-orador" class="form-control" placeholder="Buscar orador o tema...">
+                      <div
+                        class="input-group input-group-sm"
+                        style="width: 250px"
+                      >
+                        <input
+                          type="text"
+                          id="search-orador"
+                          class="form-control"
+                          placeholder="Buscar orador o tema..."
+                        />
                         <div class="input-group-append">
                           <button class="btn btn-default">
                             <i class="bi bi-search"></i>
@@ -223,17 +292,24 @@
                       </div>
                     </div>
                   </div>
-                  <div class="card-body table-responsive p-0" style="height: 600px;">
-                    <table class="table table-head-fixed table-hover text-nowrap">
+                  <div
+                    class="card-body table-responsive p-0"
+                    style="height: 600px"
+                  >
+                    <table
+                      class="table table-head-fixed table-hover text-nowrap"
+                    >
                       <thead>
                         <tr>
-                          <th style="width: 20%;">Orador</th>
-                          <th style="width: 15%;">Privilegio</th>
-                          <th style="width: 15%;">Congregación</th>
-                          <th class="text-center" style="width: 8%;">Núm.</th>
+                          <th style="width: 20%">Orador</th>
+                          <th style="width: 15%">Privilegio</th>
+                          <th style="width: 15%">Congregación</th>
+                          <th class="text-center" style="width: 8%">Núm.</th>
                           <th>Título del Discurso</th>
-                          <th style="width: 10%;">Canción</th>
-                          <th class="text-center" style="width: 10%;">Acciones</th>
+                          <th style="width: 10%">Canción</th>
+                          <th class="text-center" style="width: 10%">
+                            Acciones
+                          </th>
                         </tr>
                       </thead>
                       <tbody id="oradores-table-body">
@@ -251,56 +327,114 @@
       </main>
 
       <!-- Contenedor para notificaciones (Toasts) - Se requiere para que los avisos aparezcan -->
-      <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1055;"></div>
+      <div
+        class="toast-container position-fixed bottom-0 end-0 p-3"
+        id="toastContainer"
+        style="z-index: 1055"
+      ></div>
 
       <!-- Modal para Editar Orador -->
-      <div class="modal fade" id="editSpeakerModal" tabindex="-1" aria-labelledby="editSpeakerModalLabel" aria-hidden="true">
+      <div
+        class="modal fade"
+        id="editSpeakerModal"
+        tabindex="-1"
+        aria-labelledby="editSpeakerModalLabel"
+        aria-hidden="true"
+      >
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header bg-primary text-white">
               <h5 class="modal-title" id="editSpeakerModalLabel">
                 <i class="bi bi-pencil-square me-2"></i>Editar Orador
               </h5>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
             <div class="modal-body">
               <form id="editSpeakerForm">
-                <input type="hidden" id="edit-speaker-id">
+                <input type="hidden" id="edit-speaker-id" />
                 <div class="row">
                   <div class="col-md-6 mb-3">
-                    <label for="edit-speaker-name" class="form-label">Nombre <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="edit-speaker-name" required>
+                    <label for="edit-speaker-name" class="form-label"
+                      >Nombre <span class="text-danger">*</span></label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="edit-speaker-name"
+                      required
+                    />
                   </div>
                   <div class="col-md-6 mb-3">
-                    <label for="edit-speaker-phone" class="form-label">Teléfono de Contacto</label>
-                    <input type="text" class="form-control" id="edit-speaker-phone">
+                    <label for="edit-speaker-phone" class="form-label"
+                      >Teléfono de Contacto</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="edit-speaker-phone"
+                    />
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-md-6 mb-3">
-                    <label for="edit-speaker-congregation" class="form-label">Congregación <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="edit-speaker-congregation">
+                    <label for="edit-speaker-congregation" class="form-label"
+                      >Congregación <span class="text-danger">*</span></label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="edit-speaker-congregation"
+                    />
                   </div>
                   <div class="col-md-6 mb-3">
-                    <label class="form-label d-block">Privilegio <span class="text-danger">*</span></label>
+                    <label class="form-label d-block"
+                      >Privilegio <span class="text-danger">*</span></label
+                    >
                     <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="editSpeakerPrivilege" id="editPrivilegeAnciano" value="1">
-                      <label class="form-check-label" for="editPrivilegeAnciano">Anciano</label>
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="editSpeakerPrivilege"
+                        id="editPrivilegeAnciano"
+                        value="1"
+                      />
+                      <label class="form-check-label" for="editPrivilegeAnciano"
+                        >Anciano</label
+                      >
                     </div>
                     <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="editSpeakerPrivilege" id="editPrivilegeSiervo" value="0">
-                      <label class="form-check-label" for="editPrivilegeSiervo">Siervo Ministerial</label>
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="editSpeakerPrivilege"
+                        id="editPrivilegeSiervo"
+                        value="0"
+                      />
+                      <label class="form-check-label" for="editPrivilegeSiervo"
+                        >Siervo Ministerial</label
+                      >
                     </div>
                   </div>
                 </div>
                 <div class="mb-3 form-check">
-                  <input type="checkbox" class="form-check-input" id="edit-speaker-approved">
-                  <label class="form-check-label" for="edit-speaker-approved">Aprobado para salir a discursar</label>
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="edit-speaker-approved"
+                  />
+                  <label class="form-check-label" for="edit-speaker-approved"
+                    >Aprobado para salir a discursar</label
+                  >
                 </div>
               </form>
-              <hr>
+              <hr />
               <h6><i class="bi bi-book me-2"></i>Temas Registrados</h6>
-              <div class="table-responsive" style="max-height: 200px;">
+              <div class="table-responsive" style="max-height: 200px">
                 <table class="table table-sm table-striped">
                   <thead>
                     <tr>
@@ -315,32 +449,69 @@
                   </tbody>
                 </table>
               </div>
-              <div id="new-topic-form" class="mt-3 p-2 border rounded bg-light" style="display: none;">
+              <div
+                id="new-topic-form"
+                class="mt-3 p-2 border rounded bg-light"
+                style="display: none"
+              >
                 <h6 class="small fw-bold">Nuevo Tema</h6>
                 <div class="row g-2">
                   <div class="col-md-2">
-                    <input type="number" id="new-topic-num" class="form-control form-control-sm" placeholder="Núm.">
+                    <input
+                      type="number"
+                      id="new-topic-num"
+                      class="form-control form-control-sm"
+                      placeholder="Núm."
+                    />
                   </div>
                   <div class="col-md-6">
-                    <input type="text" id="new-topic-title" class="form-control form-control-sm" placeholder="Título">
+                    <input
+                      type="text"
+                      id="new-topic-title"
+                      class="form-control form-control-sm"
+                      placeholder="Título"
+                    />
                   </div>
                   <div class="col-md-2">
-                    <input type="number" id="new-topic-song" class="form-control form-control-sm" placeholder="Cant.">
+                    <input
+                      type="number"
+                      id="new-topic-song"
+                      class="form-control form-control-sm"
+                      placeholder="Cant."
+                    />
                   </div>
                   <div class="col-md-2 text-end">
-                    <button type="button" id="btn-save-new-topic" class="btn btn-sm btn-success w-100">
+                    <button
+                      type="button"
+                      id="btn-save-new-topic"
+                      class="btn btn-sm btn-success w-100"
+                    >
                       <i class="bi bi-check-lg"></i>
                     </button>
                   </div>
                 </div>
               </div>
-              <button type="button" id="btn-show-add-topic" class="btn btn-sm btn-outline-success mt-2">
+              <button
+                type="button"
+                id="btn-show-add-topic"
+                class="btn btn-sm btn-outline-success mt-2"
+              >
                 <i class="bi bi-plus-circle me-1"></i> Añadir tema
               </button>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" id="btn-update-speaker" class="btn btn-primary">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                id="btn-update-speaker"
+                class="btn btn-primary"
+              >
                 <i class="bi bi-save me-1"></i> Guardar Cambios
               </button>
             </div>
@@ -349,33 +520,68 @@
       </div>
 
       <!-- Modal para Confirmar Eliminación de Orador -->
-      <div class="modal fade" id="deleteSpeakerModal" tabindex="-1" aria-labelledby="deleteSpeakerModalLabel" aria-hidden="true">
+      <div
+        class="modal fade"
+        id="deleteSpeakerModal"
+        tabindex="-1"
+        aria-labelledby="deleteSpeakerModalLabel"
+        aria-hidden="true"
+      >
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header bg-danger text-white">
               <h5 class="modal-title" id="deleteSpeakerModalLabel">
-                <i class="bi bi-exclamation-octagon-fill me-2"></i>Confirmar eliminación
+                <i class="bi bi-exclamation-octagon-fill me-2"></i>Confirmar
+                eliminación
               </h5>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
             <div class="modal-body">
-              <p>¿Está seguro de que desea eliminar al orador: <strong id="delete-speaker-name"></strong>?</p>
-              
+              <p>
+                ¿Está seguro de que desea eliminar al orador:
+                <strong id="delete-speaker-name"></strong>?
+              </p>
+
               <div class="alert alert-warning">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                <strong>Advertencia:</strong> Se borrará toda la información de este discursante, incluyendo todos los temas y discursos que tenga asociados.
+                <strong>Advertencia:</strong> Se borrará toda la información de
+                este discursante, incluyendo todos los temas y discursos que
+                tenga asociados.
               </div>
 
               <div class="form-check mt-3">
-                <input class="form-check-input" type="checkbox" id="confirm-delete-check">
-                <label class="form-check-label fw-bold" for="confirm-delete-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="confirm-delete-check"
+                />
+                <label
+                  class="form-check-label fw-bold"
+                  for="confirm-delete-check"
+                >
                   Entendido, acepto que esta acción es irreversible.
                 </label>
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" id="btn-confirm-delete" class="btn btn-danger" disabled>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                id="btn-confirm-delete"
+                class="btn btn-danger"
+                disabled
+              >
                 <i class="bi bi-trash me-1"></i> Aceptar
               </button>
             </div>
@@ -384,31 +590,65 @@
       </div>
 
       <!-- Modal para Configurar PDF -->
-      <div class="modal fade" id="configPdfModal" tabindex="-1" aria-labelledby="configPdfModalLabel" aria-hidden="true">
+      <div
+        class="modal fade"
+        id="configPdfModal"
+        tabindex="-1"
+        aria-labelledby="configPdfModalLabel"
+        aria-hidden="true"
+      >
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header bg-danger text-white">
               <h5 class="modal-title" id="configPdfModalLabel">
-                <i class="bi bi-file-earmark-pdf-fill me-2"></i>Configurar documento
+                <i class="bi bi-file-earmark-pdf-fill me-2"></i>Configurar
+                documento
               </h5>
-              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
             <div class="modal-body">
               <p>Seleccione los oradores que desea incluir en el reporte:</p>
               <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" id="select-all-speakers" checked>
-                <label class="form-check-label fw-bold" for="select-all-speakers">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="select-all-speakers"
+                  checked
+                />
+                <label
+                  class="form-check-label fw-bold"
+                  for="select-all-speakers"
+                >
                   Seleccionar todos
                 </label>
               </div>
-              <hr>
-              <div id="speakers-select-list" class="list-group" style="max-height: 300px; overflow-y: auto;">
+              <hr />
+              <div
+                id="speakers-select-list"
+                class="list-group"
+                style="max-height: 300px; overflow-y: auto"
+              >
                 <!-- Lista de oradores generada dinámicamente -->
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" id="btn-generate-filtered-pdf" class="btn btn-danger">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                id="btn-generate-filtered-pdf"
+                class="btn btn-danger"
+              >
                 <i class="bi bi-file-pdf me-1"></i> Generar PDF
               </button>
             </div>
@@ -424,18 +664,16 @@
         <div class="float-end d-none d-sm-inline">v1.2.0c</div>
         <!--end::To the end-->
         <!--begin::Copyright-->
-        <strong>
-          Copyright &copy; 2026&nbsp;
-        </strong>
+        <strong> Copyright &copy; 2026&nbsp; </strong>
         Developed by
-        <strong> 
-          <a href="https://github.com/Marcoz08" class="text-decoration-none">MarcoZ</a>.
+        <strong>
+          <a href="https://github.com/Marcoz08" class="text-decoration-none"
+            >MarcoZ</a
+          >.
         </strong>
         <!--end::Copyright-->
       </footer>
       <!--end::Footer-->
-
-
     </div>
     <!--end::App Wrapper-->
     <!--begin::Script-->
@@ -461,13 +699,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.6.0/jspdf.plugin.autotable.min.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
-      const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+      const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
       const Default = {
-        scrollbarTheme: 'os-theme-light',
-        scrollbarAutoHide: 'leave',
+        scrollbarTheme: "os-theme-light",
+        scrollbarAutoHide: "leave",
         scrollbarClickScroll: true,
       };
-      document.addEventListener('DOMContentLoaded', function () {
+      document.addEventListener("DOMContentLoaded", function () {
         const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
 
         // Disable OverlayScrollbars on mobile devices to prevent touch interference
@@ -491,9 +729,9 @@
     <!--end::OverlayScrollbars Configure-->
 
     <script>
-      document.addEventListener('DOMContentLoaded', async function () {
-        const tableBody = document.getElementById('oradores-table-body');
-        const searchInput = document.getElementById('search-orador');
+      document.addEventListener("DOMContentLoaded", async function () {
+        const tableBody = document.getElementById("oradores-table-body");
+        const searchInput = document.getElementById("search-orador");
         let oradoresData = [];
         let isEditMode = false;
         let originalTopicValuesInModal = new Map(); // Map<id_registro (string), {numero_tema: number|null, titulo: string|null, cancion_sugerida: number|null}>
@@ -501,27 +739,29 @@
 
         async function fetchOradores() {
           try {
-            const response = await fetch('http://localhost:3000/api/oradores-temas');
+            const response = await fetch(
+              "http://localhost:3000/api/oradores-temas",
+            );
             if (!response.ok) {
               const errorData = await response.json();
-              throw new Error(errorData.error || 'Error en el servidor');
+              throw new Error(errorData.error || "Error en el servidor");
             }
-            
+
             oradoresData = await response.json();
             renderTable(oradoresData);
           } catch (error) {
-            console.error('Error:', error);
+            console.error("Error:", error);
             tableBody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error: ${error.message}</td></tr>`;
           }
         }
-        
+
         function renderTable(data) {
-          tableBody.innerHTML = '';
-          
+          tableBody.innerHTML = "";
+
           // Usamos Map para agrupar temas manteniendo el orden original de la consulta (alfabético)
           const groupedMap = new Map();
-          
-          data.forEach(item => {
+
+          data.forEach((item) => {
             const speakerKey = item.id_orador || item.nombre;
 
             if (!groupedMap.has(speakerKey)) {
@@ -532,43 +772,47 @@
                 telefono: item.telefono,
                 privilegio: item.privilegio,
                 aprobado: item.aprobado,
-                temas: []
+                temas: [],
               });
             }
             if (item.numero_tema || item.titulo) {
               groupedMap.get(speakerKey).temas.push({
                 numero_tema: item.numero_tema,
                 titulo: item.titulo,
-                cancion_sugerida: item.cancion_sugerida
+                cancion_sugerida: item.cancion_sugerida,
               });
             }
           });
 
           let oratorIndex = 0;
-          groupedMap.forEach(orador => {
+          groupedMap.forEach((orador) => {
             const numTemas = orador.temas.length > 0 ? orador.temas.length : 1; // Al menos 1 fila para el orador
-            
-            const privilegioText = orador.privilegio ? 'Anciano' : 'Siervo Ministerial';
-            const privilegioBadge = orador.privilegio ? 'text-bg-primary' : 'text-bg-info';
+
+            const privilegioText = orador.privilegio
+              ? "Anciano"
+              : "Siervo Ministerial";
+            const privilegioBadge = orador.privilegio
+              ? "text-bg-primary"
+              : "text-bg-info";
 
             // Definimos el icono: palomita verde si es TRUE, preventivo naranja si es FALSE o NULL
-            const aprobadoIcon = orador.aprobado ? 
-              '<i class="bi bi-check-circle-fill text-success ms-1" title="Aprobado para salir"></i>' : 
-              '<i class="bi bi-exclamation-triangle-fill text-warning ms-1" title="Pendiente de aprobación para salir"></i>';
+            const aprobadoIcon = orador.aprobado
+              ? '<i class="bi bi-check-circle-fill text-success ms-1" title="Aprobado para salir"></i>'
+              : '<i class="bi bi-exclamation-triangle-fill text-warning ms-1" title="Pendiente de aprobación para salir"></i>';
 
-            const speakerId = orador.id_orador || orador.nombre; 
+            const speakerId = orador.id_orador || orador.nombre;
 
             const speakerRows = []; // Arreglo para agrupar las filas de este orador y aplicar hover grupal
 
             // Renderizar la primera fila del orador con rowspan
-            let firstRow = document.createElement('tr');
+            let firstRow = document.createElement("tr");
             firstRow.innerHTML = `
               <td rowspan="${numTemas}" class="align-middle"><strong>${orador.nombre}</strong></td>
               <td rowspan="${numTemas}" class="align-middle"><span class="badge ${privilegioBadge}">${privilegioText}</span>${aprobadoIcon}</td>
-              <td rowspan="${numTemas}" class="align-middle">${orador.congregacion || 'El Castillo'}</td>
-              <td class="text-center">${orador.temas[0]?.numero_tema || '--'}</td>
+              <td rowspan="${numTemas}" class="align-middle">${orador.congregacion || "El Castillo"}</td>
+              <td class="text-center">${orador.temas[0]?.numero_tema || "--"}</td>
               <td>${orador.temas[0]?.titulo || '<i class="text-muted">Sin tema registrado</i>'}</td>
-              <td>${orador.temas[0]?.cancion_sugerida ? 'Cant. ' + orador.temas[0].cancion_sugerida : '--'}</td>
+              <td>${orador.temas[0]?.cancion_sugerida ? "Cant. " + orador.temas[0].cancion_sugerida : "--"}</td>
               <td rowspan="${numTemas}" class="text-center align-middle">
                 <button class="btn btn-sm btn-outline-primary edit-speaker-btn" data-id="${speakerId}" title="Editar orador">
                   <i class="bi bi-pencil-square"></i>
@@ -582,22 +826,22 @@
 
             // Renderizar filas adicionales para temas (si hay más de uno)
             for (let i = 1; i < orador.temas.length; i++) {
-              let subsequentRow = document.createElement('tr');
+              let subsequentRow = document.createElement("tr");
               subsequentRow.innerHTML = `
-                <td class="text-left">${orador.temas[i].numero_tema || '--'}</td>
+                <td class="text-left">${orador.temas[i].numero_tema || "--"}</td>
                 <td>${orador.temas[i].titulo || '<i class="text-muted">Sin tema registrado</i>'}</td>
-                <td>${orador.temas[i].cancion_sugerida ? 'Cant. ' + orador.temas[i].cancion_sugerida : '--'}</td>
+                <td>${orador.temas[i].cancion_sugerida ? "Cant. " + orador.temas[i].cancion_sugerida : "--"}</td>
               `;
               speakerRows.push(subsequentRow);
             }
 
             // Aplicar efecto de hover grupal y añadir las filas al cuerpo de la tabla
-            speakerRows.forEach(row => {
-              row.addEventListener('mouseenter', () => {
-                speakerRows.forEach(r => r.classList.add('table-active'));
+            speakerRows.forEach((row) => {
+              row.addEventListener("mouseenter", () => {
+                speakerRows.forEach((r) => r.classList.add("table-active"));
               });
-              row.addEventListener('mouseleave', () => {
-                speakerRows.forEach(r => r.classList.remove('table-active'));
+              row.addEventListener("mouseleave", () => {
+                speakerRows.forEach((r) => r.classList.remove("table-active"));
               });
               tableBody.appendChild(row);
             });
@@ -606,99 +850,120 @@
         }
 
         // Buscador básico
-        searchInput.addEventListener('input', (e) => {
+        searchInput.addEventListener("input", (e) => {
           const term = e.target.value.toLowerCase();
           // Para el buscador, necesitamos filtrar la data original y luego reagruparla
-          const filteredRawData = oradoresData.filter(o => 
-            o.nombre.toLowerCase().includes(term) ||
-            (o.titulo && o.titulo.toLowerCase().includes(term)) ||
-            (o.congregacion && o.congregacion.toLowerCase().includes(term)) ||
-            (o.numero_tema && o.numero_tema.toString().includes(term))
+          const filteredRawData = oradoresData.filter(
+            (o) =>
+              o.nombre.toLowerCase().includes(term) ||
+              (o.titulo && o.titulo.toLowerCase().includes(term)) ||
+              (o.congregacion && o.congregacion.toLowerCase().includes(term)) ||
+              (o.numero_tema && o.numero_tema.toString().includes(term)),
           );
           renderTable(filteredRawData); // La función renderTable ya agrupa
         });
 
         // Lógica para el botón de refrescar manual
-        document.getElementById('btn-refresh').addEventListener('click', () => {
+        document.getElementById("btn-refresh").addEventListener("click", () => {
           fetchOradores();
-          showNotification('Listado de oradores actualizado.', 'success');
+          showNotification("Listado de oradores actualizado.", "success");
         });
 
         // Lógica para exportar a PDF el listado de oradores y temas
-        const configPdfModal = new bootstrap.Modal(document.getElementById('configPdfModal'));
-        const speakersSelectList = document.getElementById('speakers-select-list');
-        const selectAllCheckbox = document.getElementById('select-all-speakers');
+        const configPdfModal = new bootstrap.Modal(
+          document.getElementById("configPdfModal"),
+        );
+        const speakersSelectList = document.getElementById(
+          "speakers-select-list",
+        );
+        const selectAllCheckbox = document.getElementById(
+          "select-all-speakers",
+        );
 
-        document.getElementById('btn-export-pdf').addEventListener('click', () => {
-          if (oradoresData.length === 0) {
-            showNotification('No hay datos para exportar.', 'danger');
-            return;
-          }
-
-          // Obtener lista única de oradores
-          const uniqueSpeakers = [];
-          const seen = new Set();
-          oradoresData.forEach(item => {
-            const id = (item.id_orador || item.nombre).toString();
-            if (!seen.has(id)) {
-              seen.add(id);
-              uniqueSpeakers.push({ id, nombre: item.nombre });
+        document
+          .getElementById("btn-export-pdf")
+          .addEventListener("click", () => {
+            if (oradoresData.length === 0) {
+              showNotification("No hay datos para exportar.", "danger");
+              return;
             }
-          });
 
-          // Poblar el modal
-          speakersSelectList.innerHTML = uniqueSpeakers.map(s => `
+            // Obtener lista única de oradores
+            const uniqueSpeakers = [];
+            const seen = new Set();
+            oradoresData.forEach((item) => {
+              const id = (item.id_orador || item.nombre).toString();
+              if (!seen.has(id)) {
+                seen.add(id);
+                uniqueSpeakers.push({ id, nombre: item.nombre });
+              }
+            });
+
+            // Poblar el modal
+            speakersSelectList.innerHTML = uniqueSpeakers
+              .map(
+                (s) => `
             <label class="list-group-item">
               <input class="form-check-input me-1 speaker-pdf-checkbox" type="checkbox" value="${s.id}" checked>
               ${s.nombre}
             </label>
-          `).join('');
+          `,
+              )
+              .join("");
 
-          selectAllCheckbox.checked = true;
-          configPdfModal.show();
-        });
+            selectAllCheckbox.checked = true;
+            configPdfModal.show();
+          });
 
         // Lógica de "Seleccionar todo"
-        selectAllCheckbox.addEventListener('change', () => {
-          const checkboxes = document.querySelectorAll('.speaker-pdf-checkbox');
-          checkboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
+        selectAllCheckbox.addEventListener("change", () => {
+          const checkboxes = document.querySelectorAll(".speaker-pdf-checkbox");
+          checkboxes.forEach((cb) => (cb.checked = selectAllCheckbox.checked));
         });
 
         // Función principal de generación de PDF refacturada
         function generatePDF(selectedIds) {
           const { jsPDF } = window.jspdf;
-          const doc = new jsPDF('p', 'mm', 'a4'); // Orientación vertical, milímetros, tamaño A4
+          const doc = new jsPDF("p", "mm", "a4"); // Orientación vertical, milímetros, tamaño A4
 
           // Configuración de encabezado
           doc.setFontSize(16);
           doc.setTextColor(0, 119, 182); // Color corporativo #0077B6
-          doc.text('REGISTRO DE ORADORES LOCALES Y TEMAS', 105, 15, { align: 'center' });
-          
+          doc.text("REGISTRO DE ORADORES LOCALES Y TEMAS", 105, 15, {
+            align: "center",
+          });
+
           doc.setFontSize(10);
           doc.setTextColor(100);
           doc.text(`Congregación: El Castillo`, 14, 25);
-          doc.text(`Fecha de reporte: ${new Date().toLocaleDateString()}`, 14, 30);
+          doc.text(
+            `Fecha de reporte: ${new Date().toLocaleDateString()}`,
+            14,
+            30,
+          );
 
           // Agrupamos los temas por orador siguiendo la misma lógica de la tabla web
           const groupedMap = new Map();
-          oradoresData.forEach(item => {
+          oradoresData.forEach((item) => {
             const speakerKey = item.id_orador || item.nombre;
-            
+
             // FILTRO: Solo procesar si el ID está en la lista de seleccionados
             if (!selectedIds.includes(speakerKey.toString())) return;
 
             if (!groupedMap.has(speakerKey)) {
               groupedMap.set(speakerKey, {
                 nombre: item.nombre,
-                privilegio: item.privilegio ? 'Anciano' : 'Siervo Ministerial',
-                temas: []
+                privilegio: item.privilegio ? "Anciano" : "Siervo Ministerial",
+                temas: [],
               });
             }
             if (item.numero_tema || item.titulo) {
               groupedMap.get(speakerKey).temas.push({
-                num: item.numero_tema || '--',
-                titulo: item.titulo || 'Sin título registrado',
-                cancion: item.cancion_sugerida ? 'Cant. ' + item.cancion_sugerida : '--'
+                num: item.numero_tema || "--",
+                titulo: item.titulo || "Sin título registrado",
+                cancion: item.cancion_sugerida
+                  ? "Cant. " + item.cancion_sugerida
+                  : "--",
               });
             }
           });
@@ -707,17 +972,29 @@
           const oratorGroupTracking = []; // Rastreador para saber qué filas pertenecen a qué orador
           let oratorIndex = 0;
 
-          groupedMap.forEach(orador => {
+          groupedMap.forEach((orador) => {
             if (orador.temas.length === 0) {
-              tableRows.push([orador.nombre, orador.privilegio, '--', 'Sin temas registrados', '--']);
+              tableRows.push([
+                orador.nombre,
+                orador.privilegio,
+                "--",
+                "Sin temas registrados",
+                "--",
+              ]);
               oratorGroupTracking.push(oratorIndex);
             } else {
               orador.temas.forEach((tema, index) => {
                 // Para simular el rowspan, solo incluimos los datos del orador en la primera fila de su bloque
                 if (index === 0) {
-                  tableRows.push([orador.nombre, orador.privilegio, tema.num, tema.titulo, tema.cancion]);
+                  tableRows.push([
+                    orador.nombre,
+                    orador.privilegio,
+                    tema.num,
+                    tema.titulo,
+                    tema.cancion,
+                  ]);
                 } else {
-                  tableRows.push(['', '', tema.num, tema.titulo, tema.cancion]);
+                  tableRows.push(["", "", tema.num, tema.titulo, tema.cancion]);
                 }
                 oratorGroupTracking.push(oratorIndex);
               });
@@ -728,19 +1005,37 @@
           // Generación de la tabla en el PDF
           doc.autoTable({
             startY: 35,
-            head: [['Orador', 'Privilegio', 'Núm.', 'Título del Discurso', 'Canción']],
+            head: [
+              [
+                "Orador",
+                "Privilegio",
+                "Núm.",
+                "Título del Discurso",
+                "Canción",
+              ],
+            ],
             body: tableRows,
-            theme: 'grid',
-            headStyles: { fillColor: [0, 119, 182], textColor: [255, 255, 255], fontStyle: 'bold' },
-            styles: { fontSize: 10, cellPadding: 3, valign: 'middle', lineColor: [0, 0, 0], lineWidth: 0 },
-            columnStyles: {
-              0: { cellWidth: 40, fontStyle: 'bold' },
-              1: { cellWidth: 35 },
-              2: { halign: 'center', cellWidth: 15 },
-              4: { halign: 'center', cellWidth: 20 }
+            theme: "grid",
+            headStyles: {
+              fillColor: [0, 119, 182],
+              textColor: [255, 255, 255],
+              fontStyle: "bold",
             },
-            didParseCell: function(data) {
-              if (data.section === 'body') {
+            styles: {
+              fontSize: 10,
+              cellPadding: 3,
+              valign: "middle",
+              lineColor: [0, 0, 0],
+              lineWidth: 0,
+            },
+            columnStyles: {
+              0: { cellWidth: 40, fontStyle: "bold" },
+              1: { cellWidth: 35 },
+              2: { halign: "center", cellWidth: 15 },
+              4: { halign: "center", cellWidth: 20 },
+            },
+            didParseCell: function (data) {
+              if (data.section === "body") {
                 const groupIdx = oratorGroupTracking[data.row.index];
                 // Aplicar fondo gris muy tenue a oradores impares para generar contraste de grupos
                 if (groupIdx % 2 !== 0) {
@@ -748,122 +1043,170 @@
                 }
               }
             },
-            didDrawCell: function(data) {
-              if (data.section === 'body') {
+            didDrawCell: function (data) {
+              if (data.section === "body") {
                 const groupIdx = oratorGroupTracking[data.row.index];
-                const prevGroupIdx = data.row.index > 0 ? oratorGroupTracking[data.row.index - 1] : -1;
+                const prevGroupIdx =
+                  data.row.index > 0
+                    ? oratorGroupTracking[data.row.index - 1]
+                    : -1;
                 const nextGroupIdx = oratorGroupTracking[data.row.index + 1];
-                
+
                 doc.setDrawColor(0, 0, 0);
                 doc.setLineWidth(0.6); // Grosor para bordes de grupo
 
                 // Dibujar borde superior si es el inicio de un bloque de orador
                 if (prevGroupIdx !== groupIdx) {
-                  doc.line(data.cell.x, data.cell.y, data.cell.x + data.cell.width, data.cell.y);
+                  doc.line(
+                    data.cell.x,
+                    data.cell.y,
+                    data.cell.x + data.cell.width,
+                    data.cell.y,
+                  );
                 }
                 // Dibujar borde inferior si es el fin de un bloque o la última fila
-                if (nextGroupIdx !== groupIdx || data.row.index === tableRows.length - 1) {
-                  doc.line(data.cell.x, data.cell.y + data.cell.height, data.cell.x + data.cell.width, data.cell.y + data.cell.height);
+                if (
+                  nextGroupIdx !== groupIdx ||
+                  data.row.index === tableRows.length - 1
+                ) {
+                  doc.line(
+                    data.cell.x,
+                    data.cell.y + data.cell.height,
+                    data.cell.x + data.cell.width,
+                    data.cell.y + data.cell.height,
+                  );
                 }
                 // Bordes laterales gruesos para encerrar el bloque
                 if (data.column.index === 0) {
-                  doc.line(data.cell.x, data.cell.y, data.cell.x, data.cell.y + data.cell.height);
+                  doc.line(
+                    data.cell.x,
+                    data.cell.y,
+                    data.cell.x,
+                    data.cell.y + data.cell.height,
+                  );
                 }
                 if (data.column.index === data.table.columns.length - 1) {
-                  doc.line(data.cell.x + data.cell.width, data.cell.y, data.cell.x + data.cell.width, data.cell.y + data.cell.height);
+                  doc.line(
+                    data.cell.x + data.cell.width,
+                    data.cell.y,
+                    data.cell.x + data.cell.width,
+                    data.cell.y + data.cell.height,
+                  );
                 }
               }
-            }
+            },
           });
 
-          doc.save(`Oradores_y_Temas_${new Date().toISOString().split('T')[0]}.pdf`);
+          doc.save(
+            `Oradores_y_Temas_${new Date().toISOString().split("T")[0]}.pdf`,
+          );
         }
 
         // Evento del botón "Generar PDF" dentro del modal
-        document.getElementById('btn-generate-filtered-pdf').addEventListener('click', () => {
-          const selectedCheckboxes = document.querySelectorAll('.speaker-pdf-checkbox:checked');
-          const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.value);
+        document
+          .getElementById("btn-generate-filtered-pdf")
+          .addEventListener("click", () => {
+            const selectedCheckboxes = document.querySelectorAll(
+              ".speaker-pdf-checkbox:checked",
+            );
+            const selectedIds = Array.from(selectedCheckboxes).map(
+              (cb) => cb.value,
+            );
 
-          if (selectedIds.length === 0) {
-            alert('Por favor, seleccione al menos un orador para exportar.');
-            return;
-          }
+            if (selectedIds.length === 0) {
+              alert("Por favor, seleccione al menos un orador para exportar.");
+              return;
+            }
 
-          generatePDF(selectedIds);
-          configPdfModal.hide();
-        });
+            generatePDF(selectedIds);
+            configPdfModal.hide();
+          });
 
         // Lógica para el botón "Añadir orador"
-        const editSpeakerModal = new bootstrap.Modal(document.getElementById('editSpeakerModal'));
-        const btnAddSpeaker = document.getElementById('btn-add-speaker');
-        const btnUpdateSpeaker = document.getElementById('btn-update-speaker');
+        const editSpeakerModal = new bootstrap.Modal(
+          document.getElementById("editSpeakerModal"),
+        );
+        const btnAddSpeaker = document.getElementById("btn-add-speaker");
+        const btnUpdateSpeaker = document.getElementById("btn-update-speaker");
 
-        btnAddSpeaker.addEventListener('click', () => {
+        btnAddSpeaker.addEventListener("click", () => {
           isEditMode = false;
-          document.getElementById('editSpeakerModalLabel').innerHTML = '<i class="bi bi-person-plus-fill me-2"></i>Añadir Nuevo Orador';
-          document.getElementById('edit-speaker-id').value = '';
-          document.getElementById('editSpeakerForm').reset();
-          document.getElementById('edit-speaker-congregation').value = 'El Castillo';
-          document.getElementById('editPrivilegeAnciano').checked = true;
-          document.getElementById('edit-speaker-approved').checked = true;
-          
-          document.getElementById('edit-speaker-temas-body').innerHTML = '<tr><td colspan="4" class="text-center text-muted">Sin temas registrados</td></tr>';
+          document.getElementById("editSpeakerModalLabel").innerHTML =
+            '<i class="bi bi-person-plus-fill me-2"></i>Añadir Nuevo Orador';
+          document.getElementById("edit-speaker-id").value = "";
+          document.getElementById("editSpeakerForm").reset();
+          document.getElementById("edit-speaker-congregation").value =
+            "El Castillo";
+          document.getElementById("editPrivilegeAnciano").checked = true;
+          document.getElementById("edit-speaker-approved").checked = true;
+
+          document.getElementById("edit-speaker-temas-body").innerHTML =
+            '<tr><td colspan="4" class="text-center text-muted">Sin temas registrados</td></tr>';
           temasPendientesEliminar = [];
           originalTopicValuesInModal.clear();
-          
-          newTopicForm.style.display = 'none';
-          btnShowAddTopic.style.display = 'block';
+
+          newTopicForm.style.display = "none";
+          btnShowAddTopic.style.display = "block";
           editSpeakerModal.show();
         });
 
         // Evento para abrir modal de edición y cargar datos
-        tableBody.addEventListener('click', (e) => {
-          const editBtn = e.target.closest('.edit-speaker-btn');
+        tableBody.addEventListener("click", (e) => {
+          const editBtn = e.target.closest(".edit-speaker-btn");
           if (editBtn) {
             isEditMode = true;
-            document.getElementById('editSpeakerModalLabel').innerHTML = '<i class="bi bi-pencil-square me-2"></i>Editar Orador';
+            document.getElementById("editSpeakerModalLabel").innerHTML =
+              '<i class="bi bi-pencil-square me-2"></i>Editar Orador';
             const id = editBtn.dataset.id;
             temasPendientesEliminar = []; // Resetear lista de eliminaciones al abrir
             // Buscamos todas las filas relacionadas a este orador en la data plana
-            const oratorRows = oradoresData.filter(item => (item.id_orador || item.nombre).toString() === id.toString());
-            
+            const oratorRows = oradoresData.filter(
+              (item) =>
+                (item.id_orador || item.nombre).toString() === id.toString(),
+            );
+
             if (oratorRows.length === 0) return;
-            
+
             originalTopicValuesInModal.clear(); // Limpiar el estado anterior al abrir el modal
             const speaker = oratorRows[0];
-            document.getElementById('edit-speaker-id').value = id;
-            document.getElementById('edit-speaker-name').value = speaker.nombre;
-            document.getElementById('edit-speaker-phone').value = speaker.telefono || '';
-            document.getElementById('edit-speaker-congregation').value = speaker.congregacion || '';
-            
+            document.getElementById("edit-speaker-id").value = id;
+            document.getElementById("edit-speaker-name").value = speaker.nombre;
+            document.getElementById("edit-speaker-phone").value =
+              speaker.telefono || "";
+            document.getElementById("edit-speaker-congregation").value =
+              speaker.congregacion || "";
+
             if (speaker.privilegio) {
-              document.getElementById('editPrivilegeAnciano').checked = true;
+              document.getElementById("editPrivilegeAnciano").checked = true;
             } else {
-              document.getElementById('editPrivilegeSiervo').checked = true;
+              document.getElementById("editPrivilegeSiervo").checked = true;
             }
-            
-            document.getElementById('edit-speaker-approved').checked = speaker.aprobado === 1;
-            
+
+            document.getElementById("edit-speaker-approved").checked =
+              speaker.aprobado === 1;
+
             // Resetear el formulario de añadir tema al abrir el modal
-            newTopicForm.style.display = 'none';
-            btnShowAddTopic.style.display = 'block';
+            newTopicForm.style.display = "none";
+            btnShowAddTopic.style.display = "block";
 
             // Cargar la lista de temas en el modal
-            const temasBody = document.getElementById('edit-speaker-temas-body');
-            temasBody.innerHTML = '';
-            oratorRows.forEach(row => {
+            const temasBody = document.getElementById(
+              "edit-speaker-temas-body",
+            );
+            temasBody.innerHTML = "";
+            oratorRows.forEach((row) => {
               if (row.numero_tema || row.titulo) {
-                const tr = document.createElement('tr');
+                const tr = document.createElement("tr");
                 // Almacenar los valores originales para detectar cambios
                 originalTopicValuesInModal.set(row.id_registro.toString(), {
                   numero_tema: row.numero_tema,
                   titulo: row.titulo,
-                  cancion_sugerida: row.cancion_sugerida
+                  cancion_sugerida: row.cancion_sugerida,
                 });
                 tr.innerHTML = `
-                  <td><input type="number" class="form-control form-control-sm topic-edit-input" data-id-registro="${row.id_registro}" data-field="numero_tema" value="${row.numero_tema || ''}"></td>
-                  <td><input type="text" class="form-control form-control-sm topic-edit-input" data-id-registro="${row.id_registro}" data-field="titulo" value="${row.titulo || ''}"></td>
-                  <td><input type="number" class="form-control form-control-sm topic-edit-input" data-id-registro="${row.id_registro}" data-field="cancion_sugerida" value="${row.cancion_sugerida || ''}"></td>
+                  <td><input type="number" class="form-control form-control-sm topic-edit-input" data-id-registro="${row.id_registro}" data-field="numero_tema" value="${row.numero_tema || ""}"></td>
+                  <td><input type="text" class="form-control form-control-sm topic-edit-input" data-id-registro="${row.id_registro}" data-field="titulo" value="${row.titulo || ""}"></td>
+                  <td><input type="number" class="form-control form-control-sm topic-edit-input" data-id-registro="${row.id_registro}" data-field="cancion_sugerida" value="${row.cancion_sugerida || ""}"></td>
                   <td class="text-end">
                     <button type="button" class="btn btn-sm btn-link text-danger remove-topic-btn" data-id-registro="${row.id_registro}" title="Eliminar tema">
                       <i class="bi bi-trash"></i>
@@ -873,23 +1216,40 @@
                 temasBody.appendChild(tr);
               }
             });
-            if (temasBody.innerHTML === '') temasBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Sin temas registrados</td></tr>';
+            if (temasBody.innerHTML === "")
+              temasBody.innerHTML =
+                '<tr><td colspan="4" class="text-center text-muted">Sin temas registrados</td></tr>';
 
             editSpeakerModal.show();
           }
         });
 
-        btnUpdateSpeaker.addEventListener('click', async () => {
-          const id = document.getElementById('edit-speaker-id').value;
-          const nombre = document.getElementById('edit-speaker-name').value.trim();
-          const telefono = document.getElementById('edit-speaker-phone').value.trim();
-          const congregacion = document.getElementById('edit-speaker-congregation').value.trim();
-          const privilegioRadio = document.querySelector('input[name="editSpeakerPrivilege"]:checked');
-          const privilegio = privilegioRadio ? privilegioRadio.value === '1' : true;
-          const aprobado = document.getElementById('edit-speaker-approved').checked;
+        btnUpdateSpeaker.addEventListener("click", async () => {
+          const id = document.getElementById("edit-speaker-id").value;
+          const nombre = document
+            .getElementById("edit-speaker-name")
+            .value.trim();
+          const telefono = document
+            .getElementById("edit-speaker-phone")
+            .value.trim();
+          const congregacion = document
+            .getElementById("edit-speaker-congregation")
+            .value.trim();
+          const privilegioRadio = document.querySelector(
+            'input[name="editSpeakerPrivilege"]:checked',
+          );
+          const privilegio = privilegioRadio
+            ? privilegioRadio.value === "1"
+            : true;
+          const aprobado = document.getElementById(
+            "edit-speaker-approved",
+          ).checked;
 
           if (!nombre || !congregacion) {
-            showNotification('El nombre y la congregación son campos obligatorios.', 'danger');
+            showNotification(
+              "El nombre y la congregación son campos obligatorios.",
+              "danger",
+            );
             return;
           }
 
@@ -898,41 +1258,59 @@
 
           try {
             let finalOradorId = id;
-            const speakerData = { nombre, telefono, privilegio, congregacion, aprobado };
+            const speakerData = {
+              nombre,
+              telefono,
+              privilegio,
+              congregacion,
+              aprobado,
+            };
 
             // Procesar eliminaciones pendientes antes de actualizar orador
             if (temasPendientesEliminar.length > 0) {
               for (const idTema of temasPendientesEliminar) {
-                topicUpdatePromises.push(fetch(`http://localhost:3000/api/temas-orador/${idTema}`, { method: 'DELETE' }));
+                topicUpdatePromises.push(
+                  fetch(`http://localhost:3000/api/temas-orador/${idTema}`, {
+                    method: "DELETE",
+                  }),
+                );
               }
               temasPendientesEliminar = [];
             }
 
             // 1. Guardar o Actualizar Orador primero para tener el ID
             if (!isEditMode) {
-              const response = await fetch('http://localhost:3000/api/oradores', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(speakerData)
-              });
-              if (!response.ok) throw new Error('Error al crear orador');
+              const response = await fetch(
+                "http://localhost:3000/api/oradores",
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(speakerData),
+                },
+              );
+              if (!response.ok) throw new Error("Error al crear orador");
               const result = await response.json();
               finalOradorId = result.id_orador;
             } else {
-              const response = await fetch(`http://localhost:3000/api/oradores/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(speakerData)
-              });
-              if (!response.ok) throw new Error('Error al actualizar orador');
+              const response = await fetch(
+                `http://localhost:3000/api/oradores/${id}`,
+                {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(speakerData),
+                },
+              );
+              if (!response.ok) throw new Error("Error al actualizar orador");
             }
 
             // 2. Ahora procesar los temas usando finalOradorId
             // Procesar actualizaciones de temas existentes
-            const topicInputs = document.querySelectorAll('#edit-speaker-temas-body .topic-edit-input');
+            const topicInputs = document.querySelectorAll(
+              "#edit-speaker-temas-body .topic-edit-input",
+            );
             const changedTopics = new Map(); // Map<id_registro, {field: value, ...}>
 
-            topicInputs.forEach(input => {
+            topicInputs.forEach((input) => {
               const idRegistro = input.dataset.idRegistro;
               const field = input.dataset.field;
               let currentInputValue = input.value; // Valor como string del input
@@ -943,96 +1321,132 @@
               let originalValue = originalTopic[field];
 
               let processedCurrentValue;
-              if (input.type === 'number') {
-                  processedCurrentValue = currentInputValue === '' ? null : parseInt(currentInputValue, 10);
-              } else { // Tipo texto
-                  processedCurrentValue = currentInputValue === '' ? null : currentInputValue;
+              if (input.type === "number") {
+                processedCurrentValue =
+                  currentInputValue === ""
+                    ? null
+                    : parseInt(currentInputValue, 10);
+              } else {
+                // Tipo texto
+                processedCurrentValue =
+                  currentInputValue === "" ? null : currentInputValue;
               }
 
               // Comparar el valor procesado actual con el valor original
               if (processedCurrentValue !== originalValue) {
-                if (!changedTopics.has(idRegistro)) changedTopics.set(idRegistro, {});
+                if (!changedTopics.has(idRegistro))
+                  changedTopics.set(idRegistro, {});
                 changedTopics.get(idRegistro)[field] = processedCurrentValue;
               }
             });
 
             for (const [idRegistro, updates] of changedTopics.entries()) {
-              topicUpdatePromises.push(fetch(`http://localhost:3000/api/temas-orador/${idRegistro}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updates)
-              }));
+              topicUpdatePromises.push(
+                fetch(`http://localhost:3000/api/temas-orador/${idRegistro}`, {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(updates),
+                }),
+              );
             }
 
             // Procesar temas totalmente nuevos
-            const newTopicRows = document.querySelectorAll('.new-topic-row');
-            newTopicRows.forEach(row => {
-              const inputs = row.querySelectorAll('.topic-new-input');
+            const newTopicRows = document.querySelectorAll(".new-topic-row");
+            newTopicRows.forEach((row) => {
+              const inputs = row.querySelectorAll(".topic-new-input");
               const newTopicData = { id_orador: finalOradorId };
-              inputs.forEach(input => {
-                  const field = input.dataset.field;
-                  newTopicData[field] = input.value === '' ? null : (input.type === 'number' ? parseInt(input.value, 10) : input.value);
+              inputs.forEach((input) => {
+                const field = input.dataset.field;
+                newTopicData[field] =
+                  input.value === ""
+                    ? null
+                    : input.type === "number"
+                      ? parseInt(input.value, 10)
+                      : input.value;
               });
-              topicUpdatePromises.push(fetch('http://localhost:3000/api/temas-orador', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newTopicData)
-              }));
+              topicUpdatePromises.push(
+                fetch("http://localhost:3000/api/temas-orador", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(newTopicData),
+                }),
+              );
             });
 
             // Esperar a que todas las operaciones de temas se completen
             await Promise.all(topicUpdatePromises);
 
             editSpeakerModal.hide();
-            showNotification(isEditMode ? 'Orador actualizado.' : 'Orador añadido con éxito.', 'success');
+            showNotification(
+              isEditMode ? "Orador actualizado." : "Orador añadido con éxito.",
+              "success",
+            );
             fetchOradores();
           } catch (error) {
-            showNotification('Error de conexión con el servidor.', 'danger', 'FETCH_ERROR');
+            showNotification(
+              "Error de conexión con el servidor.",
+              "danger",
+              "FETCH_ERROR",
+            );
           }
         });
 
         // --- Lógica para añadir nuevos temas a un orador ---
-        const btnShowAddTopic = document.getElementById('btn-show-add-topic');
-        const newTopicForm = document.getElementById('new-topic-form');
-        const btnSaveNewTopic = document.getElementById('btn-save-new-topic');
+        const btnShowAddTopic = document.getElementById("btn-show-add-topic");
+        const newTopicForm = document.getElementById("new-topic-form");
+        const btnSaveNewTopic = document.getElementById("btn-save-new-topic");
 
-        btnShowAddTopic.addEventListener('click', () => {
-          newTopicForm.style.display = 'block';
-          btnShowAddTopic.style.display = 'none';
+        btnShowAddTopic.addEventListener("click", () => {
+          newTopicForm.style.display = "block";
+          btnShowAddTopic.style.display = "none";
         });
 
         // Lógica para quitar temas visualmente y encolar su eliminación
-        document.getElementById('edit-speaker-temas-body').addEventListener('click', (e) => {
-          const btn = e.target.closest('.remove-topic-btn');
-          if (btn) {
-            const row = btn.closest('tr');
-            const idRegistro = btn.dataset.idRegistro;
-            if (idRegistro && idRegistro !== "null" && !row.classList.contains('new-topic-row')) {
-              temasPendientesEliminar.push(idRegistro.toString());
+        document
+          .getElementById("edit-speaker-temas-body")
+          .addEventListener("click", (e) => {
+            const btn = e.target.closest(".remove-topic-btn");
+            if (btn) {
+              const row = btn.closest("tr");
+              const idRegistro = btn.dataset.idRegistro;
+              if (
+                idRegistro &&
+                idRegistro !== "null" &&
+                !row.classList.contains("new-topic-row")
+              ) {
+                temasPendientesEliminar.push(idRegistro.toString());
+              }
+              row.remove();
+              const body = document.getElementById("edit-speaker-temas-body");
+              if (body.children.length === 0) {
+                body.innerHTML =
+                  '<tr><td colspan="4" class="text-center text-muted">Sin temas registrados</td></tr>';
+              }
             }
-            row.remove();
-            const body = document.getElementById('edit-speaker-temas-body');
-            if (body.children.length === 0) {
-              body.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Sin temas registrados</td></tr>';
-            }
-          }
-        });
+          });
 
-        btnSaveNewTopic.addEventListener('click', () => {
-          const numero_tema = document.getElementById('new-topic-num').value;
-          const titulo = document.getElementById('new-topic-title').value.trim();
-          const cancion_sugerida = document.getElementById('new-topic-song').value;
+        btnSaveNewTopic.addEventListener("click", () => {
+          const numero_tema = document.getElementById("new-topic-num").value;
+          const titulo = document
+            .getElementById("new-topic-title")
+            .value.trim();
+          const cancion_sugerida =
+            document.getElementById("new-topic-song").value;
 
           if (!numero_tema && !titulo) {
-            showNotification('Ingrese al menos el número o título del discurso.', 'danger');
+            showNotification(
+              "Ingrese al menos el número o título del discurso.",
+              "danger",
+            );
             return;
           }
 
-          const temasBody = document.getElementById('edit-speaker-temas-body');
-          if (temasBody.innerHTML.includes('Sin temas registrados')) temasBody.innerHTML = '';
+          const temasBody = document.getElementById("edit-speaker-temas-body");
+          if (temasBody.innerHTML.includes("Sin temas registrados"))
+            temasBody.innerHTML = "";
 
-          const tr = document.createElement('tr');
-          tr.classList.add('new-topic-row');
+          const tr = document.createElement("tr");
+          tr.classList.add("new-topic-row");
           tr.innerHTML = `
             <td><input type="number" class="form-control form-control-sm topic-new-input" data-field="numero_tema" value="${numero_tema}"></td>
             <td><input type="text" class="form-control form-control-sm topic-new-input" data-field="titulo" value="${titulo}"></td>
@@ -1045,37 +1459,44 @@
           `;
           temasBody.appendChild(tr);
 
-          document.getElementById('new-topic-num').value = '';
-          document.getElementById('new-topic-title').value = '';
-          document.getElementById('new-topic-song').value = '';
-          newTopicForm.style.display = 'none';
-          btnShowAddTopic.style.display = 'block';
+          document.getElementById("new-topic-num").value = "";
+          document.getElementById("new-topic-title").value = "";
+          document.getElementById("new-topic-song").value = "";
+          newTopicForm.style.display = "none";
+          btnShowAddTopic.style.display = "block";
         });
 
         // Resetear el estado del formulario de temas al cerrar el modal
-        document.getElementById('editSpeakerModal').addEventListener('hidden.bs.modal', () => {
-          newTopicForm.style.display = 'none';
-          btnShowAddTopic.style.display = 'block';
-        });
+        document
+          .getElementById("editSpeakerModal")
+          .addEventListener("hidden.bs.modal", () => {
+            newTopicForm.style.display = "none";
+            btnShowAddTopic.style.display = "block";
+          });
 
         // Lógica del Modal de Eliminación
-        const deleteModal = new bootstrap.Modal(document.getElementById('deleteSpeakerModal'));
-        const btnConfirmDelete = document.getElementById('btn-confirm-delete');
-        const checkConfirmDelete = document.getElementById('confirm-delete-check');
+        const deleteModal = new bootstrap.Modal(
+          document.getElementById("deleteSpeakerModal"),
+        );
+        const btnConfirmDelete = document.getElementById("btn-confirm-delete");
+        const checkConfirmDelete = document.getElementById(
+          "confirm-delete-check",
+        );
         let speakerToDeleteId = null;
 
-        tableBody.addEventListener('click', (e) => {
-          const deleteBtn = e.target.closest('.delete-speaker-btn');
+        tableBody.addEventListener("click", (e) => {
+          const deleteBtn = e.target.closest(".delete-speaker-btn");
           if (deleteBtn) {
             speakerToDeleteId = deleteBtn.dataset.id;
-            document.getElementById('delete-speaker-name').innerText = deleteBtn.dataset.nombre;
+            document.getElementById("delete-speaker-name").innerText =
+              deleteBtn.dataset.nombre;
             checkConfirmDelete.checked = false;
             btnConfirmDelete.disabled = true;
             deleteModal.show();
           }
         });
 
-        checkConfirmDelete.addEventListener('change', () => {
+        checkConfirmDelete.addEventListener("change", () => {
           btnConfirmDelete.disabled = !checkConfirmDelete.checked;
         });
 
@@ -1085,12 +1506,16 @@
          * @param {string} type - 'success' para verde, 'danger' para rojo
          * @param {number|string} errorCode - (Opcional) Código de error para mostrar en fallos
          */
-        function showNotification(message, type = 'success', errorCode = null) {
-          const toastContainer = document.getElementById('toastContainer');
-          const toastId = 'toast-' + Date.now(); // ID único para evitar conflictos
-          const bgClass = type === 'success' ? 'text-bg-success' : 'text-bg-danger';
-          const icon = type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill';
-          
+        function showNotification(message, type = "success", errorCode = null) {
+          const toastContainer = document.getElementById("toastContainer");
+          const toastId = "toast-" + Date.now(); // ID único para evitar conflictos
+          const bgClass =
+            type === "success" ? "text-bg-success" : "text-bg-danger";
+          const icon =
+            type === "success"
+              ? "bi-check-circle-fill"
+              : "bi-exclamation-triangle-fill";
+
           // Si hay un código de error, formateamos el mensaje para que sea más informativo
           let bodyContent = message;
           if (errorCode) {
@@ -1110,37 +1535,55 @@
               </div>
             </div>
           `;
-          
-          toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+
+          toastContainer.insertAdjacentHTML("beforeend", toastHTML);
           // Inicializar y mostrar el Toast de Bootstrap
           const toastElement = document.getElementById(toastId);
-          const toast = new bootstrap.Toast(toastElement, { delay: type === 'success' ? 3000 : 6000 });
+          const toast = new bootstrap.Toast(toastElement, {
+            delay: type === "success" ? 3000 : 6000,
+          });
           toast.show();
-          
+
           // Eliminar el elemento del DOM después de que se oculte para no saturar la página
-          toastElement.addEventListener('hidden.bs.toast', () => toastElement.remove());
+          toastElement.addEventListener("hidden.bs.toast", () =>
+            toastElement.remove(),
+          );
         }
 
-        btnConfirmDelete.addEventListener('click', async () => {
+        btnConfirmDelete.addEventListener("click", async () => {
           if (!speakerToDeleteId) return;
-          
+
           try {
             // Llamada real al backend para eliminar
-            const response = await fetch(`http://localhost:3000/api/oradores/${speakerToDeleteId}`, {
-              method: 'DELETE'
-            });
+            const response = await fetch(
+              `http://localhost:3000/api/oradores/${speakerToDeleteId}`,
+              {
+                method: "DELETE",
+              },
+            );
 
             if (response.ok) {
               deleteModal.hide();
-              showNotification('El orador y sus temas han sido eliminados correctamente.', 'success');
+              showNotification(
+                "El orador y sus temas han sido eliminados correctamente.",
+                "success",
+              );
               fetchOradores(); // Recargamos la tabla para ver los cambios
             } else {
               const errorData = await response.json();
-              showNotification(errorData.error || 'Error en el servidor', 'danger', response.status);
+              showNotification(
+                errorData.error || "Error en el servidor",
+                "danger",
+                response.status,
+              );
             }
           } catch (error) {
-            console.error('Error en la petición DELETE:', error);
-            showNotification('Error de conexión. Asegúrese de que el servidor esté activo.', 'danger', 'CONN_ERROR');
+            console.error("Error en la petición DELETE:", error);
+            showNotification(
+              "Error de conexión. Asegúrese de que el servidor esté activo.",
+              "danger",
+              "CONN_ERROR",
+            );
           }
         });
 

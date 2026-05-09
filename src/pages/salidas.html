@@ -6,10 +6,21 @@
     <title>Discursapp | Dashboard</title>
 
     <!--begin::Accessibility Meta Tags-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
     <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
+    <meta
+      name="theme-color"
+      content="#007bff"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#1a1a1a"
+      media="(prefers-color-scheme: dark)"
+    />
     <!--end::Accessibility Meta Tags-->
 
     <!--begin::Primary Meta Tags-->
@@ -26,7 +37,11 @@
     <!--end::Primary Meta Tags-->
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../assets/discursapp_favicon.ico" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="../assets/discursapp_favicon.ico"
+    />
 
     <!--begin::Accessibility Features-->
     <!-- Skip links will be dynamically added by accessibility.js -->
@@ -64,6 +79,9 @@
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
+    <!--begin::Theme Manager-->
+    <script src="../js/theme.js"></script>
+    <!--end::Theme Manager-->
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -77,7 +95,12 @@
           <!--begin::Start Navbar Links-->
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+              <a
+                class="nav-link"
+                data-lte-toggle="sidebar"
+                href="#"
+                role="button"
+              >
                 <i class="bi bi-list"></i>
               </a>
             </li>
@@ -91,7 +114,11 @@
       </nav>
       <!--end::Header-->
       <!--begin::Sidebar-->
-      <aside class="app-sidebar shadow" data-bs-theme="dark" style="background-color: #1F3056;">
+      <aside
+        class="app-sidebar shadow"
+        data-bs-theme="dark"
+        style="background-color: #1f3056"
+      >
         <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
@@ -160,7 +187,19 @@
                   <p>Oradores locales</p>
                 </a>
               </li>
-                                        
+              <li
+                class="nav-item mt-auto"
+                style="
+                  border-top: 3px solid rgba(255, 255, 255, 0.1);
+                  padding-top: 0.5rem;
+                  margin-top: 1rem;
+                "
+              >
+                <a href="./configuracion.html" class="nav-link">
+                  <i class="nav-icon bi bi-gear-fill"></i>
+                  <p>Configuración</p>
+                </a>
+              </li>
             </ul>
             <!--end::Sidebar Menu-->
           </nav>
@@ -182,7 +221,9 @@
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">salidas</li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    salidas
+                  </li>
                 </ol>
               </div>
             </div>
@@ -194,14 +235,20 @@
         <!--begin::App Content-->
         <div class="app-content">
           <!-- Barra de herramientas superior para filtros -->
-          <nav class="navbar navbar-expand bg-white border-bottom shadow-sm mb-4">
+          <nav
+            class="navbar navbar-expand bg-body border-bottom shadow-sm mb-4"
+          >
             <div class="container-fluid">
               <span class="navbar-brand fs-6 fw-bold text-secondary">
                 <i class="bi bi-calendar-range me-2"></i>Selección de periodo
               </span>
               <div class="navbar-nav ms-auto d-flex flex-row gap-2">
                 <div class="nav-item">
-                  <select id="select-mes-salidas" class="form-select form-select-sm" style="width: 130px;">
+                  <select
+                    id="select-mes-salidas"
+                    class="form-select form-select-sm"
+                    style="width: 130px"
+                  >
                     <option value="0">Enero</option>
                     <option value="1">Febrero</option>
                     <option value="2">Marzo</option>
@@ -217,13 +264,21 @@
                   </select>
                 </div>
                 <div class="nav-item">
-                  <select id="select-anio-salidas" class="form-select form-select-sm" style="width: 100px;">
+                  <select
+                    id="select-anio-salidas"
+                    class="form-select form-select-sm"
+                    style="width: 100px"
+                  >
                     <!-- Opciones generadas por JS -->
                   </select>
                 </div>
                 <div class="nav-item">
-                  <button id="btn-export-pdf" class="btn btn-sm btn-outline-danger">
-                    <i class="bi bi-file-earmark-pdf-fill me-1"></i> Exportar a PDF
+                  <button
+                    id="btn-export-pdf"
+                    class="btn btn-sm btn-outline-danger"
+                  >
+                    <i class="bi bi-file-earmark-pdf-fill me-1"></i> Exportar a
+                    PDF
                   </button>
                 </div>
               </div>
@@ -234,13 +289,16 @@
           <div class="container-fluid">
             <!-- Tu contenido personalizado comienza aquí -->
             <div class="row">
-              <div class="col-12">                
+              <div class="col-12">
                 <!-- Tarjeta 1: Información de la Congregación -->
                 <div class="card card-outline card-primary mb-4 shadow-sm">
-                  <div class="card-header bg-white py-3">
-                    <div class="row align-items-center">                      
+                  <div class="card-header bg-body py-3">
+                    <div class="row align-items-center">
                       <div class="col-12">
-                        <h3 class="card-title fw-bold text-primary mb-0"><i class="bi bi-geo-alt-fill me-2"></i>Congregación a visitar</h3>
+                        <h3 class="card-title fw-bold text-primary mb-0">
+                          <i class="bi bi-geo-alt-fill me-2"></i>Congregación a
+                          visitar
+                        </h3>
                       </div>
                     </div>
                   </div>
@@ -248,116 +306,309 @@
                     <div class="row align-items-center text-center">
                       <div class="col-md-4">
                         <i class="bi bi-house-door-fill text-primary me-2"></i>
-                        <strong>Congregación:</strong> <span id="local-congregacion" class="ms-1">--</span>
+                        <strong>Congregación:</strong>
+                        <span id="local-congregacion" class="ms-1">--</span>
                       </div>
                       <div class="col-md-4 border-end-md">
-                        <i class="bi bi-calendar-event-fill text-primary me-2"></i>
-                        <strong>Día:</strong> <span id="local-dia" class="ms-1">--</span>
+                        <i
+                          class="bi bi-calendar-event-fill text-primary me-2"
+                        ></i>
+                        <strong>Día:</strong>
+                        <span id="local-dia" class="ms-1">--</span>
                       </div>
                       <div class="col-md-4 border-end-md">
                         <i class="bi bi-clock-fill text-primary me-2"></i>
-                        <strong>Hora:</strong> <span id="local-hora" class="ms-1">--:--</span>
-                      </div>                      
-                    </div>                    
+                        <strong>Hora:</strong>
+                        <span id="local-hora" class="ms-1">--:--</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <!-- Tarjeta 2: Tabla de Programación (Como en Visitas) -->
                 <div class="card shadow-sm">
-                  <div class="card-header bg-white py-3">
+                  <div class="card-header bg-body py-3">
                     <div class="row align-items-center">
                       <div class="col-md-6">
                         <h3 class="card-title fw-bold text-primary mb-0">
-                          <i class="bi bi-calendar3 me-2"></i>Programación Mensual de Salidas
+                          <i class="bi bi-calendar3 me-2"></i>Programación
+                          Mensual de Salidas
                         </h3>
                       </div>
-                      <div class="col-md-6 d-flex justify-content-md-end gap-2 mt-2 mt-md-0">
-                        <button type="button" class="btn btn-sm btn-outline-primary" id="btn-edit-salidas">
+                      <div
+                        class="col-md-6 d-flex justify-content-md-end gap-2 mt-2 mt-md-0"
+                      >
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-outline-primary"
+                          id="btn-edit-salidas"
+                        >
                           <i class="bi bi-pencil-fill me-1"></i> Editar Programa
                         </button>
-                        <button id="btn-save-salidas" class="btn btn-sm btn-success" style="display: none;">
-                          <i class="bi bi-cloud-check-fill me-1"></i> Guardar Todo
+                        <button
+                          id="btn-save-salidas"
+                          class="btn btn-sm btn-success"
+                          style="display: none"
+                        >
+                          <i class="bi bi-cloud-check-fill me-1"></i> Guardar
+                          Todo
                         </button>
                       </div>
                     </div>
                   </div>
                   <div class="card-body p-0 table-responsive">
                     <table class="table table-hover align-middle mb-0">
-                      <thead class="table-light">
+                      <thead>
                         <tr>
-                          <th style="width: 25%;">Discursante</th>
-                          <th class="text-center" style="width: 12%;">Num. Bosquejo</th>
-                          <th style="width: 28%;">Tema</th>
-                          <th class="text-center" style="width: 10%;">Canción</th>
-                          <th class="text-center" style="width: 10%;">Hora</th>
-                          <th class="text-center" style="width: 15%;">Fecha</th>
+                          <th style="width: 25%">Discursante</th>
+                          <th class="text-center" style="width: 12%">
+                            Num. Bosquejo
+                          </th>
+                          <th style="width: 28%">Tema</th>
+                          <th class="text-center" style="width: 10%">
+                            Canción
+                          </th>
+                          <th class="text-center" style="width: 10%">Hora</th>
+                          <th class="text-center" style="width: 15%">Fecha</th>
                         </tr>
                       </thead>
                       <tbody id="tabla-salidas-body">
                         <!-- Se genera dinámicamente -->
-                        <tr><td colspan="6" class="text-center text-muted">Seleccione un mes con rol confirmado</td></tr>
+                        <tr>
+                          <td colspan="6" class="text-center text-muted">
+                            Seleccione un mes con rol confirmado
+                          </td>
+                        </tr>
                       </tbody>
                     </table>
                   </div>
-                  <div class="card-footer bg-white">
+                  <div class="card-footer bg-body">
                     <p class="text-muted small mb-0">
-                      <i class="bi bi-info-circle me-1"></i> 
-                      IMPORTANTE: Solo aparecerán los fines de semana si existe un acuerdo <strong>Confirmado</strong> en la 
-                      <a href="./agenda.html" class="fw-bold">Agenda de roles</a> para este mes.
+                      <i class="bi bi-info-circle me-1"></i>
+                      IMPORTANTE: Solo aparecerán los fines de semana si existe
+                      un acuerdo <strong>Confirmado</strong> en la
+                      <a href="./agenda.html" class="fw-bold"
+                        >Agenda de roles</a
+                      >
+                      para este mes.
                     </p>
                   </div>
                 </div>
-              </div>             
               </div>
             </div>
-            <!--end::Container-->
+          </div>
+          <!--end::Container-->
 
-            <!-- Modal para Configurar Exportación PDF -->
-            <div class="modal fade" id="configPdfModal" tabindex="-1" aria-labelledby="configPdfModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="configPdfModalLabel">
-                      <i class="bi bi-file-earmark-pdf-fill me-2"></i>Configurar documento
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          <!-- Modal para Configurar Exportación PDF -->
+          <div
+            class="modal fade"
+            id="configPdfModal"
+            tabindex="-1"
+            aria-labelledby="configPdfModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                  <h5 class="modal-title" id="configPdfModalLabel">
+                    <i class="bi bi-file-earmark-pdf-fill me-2"></i>Configurar
+                    documento
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label for="pdf-select-anio" class="form-label fw-bold"
+                      >Año a exportar</label
+                    >
+                    <select id="pdf-select-anio" class="form-select"></select>
                   </div>
-                  <div class="modal-body">
-                    <div class="mb-3">
-                      <label for="pdf-select-anio" class="form-label fw-bold">Año a exportar</label>
-                      <select id="pdf-select-anio" class="form-select"></select>
+                  <label class="form-label fw-bold"
+                    >Seleccione los meses:</label
+                  >
+                  <div class="row g-2 mt-1" id="pdf-meses-checks">
+                    <div class="col-4 col-sm-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input pdf-month-check"
+                          type="checkbox"
+                          value="0"
+                          id="pdf-m0"
+                        /><label class="form-check-label" for="pdf-m0"
+                          >Ene</label
+                        >
+                      </div>
                     </div>
-                    <label class="form-label fw-bold">Seleccione los meses:</label>
-                    <div class="row g-2 mt-1" id="pdf-meses-checks">
-                      <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="0" id="pdf-m0"><label class="form-check-label" for="pdf-m0">Ene</label></div></div>
-                      <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="1" id="pdf-m1"><label class="form-check-label" for="pdf-m1">Feb</label></div></div>
-                      <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="2" id="pdf-m2"><label class="form-check-label" for="pdf-m2">Mar</label></div></div>
-                      <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="3" id="pdf-m3"><label class="form-check-label" for="pdf-m3">Abr</label></div></div>
-                      <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="4" id="pdf-m4"><label class="form-check-label" for="pdf-m4">May</label></div></div>
-                      <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="5" id="pdf-m5"><label class="form-check-label" for="pdf-m5">Jun</label></div></div>
-                      <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="6" id="pdf-m6"><label class="form-check-label" for="pdf-m6">Jul</label></div></div>
-                      <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="7" id="pdf-m7"><label class="form-check-label" for="pdf-m7">Ago</label></div></div>
-                      <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="8" id="pdf-m8"><label class="form-check-label" for="pdf-m8">Sep</label></div></div>
-                      <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="9" id="pdf-m9"><label class="form-check-label" for="pdf-m9">Oct</label></div></div>
-                      <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="10" id="pdf-m10"><label class="form-check-label" for="pdf-m10">Nov</label></div></div>
-                      <div class="col-4 col-sm-3"><div class="form-check"><input class="form-check-input pdf-month-check" type="checkbox" value="11" id="pdf-m11"><label class="form-check-label" for="pdf-m11">Dic</label></div></div>
+                    <div class="col-4 col-sm-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input pdf-month-check"
+                          type="checkbox"
+                          value="1"
+                          id="pdf-m1"
+                        /><label class="form-check-label" for="pdf-m1"
+                          >Feb</label
+                        >
+                      </div>
                     </div>
-                    <div class="mt-3 text-end">
-                       <button type="button" id="btn-pdf-select-all" class="btn btn-xs btn-link p-0 text-decoration-none">Seleccionar todos</button>
+                    <div class="col-4 col-sm-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input pdf-month-check"
+                          type="checkbox"
+                          value="2"
+                          id="pdf-m2"
+                        /><label class="form-check-label" for="pdf-m2"
+                          >Mar</label
+                        >
+                      </div>
+                    </div>
+                    <div class="col-4 col-sm-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input pdf-month-check"
+                          type="checkbox"
+                          value="3"
+                          id="pdf-m3"
+                        /><label class="form-check-label" for="pdf-m3"
+                          >Abr</label
+                        >
+                      </div>
+                    </div>
+                    <div class="col-4 col-sm-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input pdf-month-check"
+                          type="checkbox"
+                          value="4"
+                          id="pdf-m4"
+                        /><label class="form-check-label" for="pdf-m4"
+                          >May</label
+                        >
+                      </div>
+                    </div>
+                    <div class="col-4 col-sm-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input pdf-month-check"
+                          type="checkbox"
+                          value="5"
+                          id="pdf-m5"
+                        /><label class="form-check-label" for="pdf-m5"
+                          >Jun</label
+                        >
+                      </div>
+                    </div>
+                    <div class="col-4 col-sm-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input pdf-month-check"
+                          type="checkbox"
+                          value="6"
+                          id="pdf-m6"
+                        /><label class="form-check-label" for="pdf-m6"
+                          >Jul</label
+                        >
+                      </div>
+                    </div>
+                    <div class="col-4 col-sm-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input pdf-month-check"
+                          type="checkbox"
+                          value="7"
+                          id="pdf-m7"
+                        /><label class="form-check-label" for="pdf-m7"
+                          >Ago</label
+                        >
+                      </div>
+                    </div>
+                    <div class="col-4 col-sm-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input pdf-month-check"
+                          type="checkbox"
+                          value="8"
+                          id="pdf-m8"
+                        /><label class="form-check-label" for="pdf-m8"
+                          >Sep</label
+                        >
+                      </div>
+                    </div>
+                    <div class="col-4 col-sm-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input pdf-month-check"
+                          type="checkbox"
+                          value="9"
+                          id="pdf-m9"
+                        /><label class="form-check-label" for="pdf-m9"
+                          >Oct</label
+                        >
+                      </div>
+                    </div>
+                    <div class="col-4 col-sm-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input pdf-month-check"
+                          type="checkbox"
+                          value="10"
+                          id="pdf-m10"
+                        /><label class="form-check-label" for="pdf-m10"
+                          >Nov</label
+                        >
+                      </div>
+                    </div>
+                    <div class="col-4 col-sm-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input pdf-month-check"
+                          type="checkbox"
+                          value="11"
+                          id="pdf-m11"
+                        /><label class="form-check-label" for="pdf-m11"
+                          >Dic</label
+                        >
+                      </div>
                     </div>
                   </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" id="btn-generate-pdf-final" class="btn btn-danger">
-                      <i class="bi bi-file-pdf me-1"></i> Generar PDF
+                  <div class="mt-3 text-end">
+                    <button
+                      type="button"
+                      id="btn-pdf-select-all"
+                      class="btn btn-xs btn-link p-0 text-decoration-none"
+                    >
+                      Seleccionar todos
                     </button>
                   </div>
                 </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="button"
+                    id="btn-generate-pdf-final"
+                    class="btn btn-danger"
+                  >
+                    <i class="bi bi-file-pdf me-1"></i> Generar PDF
+                  </button>
+                </div>
               </div>
             </div>
-            <!-- Fin de contenido personalizado -->
           </div>
-          <!--end::App Content-->
+          <!-- Fin de contenido personalizado -->
+        </div>
+        <!--end::App Content-->
       </main>
       <!--end::App Main-->
 
@@ -367,21 +618,23 @@
         <div class="float-end d-none d-sm-inline">v1.2.0c</div>
         <!--end::To the end-->
         <!--begin::Copyright-->
-        <strong>
-          Copyright &copy; 2026&nbsp;
-        </strong>
+        <strong> Copyright &copy; 2026&nbsp; </strong>
         Developed by
-        <strong> 
-          <a href="https://github.com/Marcoz08" class="text-decoration-none">MarcoZ</a>.
+        <strong>
+          <a href="https://github.com/Marcoz08" class="text-decoration-none"
+            >MarcoZ</a
+          >.
         </strong>
         <!--end::Copyright-->
       </footer>
       <!--end::Footer-->
 
-
       <!-- Contenedor para notificaciones (Toasts) -->
-      <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1055;"></div>
-
+      <div
+        class="toast-container position-fixed bottom-0 end-0 p-3"
+        id="toastContainer"
+        style="z-index: 1055"
+      ></div>
     </div>
     <!--end::App Wrapper-->
     <!--begin::Script-->
@@ -407,13 +660,13 @@
     <script src="../js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
-      const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+      const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
       const Default = {
-        scrollbarTheme: 'os-theme-light',
-        scrollbarAutoHide: 'leave',
+        scrollbarTheme: "os-theme-light",
+        scrollbarAutoHide: "leave",
         scrollbarClickScroll: true,
       };
-      document.addEventListener('DOMContentLoaded', function () {
+      document.addEventListener("DOMContentLoaded", function () {
         const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
 
         // Disable OverlayScrollbars on mobile devices to prevent touch interference
@@ -437,20 +690,24 @@
     <!--end::OverlayScrollbars Configure-->
 
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const selectMes = document.getElementById('select-mes-salidas');
-        const selectAnio = document.getElementById('select-anio-salidas');
-        const congEl = document.getElementById('local-congregacion');
-        const diaEl = document.getElementById('local-dia');
-        const horaEl = document.getElementById('local-hora');
-        const tablaSalidasBody = document.getElementById('tabla-salidas-body');
-        const btnEditSalidas = document.getElementById('btn-edit-salidas');
-        const btnSaveSalidas = document.getElementById('btn-save-salidas');
-        const btnExportPdf = document.getElementById('btn-export-pdf');
-        const configPdfModal = new bootstrap.Modal(document.getElementById('configPdfModal'));
-        const pdfSelectAnio = document.getElementById('pdf-select-anio');
-        const btnPdfSelectAll = document.getElementById('btn-pdf-select-all');
-        const btnGeneratePdfFinal = document.getElementById('btn-generate-pdf-final');
+      document.addEventListener("DOMContentLoaded", function () {
+        const selectMes = document.getElementById("select-mes-salidas");
+        const selectAnio = document.getElementById("select-anio-salidas");
+        const congEl = document.getElementById("local-congregacion");
+        const diaEl = document.getElementById("local-dia");
+        const horaEl = document.getElementById("local-hora");
+        const tablaSalidasBody = document.getElementById("tabla-salidas-body");
+        const btnEditSalidas = document.getElementById("btn-edit-salidas");
+        const btnSaveSalidas = document.getElementById("btn-save-salidas");
+        const btnExportPdf = document.getElementById("btn-export-pdf");
+        const configPdfModal = new bootstrap.Modal(
+          document.getElementById("configPdfModal"),
+        );
+        const pdfSelectAnio = document.getElementById("pdf-select-anio");
+        const btnPdfSelectAll = document.getElementById("btn-pdf-select-all");
+        const btnGeneratePdfFinal = document.getElementById(
+          "btn-generate-pdf-final",
+        );
 
         const today = new Date();
         const currentMonth = today.getMonth();
@@ -478,26 +735,29 @@
         }
 
         // Evento para abrir el modal de configuración de PDF
-        btnExportPdf.addEventListener('click', () => {
+        btnExportPdf.addEventListener("click", () => {
           configPdfModal.show();
         });
 
         // Lógica de "Seleccionar todos / Desmarcar todos" en el modal PDF
-        btnPdfSelectAll.addEventListener('click', () => {
-          const checks = document.querySelectorAll('.pdf-month-check');
-          const allChecked = Array.from(checks).every(c => c.checked);
-          checks.forEach(c => c.checked = !allChecked);
-          btnPdfSelectAll.textContent = allChecked ? 'Seleccionar todos' : 'Desmarcar todos';
+        btnPdfSelectAll.addEventListener("click", () => {
+          const checks = document.querySelectorAll(".pdf-month-check");
+          const allChecked = Array.from(checks).every((c) => c.checked);
+          checks.forEach((c) => (c.checked = !allChecked));
+          btnPdfSelectAll.textContent = allChecked
+            ? "Seleccionar todos"
+            : "Desmarcar todos";
         });
 
         // Evento para generar el PDF final
-        btnGeneratePdfFinal.addEventListener('click', async () => {
+        btnGeneratePdfFinal.addEventListener("click", async () => {
           const anio = pdfSelectAnio.value;
-          const mesesSeleccionados = Array.from(document.querySelectorAll('.pdf-month-check:checked'))
-                                          .map(c => parseInt(c.value));
+          const mesesSeleccionados = Array.from(
+            document.querySelectorAll(".pdf-month-check:checked"),
+          ).map((c) => parseInt(c.value));
 
           if (mesesSeleccionados.length === 0) {
-            showNotification('Por favor seleccione al menos un mes.', 'danger');
+            showNotification("Por favor seleccione al menos un mes.", "danger");
             return;
           }
 
@@ -507,15 +767,30 @@
 
         async function generateSalidasPDF(anio, meses) {
           const { jsPDF } = window.jspdf;
-          const doc = new jsPDF('p', 'mm', 'a4');
-          const mesesNombres = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
-          
-          let currentY = 15; 
+          const doc = new jsPDF("p", "mm", "a4");
+          const mesesNombres = [
+            "ENERO",
+            "FEBRERO",
+            "MARZO",
+            "ABRIL",
+            "MAYO",
+            "JUNIO",
+            "JULIO",
+            "AGOSTO",
+            "SEPTIEMBRE",
+            "OCTUBRE",
+            "NOVIEMBRE",
+            "DICIEMBRE",
+          ];
+
+          let currentY = 15;
           let generatedContent = false;
 
           for (const mes of meses) {
             // Obtener datos del rol confirmado para este mes (cada mes puede tener una congregación distinta)
-            const agendaResponse = await fetch(`http://localhost:3000/api/agenda/confirmada?mes=${mes}&anio=${anio}`);
+            const agendaResponse = await fetch(
+              `http://localhost:3000/api/agenda/confirmada?mes=${mes}&anio=${anio}`,
+            );
             const agendaData = await agendaResponse.json();
 
             // Si no hay rol confirmado para ese mes, lo saltamos del reporte
@@ -524,32 +799,38 @@
             generatedContent = true;
 
             // Obtener programación de salidas guardada para ese mes
-            const response = await fetch(`http://localhost:3000/api/salidas-programacion?mes=${mes}&anio=${anio}`);
+            const response = await fetch(
+              `http://localhost:3000/api/salidas-programacion?mes=${mes}&anio=${anio}`,
+            );
             const programData = await response.json();
 
             const targetDay = agendaData.dia_rp % 7;
-            const displayTime = agendaData.hora_reunion ? agendaData.hora_reunion.substring(0, 5) : "--:--";
+            const displayTime = agendaData.hora_reunion
+              ? agendaData.hora_reunion.substring(0, 5)
+              : "--:--";
 
             const tableRows = [];
             let date = new Date(anio, mes, 1, 12, 0, 0);
             while (date.getMonth() === mes) {
               if (date.getDay() === targetDay) {
-                const dayNum = date.getDate().toString().padStart(2, '0');
-                const monthNum = (date.getMonth() + 1).toString().padStart(2, '0');
+                const dayNum = date.getDate().toString().padStart(2, "0");
+                const monthNum = (date.getMonth() + 1)
+                  .toString()
+                  .padStart(2, "0");
                 const fullDateStr = `${anio}-${monthNum}-${dayNum}`;
-                
-                const dataRow = programData.find(p => {
-                  const pDateStr = p.fecha_salida.split('T')[0];
+
+                const dataRow = programData.find((p) => {
+                  const pDateStr = p.fecha_salida.split("T")[0];
                   return pDateStr === fullDateStr;
                 });
 
                 tableRows.push([
-                  dataRow?.nombre_orador || '--',
-                  dataRow?.num_bosquejo || '--',
-                  dataRow?.tema || 'Sin asignar',
-                  dataRow?.cancion || '--',
+                  dataRow?.nombre_orador || "--",
+                  dataRow?.num_bosquejo || "--",
+                  dataRow?.tema || "Sin asignar",
+                  dataRow?.cancion || "--",
                   displayTime,
-                  `${dayNum}/${monthNum}`
+                  `${dayNum}/${monthNum}`,
                 ]);
               }
               date.setDate(date.getDate() + 1);
@@ -566,38 +847,68 @@
             // Encabezado del mes
             doc.setFontSize(18);
             doc.setTextColor(0, 119, 182);
-            doc.text(`PROGRAMA DE SALIDAS A DISCURSAR - ${mesesNombres[mes]} ${anio}`, 105, currentY, { align: 'center' });
-            
+            doc.text(
+              `PROGRAMA DE SALIDAS A DISCURSAR - ${mesesNombres[mes]} ${anio}`,
+              105,
+              currentY,
+              { align: "center" },
+            );
+
             doc.setFontSize(12);
             doc.setTextColor(80);
-            doc.setFont(undefined, 'bold');
-            doc.text(`Congregación a visitar: ${agendaData.congregacion}`, 14, currentY + 11);
-            doc.text(`Día y hora: ${agendaData.nombre_dia} - ${displayTime}`, 14, currentY + 18);
-            doc.setFont(undefined, 'normal');
+            doc.setFont(undefined, "bold");
+            doc.text(
+              `Congregación a visitar: ${agendaData.congregacion}`,
+              14,
+              currentY + 11,
+            );
+            doc.text(
+              `Día y hora: ${agendaData.nombre_dia} - ${displayTime}`,
+              14,
+              currentY + 18,
+            );
+            doc.setFont(undefined, "normal");
 
             doc.autoTable({
               startY: currentY + 26,
-              head: [['Discursante', 'Núm.', 'Título del Discurso', 'Cant.', 'Hora', 'Fecha']],
+              head: [
+                [
+                  "Discursante",
+                  "Núm.",
+                  "Título del Discurso",
+                  "Cant.",
+                  "Hora",
+                  "Fecha",
+                ],
+              ],
               body: tableRows,
-              theme: 'grid',
-              headStyles: { fillColor: [0, 119, 182], textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center' },
-              styles: { fontSize: 11, cellPadding: 4, valign: 'middle' },
+              theme: "grid",
+              headStyles: {
+                fillColor: [0, 119, 182],
+                textColor: [255, 255, 255],
+                fontStyle: "bold",
+                halign: "center",
+              },
+              styles: { fontSize: 11, cellPadding: 4, valign: "middle" },
               alternateRowStyles: { fillColor: [202, 240, 248] },
               columnStyles: {
-                0: { fontStyle: 'bold' },
-                1: { halign: 'center', cellWidth: 15 },
-                3: { halign: 'center', cellWidth: 15 },
-                4: { halign: 'center', cellWidth: 20, fontStyle: 'bold' },
-                5: { halign: 'center', cellWidth: 22, fontStyle: 'bold' }
-              }
+                0: { fontStyle: "bold" },
+                1: { halign: "center", cellWidth: 15 },
+                3: { halign: "center", cellWidth: 15 },
+                4: { halign: "center", cellWidth: 20, fontStyle: "bold" },
+                5: { halign: "center", cellWidth: 22, fontStyle: "bold" },
+              },
             });
 
             currentY = doc.lastAutoTable.finalY + 15;
           }
 
           if (!generatedContent) {
-             showNotification('No se encontraron roles confirmados para los meses seleccionados.', 'danger');
-             return;
+            showNotification(
+              "No se encontraron roles confirmados para los meses seleccionados.",
+              "danger",
+            );
+            return;
           }
 
           doc.save(`Programa_Salidas_${anio}.pdf`);
@@ -606,74 +917,89 @@
         // Cargar lista de oradores locales para el autocompletado
         async function fetchOradoresLocales() {
           try {
-            const response = await fetch('http://localhost:3000/api/oradores-temas');
+            const response = await fetch(
+              "http://localhost:3000/api/oradores-temas",
+            );
             allOradoresTemasRaw = await response.json();
-            
+
             // Creamos una lista única de oradores aprobados
             const uniqueSpeakers = new Map();
-            allOradoresTemasRaw.forEach(item => {
+            allOradoresTemasRaw.forEach((item) => {
               if (item.aprobado === 1 && !uniqueSpeakers.has(item.id_orador)) {
-                uniqueSpeakers.set(item.id_orador, { id_orador: item.id_orador, nombre: item.nombre });
+                uniqueSpeakers.set(item.id_orador, {
+                  id_orador: item.id_orador,
+                  nombre: item.nombre,
+                });
               }
             });
             oradoresLocalesTemas = Array.from(uniqueSpeakers.values());
-          } catch (e) { console.error("Error cargando oradores:", e); }
+          } catch (e) {
+            console.error("Error cargando oradores:", e);
+          }
         }
 
         // Alternar modo edición
-        btnEditSalidas.addEventListener('click', () => {
+        btnEditSalidas.addEventListener("click", () => {
           if (!currentConfirmedAgenda) {
-            alert("No hay un rol confirmado para este periodo. Primero agende el rol en la sección 'Agenda de roles'.");
+            alert(
+              "No hay un rol confirmado para este periodo. Primero agende el rol en la sección 'Agenda de roles'.",
+            );
             return;
           }
           isEditingSalidas = !isEditingSalidas;
-          btnEditSalidas.innerHTML = isEditingSalidas ? '<i class="bi bi-x-circle-fill me-1"></i> Cancelar' : '<i class="bi bi-pencil-fill me-1"></i> Editar Programa';
-          btnEditSalidas.className = isEditingSalidas ? 'btn btn-sm btn-outline-danger' : 'btn btn-sm btn-outline-primary';
-          btnSaveSalidas.style.display = isEditingSalidas ? 'block' : 'none';
+          btnEditSalidas.innerHTML = isEditingSalidas
+            ? '<i class="bi bi-x-circle-fill me-1"></i> Cancelar'
+            : '<i class="bi bi-pencil-fill me-1"></i> Editar Programa';
+          btnEditSalidas.className = isEditingSalidas
+            ? "btn btn-sm btn-outline-danger"
+            : "btn btn-sm btn-outline-primary";
+          btnSaveSalidas.style.display = isEditingSalidas ? "block" : "none";
           renderSalidasTable();
         });
 
         // Lógica de selección de orador en la tabla
-        tablaSalidasBody.addEventListener('change', (e) => {
-          const row = e.target.closest('tr');
+        tablaSalidasBody.addEventListener("change", (e) => {
+          const row = e.target.closest("tr");
 
-          if (e.target.classList.contains('orador-select')) {
+          if (e.target.classList.contains("orador-select")) {
             const selectedId = e.target.value;
-            const temaSelect = row.querySelector('.tema-select');
-            
+            const temaSelect = row.querySelector(".tema-select");
+
             // Limpiar campos dependientes
-            row.querySelector('.num-input').value = "";
-            row.querySelector('.cancion-input').value = "";
+            row.querySelector(".num-input").value = "";
+            row.querySelector(".cancion-input").value = "";
             delete row.dataset.idRegistro;
 
             if (selectedId !== "") {
               row.dataset.idOrador = selectedId;
               temaSelect.disabled = false;
-              
+
               // Poblar el select de temas solo con los del orador seleccionado
-              let topicOptions = '<option value="">-- Seleccionar tema --</option>';
+              let topicOptions =
+                '<option value="">-- Seleccionar tema --</option>';
               allOradoresTemasRaw
-                .filter(t => t.id_orador == selectedId && t.id_registro)
-                .forEach(topic => {
-                  topicOptions += `<option value="${topic.id_registro}" data-num="${topic.numero_tema || ''}" data-cancion="${topic.cancion_sugerida || ''}">${topic.titulo}</option>`;
+                .filter((t) => t.id_orador == selectedId && t.id_registro)
+                .forEach((topic) => {
+                  topicOptions += `<option value="${topic.id_registro}" data-num="${topic.numero_tema || ""}" data-cancion="${topic.cancion_sugerida || ""}">${topic.titulo}</option>`;
                 });
               temaSelect.innerHTML = topicOptions;
             } else {
               temaSelect.disabled = true;
-              temaSelect.innerHTML = '<option value="">-- Seleccionar tema --</option>';
+              temaSelect.innerHTML =
+                '<option value="">-- Seleccionar tema --</option>';
               delete row.dataset.idOrador;
             }
           }
 
-          if (e.target.classList.contains('tema-select')) {
+          if (e.target.classList.contains("tema-select")) {
             const opt = e.target.options[e.target.selectedIndex];
             if (opt.value !== "") {
-              row.querySelector('.num-input').value = opt.dataset.num;
-              row.querySelector('.cancion-input').value = opt.dataset.cancion;
+              row.querySelector(".num-input").value = opt.dataset.num;
+              row.querySelector(".cancion-input").value = opt.dataset.cancion;
               row.dataset.idRegistro = opt.value;
             } else {
-              row.querySelector('.num-input').value = "";
-              row.querySelector('.cancion-input').value = "";
+              row.querySelector(".num-input").value = "";
+              row.querySelector(".cancion-input").value = "";
               delete row.dataset.idRegistro;
             }
           }
@@ -681,11 +1007,12 @@
 
         async function renderSalidasTable() {
           if (!currentConfirmedAgenda) {
-            tablaSalidasBody.innerHTML = '<tr><td colspan="6" class="text-center p-4 text-muted"><i class="bi bi-calendar-x me-2"></i>Sin rol confirmado para este periodo</td></tr>';
+            tablaSalidasBody.innerHTML =
+              '<tr><td colspan="6" class="text-center p-4 text-muted"><i class="bi bi-calendar-x me-2"></i>Sin rol confirmado para este periodo</td></tr>';
             return;
           }
 
-          const mes = parseInt(selectMes.value); 
+          const mes = parseInt(selectMes.value);
           const anio = parseInt(selectAnio.value);
 
           // Sincronizamos con el día del acuerdo (6=Sab, 7=Dom) % 7 -> (6=Sab, 0=Dom)
@@ -693,62 +1020,89 @@
           // Usamos la hora del acuerdo para todas las filas del mes
           let displayTime = "--:--";
           if (currentConfirmedAgenda.hora_reunion) {
-              const [h, m] = currentConfirmedAgenda.hora_reunion.split(':');
-              const h24 = parseInt(h);
-              const ampm = h24 >= 12 ? 'PM' : 'AM';
-              const h12 = h24 % 12 || 12;
-              displayTime = `${h12.toString().padStart(2, '0')}:${m} ${ampm}`;
+            const [h, m] = currentConfirmedAgenda.hora_reunion.split(":");
+            const h24 = parseInt(h);
+            const ampm = h24 >= 12 ? "PM" : "AM";
+            const h12 = h24 % 12 || 12;
+            displayTime = `${h12.toString().padStart(2, "0")}:${m} ${ampm}`;
           }
 
-          const mesesShort = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+          const mesesShort = [
+            "ene",
+            "feb",
+            "mar",
+            "abr",
+            "may",
+            "jun",
+            "jul",
+            "ago",
+            "sep",
+            "oct",
+            "nov",
+            "dic",
+          ];
 
           try {
-            const response = await fetch(`http://localhost:3000/api/salidas-programacion?mes=${mes}&anio=${anio}`);
+            const response = await fetch(
+              `http://localhost:3000/api/salidas-programacion?mes=${mes}&anio=${anio}`,
+            );
             const programacion = response.ok ? await response.json() : [];
 
-            tablaSalidasBody.innerHTML = '';
+            tablaSalidasBody.innerHTML = "";
             // Iteramos por todos los días del mes para encontrar los días de reunión (targetDay)
             let date = new Date(anio, mes, 1, 12, 0, 0);
             while (date.getMonth() === mes) {
               if (date.getDay() === targetDay) {
-                const fullDateStr = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split('T')[0];
-                const displayDateStr = `${date.getDate().toString().padStart(2, '0')}-${mesesShort[mes]}`;
-                
-                // Buscamos si ya hay datos guardados para esta fecha
-                const data = Array.isArray(programacion) ? programacion.find(p => {
-                  const pDateStr = p.fecha_salida.split('T')[0];
-                  return pDateStr === fullDateStr;
-                }) : null;
+                const fullDateStr = new Date(
+                  date.getTime() - date.getTimezoneOffset() * 60000,
+                )
+                  .toISOString()
+                  .split("T")[0];
+                const displayDateStr = `${date.getDate().toString().padStart(2, "0")}-${mesesShort[mes]}`;
 
-                const tr = document.createElement('tr');
+                // Buscamos si ya hay datos guardados para esta fecha
+                const data = Array.isArray(programacion)
+                  ? programacion.find((p) => {
+                      const pDateStr = p.fecha_salida.split("T")[0];
+                      return pDateStr === fullDateStr;
+                    })
+                  : null;
+
+                const tr = document.createElement("tr");
                 tr.dataset.fecha = fullDateStr;
-                
+
                 if (isEditingSalidas) {
-                  let options = '<option value="">-- Seleccionar discursante --</option>';
-                  oradoresLocalesTemas.forEach(speaker => {
-                    const isSelected = data && data.id_orador === speaker.id_orador;
+                  let options =
+                    '<option value="">-- Seleccionar discursante --</option>';
+                  oradoresLocalesTemas.forEach((speaker) => {
+                    const isSelected =
+                      data && data.id_orador === speaker.id_orador;
                     options += `
-                      <option value="${speaker.id_orador}" ${isSelected ? 'selected' : ''}>
+                      <option value="${speaker.id_orador}" ${isSelected ? "selected" : ""}>
                         ${speaker.nombre}
                       </option>`;
                   });
 
                   // Cargar temas si ya hay un orador guardado en esa fecha
-                  let topicOptions = '<option value="">-- Seleccionar tema --</option>';
+                  let topicOptions =
+                    '<option value="">-- Seleccionar tema --</option>';
                   if (data && data.id_orador) {
                     allOradoresTemasRaw
-                      .filter(t => t.id_orador === data.id_orador && t.id_registro)
-                      .forEach(topic => {
-                        const isSelected = data.id_registro === topic.id_registro;
-                        topicOptions += `<option value="${topic.id_registro}" data-num="${topic.numero_tema || ''}" data-cancion="${topic.cancion_sugerida || ''}" ${isSelected ? 'selected' : ''}>${topic.titulo}</option>`;
+                      .filter(
+                        (t) => t.id_orador === data.id_orador && t.id_registro,
+                      )
+                      .forEach((topic) => {
+                        const isSelected =
+                          data.id_registro === topic.id_registro;
+                        topicOptions += `<option value="${topic.id_registro}" data-num="${topic.numero_tema || ""}" data-cancion="${topic.cancion_sugerida || ""}" ${isSelected ? "selected" : ""}>${topic.titulo}</option>`;
                       });
                   }
 
                   tr.innerHTML = `
                     <td><select class="form-select form-select-sm orador-select">${options}</select></td>
-                    <td><input type="number" class="form-control form-control-sm text-center num-input" readonly value="${data?.num_bosquejo || ''}"></td>
-                    <td><select class="form-select form-select-sm tema-select" ${data?.id_orador ? '' : 'disabled'}>${topicOptions}</select></td>
-                    <td><input type="number" class="form-control form-control-sm text-center cancion-input" readonly value="${data?.cancion || ''}"></td>
+                    <td><input type="number" class="form-control form-control-sm text-center num-input" readonly value="${data?.num_bosquejo || ""}"></td>
+                    <td><select class="form-select form-select-sm tema-select" ${data?.id_orador ? "" : "disabled"}>${topicOptions}</select></td>
+                    <td><input type="number" class="form-control form-control-sm text-center cancion-input" readonly value="${data?.cancion || ""}"></td>
                     <td class="text-center text-muted"><small>${displayTime}</small></td>
                     <td class="text-center fw-bold text-secondary">${displayDateStr}</td>
                   `;
@@ -759,9 +1113,9 @@
                 } else {
                   tr.innerHTML = `
                     <td><i class="bi bi-person-up text-primary me-2"></i><strong>${data?.nombre_orador || '<span class="text-muted">Por asignar</span>'}</strong></td>
-                    <td class="text-center"><span class="badge text-bg-light border">${data?.num_bosquejo || '--'}</span></td>
+                    <td class="text-center"><span class="badge text-bg-light border">${data?.num_bosquejo || "--"}</span></td>
                     <td><small>${data?.tema || '<span class="text-muted italic">Sin asignar</span>'}</small></td>
-                    <td class="text-center">${data?.cancion || '--'}</td>
+                    <td class="text-center">${data?.cancion || "--"}</td>
                     <td class="text-center text-muted"><small>${displayTime}</small></td>
                     <td class="text-center fw-bold text-secondary">${displayDateStr}</td>
                   `;
@@ -770,7 +1124,9 @@
               }
               date.setDate(date.getDate() + 1);
             }
-          } catch (e) { console.error("Error al renderizar tabla:", e); }
+          } catch (e) {
+            console.error("Error al renderizar tabla:", e);
+          }
         }
 
         // Función para verificar si hay un rol en la agenda para el periodo seleccionado
@@ -778,86 +1134,99 @@
           const mes = selectMes.value;
           const anio = selectAnio.value;
           try {
-            const response = await fetch(`http://localhost:3000/api/agenda/confirmada?mes=${mes}&anio=${anio}`);
+            const response = await fetch(
+              `http://localhost:3000/api/agenda/confirmada?mes=${mes}&anio=${anio}`,
+            );
             const data = await response.json();
             if (data && data.congregacion) {
               currentConfirmedAgenda = data;
               congEl.textContent = data.congregacion;
-              congEl.classList.add('fw-bold', 'text-primary');
-              
+              congEl.classList.add("fw-bold", "text-primary");
+
               // Mostrar el nombre del día
               diaEl.textContent = data.nombre_dia || "--";
 
               // Formatear y mostrar la hora
               if (data.hora_reunion) {
-                const [h, m] = data.hora_reunion.split(':');
+                const [h, m] = data.hora_reunion.split(":");
                 const h24 = parseInt(h);
-                const ampm = h24 >= 12 ? 'PM' : 'AM';
+                const ampm = h24 >= 12 ? "PM" : "AM";
                 const h12 = h24 % 12 || 12;
-                horaEl.textContent = `${h12.toString().padStart(2, '0')}:${m} ${ampm}`;
+                horaEl.textContent = `${h12.toString().padStart(2, "0")}:${m} ${ampm}`;
               } else {
                 horaEl.textContent = "--:--";
               }
             } else {
               currentConfirmedAgenda = null;
               congEl.textContent = "Sin rol confirmado";
-              congEl.classList.remove('fw-bold', 'text-primary');
+              congEl.classList.remove("fw-bold", "text-primary");
               diaEl.textContent = "--";
               horaEl.textContent = "--:--";
             }
             renderSalidasTable();
           } catch (error) {
-            console.error('Error al obtener datos de salida:', error);
+            console.error("Error al obtener datos de salida:", error);
           }
         }
 
         // Guardar cambios
-        btnSaveSalidas.addEventListener('click', async () => {
-          const rows = document.querySelectorAll('#tabla-salidas-body tr');
+        btnSaveSalidas.addEventListener("click", async () => {
+          const rows = document.querySelectorAll("#tabla-salidas-body tr");
           const programacion = [];
-          
+
           if (!currentConfirmedAgenda || !currentConfirmedAgenda.id_rol) {
             alert("No hay un rol confirmado válido para este periodo.");
             return;
           }
 
-          rows.forEach(row => {
-            const select = row.querySelector('.orador-select');
+          rows.forEach((row) => {
+            const select = row.querySelector(".orador-select");
             if (select && select.value !== "") {
               programacion.push({
                 id_registro: row.dataset.idRegistro,
                 id_rol: currentConfirmedAgenda.id_rol,
                 id_orador: row.dataset.idOrador,
-                fecha_salida: row.dataset.fecha
+                fecha_salida: row.dataset.fecha,
               });
             }
           });
 
           try {
-            const response = await fetch('http://localhost:3000/api/salidas-programacion', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ mes: selectMes.value, anio: selectAnio.value, programacion })
-            });
+            const response = await fetch(
+              "http://localhost:3000/api/salidas-programacion",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  mes: selectMes.value,
+                  anio: selectAnio.value,
+                  programacion,
+                }),
+              },
+            );
             if (response.ok) {
               alert("Programación de salidas guardada con éxito.");
               btnEditSalidas.click();
             } else {
               alert("Error al guardar la programación.");
             }
-          } catch (e) { 
+          } catch (e) {
             console.error(e);
-            alert("Error de conexión al guardar."); 
+            alert("Error de conexión al guardar.");
           }
         });
 
         // Función para mostrar notificaciones Toast
-        function showNotification(message, type = 'success') {
-          const toastContainer = document.getElementById('toastContainer');
-          const toastId = 'toast-' + Date.now();
-          const bgClass = type === 'success' ? 'text-bg-success' : 'text-bg-danger';
-          const icon = type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill';
-          
+        function showNotification(message, type = "success") {
+          const toastContainer = document.getElementById("toastContainer");
+          const toastId = "toast-" + Date.now();
+          const bgClass =
+            type === "success" ? "text-bg-success" : "text-bg-danger";
+          const icon =
+            type === "success"
+              ? "bi-check-circle-fill"
+              : "bi-exclamation-triangle-fill";
+
           const toastHTML = `
             <div id="${toastId}" class="toast align-items-center ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
               <div class="d-flex">
@@ -871,20 +1240,22 @@
               </div>
             </div>
           `;
-          
-          toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+
+          toastContainer.insertAdjacentHTML("beforeend", toastHTML);
           const toastElement = document.getElementById(toastId);
           const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
           toast.show();
-          toastElement.addEventListener('hidden.bs.toast', () => toastElement.remove());
+          toastElement.addEventListener("hidden.bs.toast", () =>
+            toastElement.remove(),
+          );
         }
 
         fetchOradoresLocales();
 
         // Escuchar cambios en los selectores para actualizar la info
-        selectMes.addEventListener('change', fetchConfirmedSalida);
-        selectAnio.addEventListener('change', fetchConfirmedSalida);
-        
+        selectMes.addEventListener("change", fetchConfirmedSalida);
+        selectAnio.addEventListener("change", fetchConfirmedSalida);
+
         // Ejecución inicial al cargar la página
         fetchConfirmedSalida();
       });

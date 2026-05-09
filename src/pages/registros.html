@@ -6,10 +6,21 @@
     <title>Discursapp | Registro de bosquejos</title>
 
     <!--begin::Accessibility Meta Tags-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
     <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
+    <meta
+      name="theme-color"
+      content="#007bff"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#1a1a1a"
+      media="(prefers-color-scheme: dark)"
+    />
     <!--end::Accessibility Meta Tags-->
 
     <!--begin::Primary Meta Tags-->
@@ -26,7 +37,11 @@
     <!--end::Primary Meta Tags-->
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../assets/discursapp_favicon.ico" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="../assets/discursapp_favicon.ico"
+    />
 
     <!--begin::Accessibility Features-->
     <!-- Skip links will be dynamically added by accessibility.js -->
@@ -64,6 +79,15 @@
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
+    <!--begin::Theme Manager-->
+    <script src="../js/theme.js"></script>
+    <style>
+      .table.table-head-fixed thead tr:nth-child(1) th {
+        background-color: var(--bs-tertiary-bg);
+        border-bottom-color: var(--bs-border-color);
+      }
+    </style>
+    <!--end::Theme Manager-->
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -77,7 +101,12 @@
           <!--begin::Start Navbar Links-->
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+              <a
+                class="nav-link"
+                data-lte-toggle="sidebar"
+                href="#"
+                role="button"
+              >
                 <i class="bi bi-list"></i>
               </a>
             </li>
@@ -91,7 +120,11 @@
       </nav>
       <!--end::Header-->
       <!--begin::Sidebar-->
-      <aside class="app-sidebar shadow" data-bs-theme="dark" style="background-color: #1F3056;">
+      <aside
+        class="app-sidebar shadow"
+        data-bs-theme="dark"
+        style="background-color: #1f3056"
+      >
         <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
@@ -160,7 +193,19 @@
                   <p>Oradores locales</p>
                 </a>
               </li>
-                                        
+              <li
+                class="nav-item mt-auto"
+                style="
+                  border-top: 3px solid rgba(255, 255, 255, 0.1);
+                  padding-top: 0.5rem;
+                  margin-top: 1rem;
+                "
+              >
+                <a href="./configuracion.html" class="nav-link">
+                  <i class="nav-icon bi bi-gear-fill"></i>
+                  <p>Configuración</p>
+                </a>
+              </li>
             </ul>
             <!--end::Sidebar Menu-->
           </nav>
@@ -179,8 +224,12 @@
               </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
-                  <li class="breadcrumb-item"><a href="./index.html">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Registro de bosquejos</li>
+                  <li class="breadcrumb-item">
+                    <a href="./index.html">Home</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Registro de bosquejos
+                  </li>
                 </ol>
               </div>
             </div>
@@ -194,13 +243,25 @@
                   <div class="card-header">
                     <h3 class="card-title">Lista de Bosquejos</h3>
                     <div class="card-tools d-flex">
-                      <select id="sort-date" class="form-select form-select-sm me-2" style="width: 180px;">
+                      <select
+                        id="sort-date"
+                        class="form-select form-select-sm me-2"
+                        style="width: 180px"
+                      >
                         <option value="none">Ordenar por Núm.</option>
                         <option value="recent">Más reciente primero</option>
                         <option value="oldest">Más antiguo primero</option>
                       </select>
-                      <div class="input-group input-group-sm" style="width: 250px;">
-                        <input type="text" name="table_search" class="form-control float-end" placeholder="Buscar discurso...">
+                      <div
+                        class="input-group input-group-sm"
+                        style="width: 250px"
+                      >
+                        <input
+                          type="text"
+                          name="table_search"
+                          class="form-control float-end"
+                          placeholder="Buscar discurso..."
+                        />
                         <div class="input-group-append">
                           <button type="submit" class="btn btn-default">
                             <i class="bi bi-search"></i>
@@ -209,8 +270,13 @@
                       </div>
                     </div>
                   </div>
-                  <div class="card-body table-responsive p-0" style="height: 600px;">
-                    <table class="table table-head-fixed table-hover text-nowrap">
+                  <div
+                    class="card-body table-responsive p-0"
+                    style="height: 600px"
+                  >
+                    <table
+                      class="table table-head-fixed table-hover text-nowrap"
+                    >
                       <thead>
                         <tr>
                           <th>Núm.</th>
@@ -226,7 +292,7 @@
                     </table>
                   </div>
                 </div>
-                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -234,59 +300,123 @@
       <!--end::App Main-->
 
       <!-- Contenedor para notificaciones (Toasts) -->
-      <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" style="z-index: 1055;"></div>
+      <div
+        class="toast-container position-fixed bottom-0 end-0 p-3"
+        id="toastContainer"
+        style="z-index: 1055"
+      ></div>
 
       <!-- Modal para Editar Fecha -->
-      <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+      <div
+        class="modal fade"
+        id="editModal"
+        tabindex="-1"
+        aria-labelledby="editModalLabel"
+        aria-hidden="true"
+      >
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="editModalLabel">Actualizar Presentación</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <h5 class="modal-title" id="editModalLabel">
+                Actualizar Presentación
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
             <div class="modal-body">
               <p id="edit-speech-info" class="fw-bold"></p>
               <form id="editForm">
-                <input type="hidden" id="edit-id">
+                <input type="hidden" id="edit-id" />
                 <div class="mb-3">
-                  <label for="edit-fecha" class="form-label">Fecha de última presentación</label>
-                  <input type="date" class="form-control" id="edit-fecha">
+                  <label for="edit-fecha" class="form-label"
+                    >Fecha de última presentación</label
+                  >
+                  <input type="date" class="form-control" id="edit-fecha" />
                 </div>
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" id="clear-date-btn" class="btn btn-outline-danger me-auto">Borrar fecha</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" id="save-date-btn" class="btn btn-primary">Guardar Cambios</button>
+              <button
+                type="button"
+                id="clear-date-btn"
+                class="btn btn-outline-danger me-auto"
+              >
+                Borrar fecha
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button type="button" id="save-date-btn" class="btn btn-primary">
+                Guardar Cambios
+              </button>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Modal para Editar Título -->
-      <div class="modal fade" id="editTitleModal" tabindex="-1" aria-labelledby="editTitleModalLabel" aria-hidden="true">
+      <div
+        class="modal fade"
+        id="editTitleModal"
+        tabindex="-1"
+        aria-labelledby="editTitleModalLabel"
+        aria-hidden="true"
+      >
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="editTitleModalLabel">Editar Título del Discurso</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <h5 class="modal-title" id="editTitleModalLabel">
+                Editar Título del Discurso
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
             <div class="modal-body">
               <p id="edit-title-info" class="text-muted small"></p>
               <form id="editTitleForm">
-                <input type="hidden" id="edit-title-id">
+                <input type="hidden" id="edit-title-id" />
                 <div class="mb-3">
-                  <label for="edit-titulo-input" class="form-label">Nuevo título</label>
-                  <input type="text" class="form-control" id="edit-titulo-input" required>
+                  <label for="edit-titulo-input" class="form-label"
+                    >Nuevo título</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="edit-titulo-input"
+                    required
+                  />
                 </div>
                 <div>
-                  <p class="text-danger">Nota: Asegurese de usar un título actualizado y aprobado por la organización.</p>
+                  <p class="text-danger">
+                    Nota: Asegurese de usar un título actualizado y aprobado por
+                    la organización.
+                  </p>
                 </div>
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" id="save-title-btn" class="btn btn-primary">Guardar Cambios</button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button type="button" id="save-title-btn" class="btn btn-primary">
+                Guardar Cambios
+              </button>
             </div>
           </div>
         </div>
@@ -298,18 +428,16 @@
         <div class="float-end d-none d-sm-inline">v1.2.0c</div>
         <!--end::To the end-->
         <!--begin::Copyright-->
-        <strong>
-          Copyright &copy; 2026&nbsp;
-        </strong>
+        <strong> Copyright &copy; 2026&nbsp; </strong>
         Developed by
-        <strong> 
-          <a href="https://github.com/Marcoz08" class="text-decoration-none">MarcoZ</a>.
+        <strong>
+          <a href="https://github.com/Marcoz08" class="text-decoration-none"
+            >MarcoZ</a
+          >.
         </strong>
         <!--end::Copyright-->
       </footer>
       <!--end::Footer-->
-
-
     </div>
     <!--end::App Wrapper-->
     <!--begin::Script-->
@@ -332,13 +460,13 @@
     <script src="../js/adminlte.js"></script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
-      const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+      const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
       const Default = {
-        scrollbarTheme: 'os-theme-light',
-        scrollbarAutoHide: 'leave',
+        scrollbarTheme: "os-theme-light",
+        scrollbarAutoHide: "leave",
         scrollbarClickScroll: true,
       };
-      document.addEventListener('DOMContentLoaded', function () {
+      document.addEventListener("DOMContentLoaded", function () {
         const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
 
         // Disable OverlayScrollbars on mobile devices to prevent touch interference
@@ -363,22 +491,25 @@
 
     <!-- Lógica para cargar datos desde el servidor -->
     <script>
-      document.addEventListener('DOMContentLoaded', async function () {
-        const tableBody = document.getElementById('bosquejos-table-body');
-        const searchInput = document.querySelector('input[name="table_search"]');
-        const sortSelect = document.getElementById('sort-date');
+      document.addEventListener("DOMContentLoaded", async function () {
+        const tableBody = document.getElementById("bosquejos-table-body");
+        const searchInput = document.querySelector(
+          'input[name="table_search"]',
+        );
+        const sortSelect = document.getElementById("sort-date");
         let bosquejosOriginales = [];
 
         async function fetchBosquejos() {
           try {
-            const response = await fetch('http://localhost:3000/api/bosquejos');
-            if (!response.ok) throw new Error('Error al obtener datos');
-            
+            const response = await fetch("http://localhost:3000/api/bosquejos");
+            if (!response.ok) throw new Error("Error al obtener datos");
+
             bosquejosOriginales = await response.json();
             updateDisplay();
           } catch (error) {
-            console.error('Error:', error);
-            tableBody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Error al conectar con el servidor</td></tr>';
+            console.error("Error:", error);
+            tableBody.innerHTML =
+              '<tr><td colspan="5" class="text-center text-danger">Error al conectar con el servidor</td></tr>';
           }
         }
 
@@ -387,18 +518,20 @@
           const sortVal = sortSelect.value;
 
           // 1. Filtrar
-          let filtered = bosquejosOriginales.filter(b => 
-            b.titulo.toLowerCase().includes(term) || b.num.toString().includes(term)
+          let filtered = bosquejosOriginales.filter(
+            (b) =>
+              b.titulo.toLowerCase().includes(term) ||
+              b.num.toString().includes(term),
           );
 
           // 2. Ordenar
-          if (sortVal === 'recent') {
+          if (sortVal === "recent") {
             filtered.sort((a, b) => {
               if (!a.fecha_ult) return 1;
               if (!b.fecha_ult) return -1;
               return new Date(b.fecha_ult) - new Date(a.fecha_ult);
             });
-          } else if (sortVal === 'oldest') {
+          } else if (sortVal === "oldest") {
             filtered.sort((a, b) => {
               if (!a.fecha_ult) return 1;
               if (!b.fecha_ult) return -1;
@@ -410,43 +543,47 @@
         }
 
         function renderTable(data) {
-          tableBody.innerHTML = '';
+          tableBody.innerHTML = "";
           const now = new Date();
           const threeMonthsAgo = new Date();
           threeMonthsAgo.setMonth(now.getMonth() - 3);
           const sixMonthsAgo = new Date();
           sixMonthsAgo.setMonth(now.getMonth() - 6);
 
-          data.forEach(item => {
-            const tr = document.createElement('tr');
-            
+          data.forEach((item) => {
+            const tr = document.createElement("tr");
+
             // Ajuste para evitar que el timezone cambie la fecha al mostrarla
-            let rawFecha = '';
+            let rawFecha = "";
             if (item.fecha_ult) {
               const d = new Date(item.fecha_ult);
-              rawFecha = new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+              rawFecha = new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+                .toISOString()
+                .split("T")[0];
             }
-            const fechaStr = rawFecha ? rawFecha.split('-').reverse().join('-') : '--';
-            
-            let badgeClass = '';
-            let badgeStyle = '';
-            let statusText = '';
+            const fechaStr = rawFecha
+              ? rawFecha.split("-").reverse().join("-")
+              : "--";
+
+            let badgeClass = "";
+            let badgeStyle = "";
+            let statusText = "";
 
             if (!item.fecha_ult) {
-              badgeClass = 'text-bg-success'; // Verde
-              statusText = 'Disponible';
+              badgeClass = "text-bg-success"; // Verde
+              statusText = "Disponible";
             } else {
               const lastDate = new Date(item.fecha_ult);
               if (lastDate >= threeMonthsAgo) {
-                badgeClass = 'text-bg-danger'; // Rojo
-                statusText = 'Muy reciente';
+                badgeClass = "text-bg-danger"; // Rojo
+                statusText = "Muy reciente";
               } else if (lastDate >= sixMonthsAgo) {
-                badgeClass = 'text-white'; 
+                badgeClass = "text-white";
                 badgeStyle = 'style="background-color: #fd7e14;"'; // Naranja vibrante (Bootstrap orange)
-                statusText = 'Reciente';
+                statusText = "Reciente";
               } else {
-                badgeClass = 'text-bg-warning'; // Amarillo
-                statusText = 'Presentado';
+                badgeClass = "text-bg-warning"; // Amarillo
+                statusText = "Presentado";
               }
             }
 
@@ -478,34 +615,42 @@
         }
 
         // Abrir modal y cargar datos
-        tableBody.addEventListener('click', (e) => {
-          const dateBtn = e.target.closest('.edit-btn');
-          const titleBtn = e.target.closest('.edit-title-btn');
+        tableBody.addEventListener("click", (e) => {
+          const dateBtn = e.target.closest(".edit-btn");
+          const titleBtn = e.target.closest(".edit-title-btn");
 
           if (dateBtn) {
             const { id, num, titulo, fecha } = dateBtn.dataset;
-            document.getElementById('edit-id').value = id;
-            document.getElementById('edit-speech-info').innerText = `Bosquejo #${num}: ${titulo}`;
-            document.getElementById('edit-fecha').value = fecha;
-            new bootstrap.Modal(document.getElementById('editModal')).show();
+            document.getElementById("edit-id").value = id;
+            document.getElementById("edit-speech-info").innerText =
+              `Bosquejo #${num}: ${titulo}`;
+            document.getElementById("edit-fecha").value = fecha;
+            new bootstrap.Modal(document.getElementById("editModal")).show();
           } else if (titleBtn) {
             const { id, num, titulo } = titleBtn.dataset;
-            document.getElementById('edit-title-id').value = id;
-            document.getElementById('edit-title-info').innerText = `Actualizando Bosquejo #${num}`;
-            document.getElementById('edit-titulo-input').value = titulo;
-            new bootstrap.Modal(document.getElementById('editTitleModal')).show();
+            document.getElementById("edit-title-id").value = id;
+            document.getElementById("edit-title-info").innerText =
+              `Actualizando Bosquejo #${num}`;
+            document.getElementById("edit-titulo-input").value = titulo;
+            new bootstrap.Modal(
+              document.getElementById("editTitleModal"),
+            ).show();
           }
         });
 
         /**
          * Función reutilizable para mostrar notificaciones (Toasts)
          */
-        function showNotification(message, type = 'success', errorCode = null) {
-          const toastContainer = document.getElementById('toastContainer');
-          const toastId = 'toast-' + Date.now();
-          const bgClass = type === 'success' ? 'text-bg-success' : 'text-bg-danger';
-          const icon = type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill';
-          
+        function showNotification(message, type = "success", errorCode = null) {
+          const toastContainer = document.getElementById("toastContainer");
+          const toastId = "toast-" + Date.now();
+          const bgClass =
+            type === "success" ? "text-bg-success" : "text-bg-danger";
+          const icon =
+            type === "success"
+              ? "bi-check-circle-fill"
+              : "bi-exclamation-triangle-fill";
+
           let bodyContent = message;
           if (errorCode) {
             bodyContent = `<strong>Error en la operación:</strong><br>${message} <br><small>Código: ${errorCode}</small>`;
@@ -524,103 +669,167 @@
               </div>
             </div>
           `;
-          
-          toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+
+          toastContainer.insertAdjacentHTML("beforeend", toastHTML);
           const toastElement = document.getElementById(toastId);
-          const toast = new bootstrap.Toast(toastElement, { delay: type === 'success' ? 3000 : 7000 });
+          const toast = new bootstrap.Toast(toastElement, {
+            delay: type === "success" ? 3000 : 7000,
+          });
           toast.show();
-          toastElement.addEventListener('hidden.bs.toast', () => toastElement.remove());
+          toastElement.addEventListener("hidden.bs.toast", () =>
+            toastElement.remove(),
+          );
         }
 
         // Lógica para borrar la fecha (dejar como disponible)
-        document.getElementById('clear-date-btn').addEventListener('click', async () => {
-          const id = document.getElementById('edit-id').value;
-          
-          if (!confirm('¿Está seguro de que desea borrar la última fecha de presentación de este bosquejo?')) return;
+        document
+          .getElementById("clear-date-btn")
+          .addEventListener("click", async () => {
+            const id = document.getElementById("edit-id").value;
 
-          try {
-            const response = await fetch(`http://localhost:3000/api/bosquejos/${id}`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ fecha_ult: null })
-            });
+            if (
+              !confirm(
+                "¿Está seguro de que desea borrar la última fecha de presentación de este bosquejo?",
+              )
+            )
+              return;
 
-            if (response.ok) {
-              const modalInstance = bootstrap.Modal.getInstance(document.getElementById('editModal'));
-              modalInstance.hide();
-              showNotification('La fecha ha sido borrada. El bosquejo ahora aparece como disponible.', 'success');
-              fetchBosquejos(); // Recargar tabla
-            } else {
-              const errorData = await response.json();
-              showNotification(errorData.error || 'Error al intentar borrar la fecha', 'danger', response.status);
+            try {
+              const response = await fetch(
+                `http://localhost:3000/api/bosquejos/${id}`,
+                {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ fecha_ult: null }),
+                },
+              );
+
+              if (response.ok) {
+                const modalInstance = bootstrap.Modal.getInstance(
+                  document.getElementById("editModal"),
+                );
+                modalInstance.hide();
+                showNotification(
+                  "La fecha ha sido borrada. El bosquejo ahora aparece como disponible.",
+                  "success",
+                );
+                fetchBosquejos(); // Recargar tabla
+              } else {
+                const errorData = await response.json();
+                showNotification(
+                  errorData.error || "Error al intentar borrar la fecha",
+                  "danger",
+                  response.status,
+                );
+              }
+            } catch (error) {
+              showNotification(
+                "Error de conexión con el servidor.",
+                "danger",
+                "FETCH_ERROR",
+              );
             }
-          } catch (error) {
-            showNotification('Error de conexión con el servidor.', 'danger', 'FETCH_ERROR');
-          }
-        });
+          });
 
         // Guardar cambios
-        document.getElementById('save-date-btn').addEventListener('click', async () => {
-          const id = document.getElementById('edit-id').value;
-          const nuevaFecha = document.getElementById('edit-fecha').value;
+        document
+          .getElementById("save-date-btn")
+          .addEventListener("click", async () => {
+            const id = document.getElementById("edit-id").value;
+            const nuevaFecha = document.getElementById("edit-fecha").value;
 
-          try {
-            const response = await fetch(`http://localhost:3000/api/bosquejos/${id}`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ fecha_ult: nuevaFecha })
-            });
+            try {
+              const response = await fetch(
+                `http://localhost:3000/api/bosquejos/${id}`,
+                {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ fecha_ult: nuevaFecha }),
+                },
+              );
 
-            if (response.ok) {
-              const modalInstance = bootstrap.Modal.getInstance(document.getElementById('editModal'));
-              modalInstance.hide();
-              showNotification('La fecha de presentación se actualizó correctamente.', 'success');
-              fetchBosquejos(); // Recargar tabla
-            } else {
-              const errorData = await response.json();
-              showNotification(errorData.error || 'Error al guardar fecha', 'danger', response.status);
+              if (response.ok) {
+                const modalInstance = bootstrap.Modal.getInstance(
+                  document.getElementById("editModal"),
+                );
+                modalInstance.hide();
+                showNotification(
+                  "La fecha de presentación se actualizó correctamente.",
+                  "success",
+                );
+                fetchBosquejos(); // Recargar tabla
+              } else {
+                const errorData = await response.json();
+                showNotification(
+                  errorData.error || "Error al guardar fecha",
+                  "danger",
+                  response.status,
+                );
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              showNotification(
+                "No se pudo conectar con el servidor.",
+                "danger",
+                "FETCH_ERROR",
+              );
             }
-          } catch (error) {
-            console.error('Error:', error);
-            showNotification('No se pudo conectar con el servidor.', 'danger', 'FETCH_ERROR');
-          }
-        });
+          });
 
         // Guardar cambios de título
-        document.getElementById('save-title-btn').addEventListener('click', async () => {
-          const id = document.getElementById('edit-title-id').value;
-          const nuevoTitulo = document.getElementById('edit-titulo-input').value;
+        document
+          .getElementById("save-title-btn")
+          .addEventListener("click", async () => {
+            const id = document.getElementById("edit-title-id").value;
+            const nuevoTitulo =
+              document.getElementById("edit-titulo-input").value;
 
-          if (!nuevoTitulo.trim()) {
-            showNotification('El título no puede estar vacío', 'danger');
-            return;
-          }
-
-          try {
-            const response = await fetch(`http://localhost:3000/api/bosquejos/${id}`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ titulo: nuevoTitulo })
-            });
-
-            if (response.ok) {
-              const modalInstance = bootstrap.Modal.getInstance(document.getElementById('editTitleModal'));
-              modalInstance.hide();
-              showNotification('El título del discurso ha sido actualizado.', 'success');
-              fetchBosquejos(); // Recargar tabla
-            } else {
-              const errorData = await response.json();
-              showNotification(errorData.error || 'Error al guardar título', 'danger', response.status);
+            if (!nuevoTitulo.trim()) {
+              showNotification("El título no puede estar vacío", "danger");
+              return;
             }
-          } catch (error) {
-            console.error('Error:', error);
-            showNotification('Error de conexión con el servidor.', 'danger', 'FETCH_ERROR');
-          }
-        });
+
+            try {
+              const response = await fetch(
+                `http://localhost:3000/api/bosquejos/${id}`,
+                {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ titulo: nuevoTitulo }),
+                },
+              );
+
+              if (response.ok) {
+                const modalInstance = bootstrap.Modal.getInstance(
+                  document.getElementById("editTitleModal"),
+                );
+                modalInstance.hide();
+                showNotification(
+                  "El título del discurso ha sido actualizado.",
+                  "success",
+                );
+                fetchBosquejos(); // Recargar tabla
+              } else {
+                const errorData = await response.json();
+                showNotification(
+                  errorData.error || "Error al guardar título",
+                  "danger",
+                  response.status,
+                );
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              showNotification(
+                "Error de conexión con el servidor.",
+                "danger",
+                "FETCH_ERROR",
+              );
+            }
+          });
 
         // Eventos
-        searchInput.addEventListener('input', updateDisplay);
-        sortSelect.addEventListener('change', updateDisplay);
+        searchInput.addEventListener("input", updateDisplay);
+        sortSelect.addEventListener("change", updateDisplay);
 
         fetchBosquejos();
       });

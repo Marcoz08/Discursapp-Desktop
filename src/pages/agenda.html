@@ -64,6 +64,9 @@
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="../css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
+    <!--begin::Theme Manager-->
+    <script src="../js/theme.js"></script>
+    <!--end::Theme Manager-->
   </head>
   <!--end::Head-->
   <!--begin::Body-->
@@ -160,7 +163,12 @@
                   <p>Oradores locales</p>
                 </a>
               </li>
-                                        
+              <li class="nav-item mt-auto" style="border-top: 3px solid rgba(255,255,255,0.1); padding-top: 0.5rem; margin-top: 1rem;">
+                <a href="./configuracion.html" class="nav-link">
+                  <i class="nav-icon bi bi-gear-fill"></i>
+                  <p>Configuración</p>
+                </a>
+              </li>
             </ul>
             <!--end::Sidebar Menu-->
           </nav>
@@ -199,7 +207,7 @@
               <div class="col-12">
                 <!-- Tarjeta Principal de la Agenda -->
                 <div class="card shadow-sm">
-                  <div class="card-header bg-white py-3">
+                  <div class="card-header bg-body py-3">
                     <div class="row align-items-center">
                       <div class="col-md-6">
                         <h3 class="card-title fw-bold text-primary">
@@ -220,7 +228,7 @@
                   </div>
                   <div class="card-body p-0 table-responsive">
                     <table class="table table-hover align-middle mb-0">
-                      <thead class="table-light">
+                      <thead>
                         <tr>
                           <th style="width: 10%;">Inicio</th>
                           <th style="width: 10%;">Fin</th>
@@ -236,7 +244,7 @@
                       </tbody>
                     </table>
                   </div>
-                  <div class="card-footer bg-white text-muted small">
+                  <div class="card-footer bg-body text-muted small">
                     <i class="bi bi-info-circle me-1"></i> Use esta agenda para anotar acuerdos temporales o compromisos por confirmar antes de pasarlos a la programación oficial.
                   </div>
                 </div>
