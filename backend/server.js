@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import pool from './config/db.js';
 
 import * as oradoresController from './controllers/oradores.js';
+import * as bosquejosController from './controllers/bosquejos.js';
 
 dotenv.config();
 
@@ -43,36 +44,10 @@ console.log('💻 Servidor en modo: LOCAL (SQLite)');
 // Rutas API
 
 // Ruta para obtener todos los bosquejos y mostrarlos en la página
-app.get('/api/bosquejos', async (req, res) => {
-    try {
-        // Consulta a la tabla "lista_bosquejos" en Railway
-        const [rows] = await pool.query("SELECT * FROM lista_bosquejos ORDER BY num ASC");
-        res.json(rows);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+app.get('/api/bosquejos', bosquejosController.getBosquejos);
 
 // Ruta para actualizar la fecha de un bosquejo
-app.put('/api/bosquejos/:num', async (req, res) => {
-    const { num } = req.params;
-    const { fecha_ult, titulo } = req.body;
-    console.log(`Petición de actualización para Núm ${num}:`, { fecha_ult, titulo });
-    try {
-        let result;
-        if (titulo !== undefined) {
-            [result] = await pool.query("UPDATE lista_bosquejos SET titulo = ? WHERE num = ?", [titulo, num]);
-        } else {
-            [result] = await pool.query("UPDATE lista_bosquejos SET fecha_ult = ? WHERE num = ?", [fecha_ult || null, num]);
-        }
-
-        if (result.affectedRows === 0) return res.status(404).json({ error: "No se encontró el registro con ese número" });
-        res.json({ message: "Actualizado con éxito" });
-    } catch (err) {
-        console.error('Error en la base de datos:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
+app.put('/api/bosquejos/:num', bosquejosController.updateBosquejo);
 /////////////////////////// FIN BACKEND PAGINA registros.html ////////////////////////////////////////
 
 /////////////////////////// BACKEND PAGINA oradores.html ////////////////////////////////////////////
