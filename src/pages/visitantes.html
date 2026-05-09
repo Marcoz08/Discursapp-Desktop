@@ -159,7 +159,8 @@
                   <i class="nav-icon bi bi-people-fill"></i>
                   <p>Oradores locales</p>
                 </a>
-              </li>                          
+              </li>
+                                        
             </ul>
             <!--end::Sidebar Menu-->
           </nav>
@@ -592,8 +593,7 @@
                 const fullDateStr = `${anio}-${monthNum}-${dayNum}`;
                 
                 const dataRow = programData.find(p => {
-                  const pDate = new Date(p.fecha_discurso);
-                  const pDateStr = new Date(pDate.getTime() - pDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+                  const pDateStr = p.fecha_discurso.split('T')[0];
                   return pDateStr === fullDateStr;
                 });
 
@@ -713,9 +713,7 @@
                 
                 // Buscar si hay datos guardados para esta fecha específica
                 const dataRow = programacion.find(p => {
-                  const pDate = new Date(p.fecha_discurso);
-                  // Ajustar por zona horaria para obtener la fecha local correcta en formato string
-                  const pDateStr = new Date(pDate.getTime() - pDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+                  const pDateStr = p.fecha_discurso.split('T')[0];
                   return pDateStr === fullDateStr;
                 });
 

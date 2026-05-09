@@ -159,7 +159,8 @@
                   <i class="nav-icon bi bi-people-fill"></i>
                   <p>Oradores locales</p>
                 </a>
-              </li>                          
+              </li>
+                                        
             </ul>
             <!--end::Sidebar Menu-->
           </nav>
@@ -538,8 +539,7 @@
                 const fullDateStr = `${anio}-${monthNum}-${dayNum}`;
                 
                 const dataRow = programData.find(p => {
-                  const pDate = new Date(p.fecha_salida);
-                  const pDateStr = new Date(pDate.getTime() - pDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+                  const pDateStr = p.fecha_salida.split('T')[0];
                   return pDateStr === fullDateStr;
                 });
 
@@ -716,8 +716,7 @@
                 
                 // Buscamos si ya hay datos guardados para esta fecha
                 const data = Array.isArray(programacion) ? programacion.find(p => {
-                  const pDate = new Date(p.fecha_salida);
-                  const pDateStr = new Date(pDate.getTime() - pDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+                  const pDateStr = p.fecha_salida.split('T')[0];
                   return pDateStr === fullDateStr;
                 }) : null;
 

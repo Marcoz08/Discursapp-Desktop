@@ -1,5 +1,7 @@
 import express from 'express'; // Framework para crear el servidor web y manejar rutas
-import mysql from 'mysql2/promise'; // Driver para conectar con MySQL usando promesas (async/await)
+import sqlite3 from 'sqlite3'; // Driver para SQLite
+import path from 'path';
+import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser'; // Middleware para procesar el cuerpo de las peticiones JSON
 import cors from 'cors'; // Middleware para permitir peticiones desde otros dominios (el frontend)
 import dotenv from 'dotenv';
@@ -25,21 +27,47 @@ Columnas:
 app.use(cors()); // Habilita CORS para que tu navegador no bloquee las peticiones al API
 app.use(bodyParser.json()); // Configura el servidor para entender datos en formato JSON
 
-// --- CONFIGURACIÓN DE CONEXIÓN (Manual) ---
+// --- CONFIGURACIÓN DE CONEXIÓN (SQLite) ---
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const dbPath = path.resolve(__dirname, '../db/discursapp_sqlite.db');
 
-// OPCIÓN A: Localhost (XAMPP)
-const dbConfig = {
-    host: 'localhost',
-    user: 'root',
-    password: '', // Sin contraseña según tu configuración
-    database: 'discursapp',
-    port: 3306
+const db = new sqlite3.Database(dbPath, (err) => {
+    if (err) console.error('Error al conectar a SQLite:', err.message);
+    else {
+        console.log('Conectado a la base de datos SQLite.');
+        db.run('PRAGMA foreign_keys = ON');
+    }
+});
+
+// Wrapper para simular el comportamiento de mysql2/promise
+const pool = {
+    query: (sql, params = []) => {
+        return new Promise((resolve, reject) => {
+            const isSelect = sql.trim().toUpperCase().startsWith('SELECT');
+            if (isSelect) {
+                db.all(sql, params, (err, rows) => {
+                    if (err) reject(err);
+                    else resolve([rows]);
+                });
+            } else {
+                db.run(sql, params, function (err) {
+                    if (err) reject(err);
+                    else resolve([{ affectedRows: this.changes, insertId: this.lastID }]);
+                });
+            }
+        });
+    },
+    getConnection: () => {
+        return Promise.resolve({
+            query: pool.query,
+            beginTransaction: () => pool.query('BEGIN TRANSACTION'),
+            commit: () => pool.query('COMMIT'),
+            rollback: () => pool.query('ROLLBACK'),
+            release: () => {}
+        });
+    }
 };
-
-// OPCIÓN B: Railway (Producción) - Descomenta para usar en la nube
-// const dbConfig = process.env.DATABASE_URL;
-
-const pool = mysql.createPool(dbConfig);
 // -------------------------------------------
 
 // Mapeo constante de días de la semana para evitar JOINs con tablas innecesarias
@@ -53,7 +81,7 @@ const diasSemanaMap = {
     7: 'Domingo'
 };
 
-console.log(typeof dbConfig === 'string' ? '🔌 Servidor en modo: PRODUCCIÓN (Railway)' : '💻 Servidor en modo: LOCAL (XAMPP)');
+console.log('💻 Servidor en modo: LOCAL (SQLite)');
 
 // Rutas API
 
@@ -366,10 +394,10 @@ app.get('/api/visitantes-programacion', async (req, res) => {
     try {
         const query = `
             SELECT * FROM oradores_visitantes 
-            WHERE MONTH(fecha_discurso) = ? AND YEAR(fecha_discurso) = ?
+            WHERE CAST(strftime('%m', fecha_discurso) AS INTEGER) = ? AND CAST(strftime('%Y', fecha_discurso) AS INTEGER) = ?
         `;
         // MONTH() en SQL es 1-12, sumamos 1 al mes recibido
-        const [rows] = await pool.query(query, [parseInt(mes) + 1, anio]);
+        const [rows] = await pool.query(query, [parseInt(mes) + 1, parseInt(anio)]);
         res.json(rows);
     } catch (err) {
         console.error('Error al obtener programación de visitantes:', err);
@@ -386,8 +414,8 @@ app.post('/api/visitantes-programacion', async (req, res) => {
 
         // 1. Limpiamos registros previos para ese mes y año para evitar duplicidad al sobreescribir
         await connection.query(
-            "DELETE FROM oradores_visitantes WHERE MONTH(fecha_discurso) = ? AND YEAR(fecha_discurso) = ?",
-            [parseInt(mes) + 1, anio]
+            "DELETE FROM oradores_visitantes WHERE CAST(strftime('%m', fecha_discurso) AS INTEGER) = ? AND CAST(strftime('%Y', fecha_discurso) AS INTEGER) = ?",
+            [parseInt(mes) + 1, parseInt(anio)]
         );
 
         // 2. Preparamos los valores para la inserción masiva
@@ -400,8 +428,10 @@ app.post('/api/visitantes-programacion', async (req, res) => {
             ]);
 
         if (values.length > 0) {
-            const query = "INSERT INTO oradores_visitantes (nombre, num_bosquejo, tema, cancion, fecha_discurso, congregacion, asistio) VALUES ?";
-            await connection.query(query, [values]);
+            const placeholders = values.map(() => '(?, ?, ?, ?, ?, ?, ?)').join(', ');
+            const flatValues = values.flat();
+            const query = `INSERT INTO oradores_visitantes (nombre, num_bosquejo, tema, cancion, fecha_discurso, congregacion, asistio) VALUES ${placeholders}`;
+            await connection.query(query, flatValues);
         }
 
         await connection.commit();
@@ -450,16 +480,16 @@ app.get('/api/agenda', async (req, res) => {
         // Consultamos la agenda y unimos con los meses asociados para obtener el texto descriptivo
         const query = `
             SELECT a.*, 
-                   GROUP_CONCAT(m.mes SEPARATOR ' - ') as meses_texto,
+                   GROUP_CONCAT(m.mes, ' - ') as meses_texto,
                    GROUP_CONCAT(m.id_mes) as meses_ids
             FROM agenda a
             LEFT JOIN agenda_meses am ON a.id_rol = am.id_rol
             LEFT JOIN meses m ON am.id_mes = m.id_mes
-            WHERE YEAR(a.fecha_ini) = ? OR YEAR(a.fecha_fin) = ?
+            WHERE CAST(strftime('%Y', a.fecha_ini) AS INTEGER) = ? OR CAST(strftime('%Y', a.fecha_fin) AS INTEGER) = ?
             GROUP BY a.id_rol
             ORDER BY a.fecha_ini ASC
         `;
-        const [rows] = await pool.query(query, [anio, anio]);
+        const [rows] = await pool.query(query, [parseInt(anio), parseInt(anio)]);
         res.json(rows);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -493,9 +523,10 @@ app.post('/api/agenda', async (req, res) => {
 
         // 2. Si hay meses seleccionados, los insertamos en la tabla relacional 'agenda_meses'
         if (meses && meses.length > 0) {
-            const queryMeses = "INSERT INTO agenda_meses (id_rol, id_mes) VALUES ?";
-            const values = meses.map(id_mes => [id_rol, id_mes]);
-            await connection.query(queryMeses, [values]);
+            const placeholders = meses.map(() => '(?, ?)').join(', ');
+            const flatValues = meses.map(id_mes => [id_rol, id_mes]).flat();
+            const queryMeses = `INSERT INTO agenda_meses (id_rol, id_mes) VALUES ${placeholders}`;
+            await connection.query(queryMeses, flatValues);
         }
 
         await connection.commit();
@@ -539,9 +570,10 @@ app.put('/api/agenda/:id', async (req, res) => {
         await connection.query("DELETE FROM agenda_meses WHERE id_rol = ?", [id]);
 
         if (meses && meses.length > 0) {
-            const queryMeses = "INSERT INTO agenda_meses (id_rol, id_mes) VALUES ?";
-            const values = meses.map(id_mes => [id, id_mes]);
-            await connection.query(queryMeses, [values]);
+            const placeholders = meses.map(() => '(?, ?)').join(', ');
+            const flatValues = meses.map(id_mes => [id, id_mes]).flat();
+            const queryMeses = `INSERT INTO agenda_meses (id_rol, id_mes) VALUES ${placeholders}`;
+            await connection.query(queryMeses, flatValues);
         }
 
         await connection.commit();
@@ -625,9 +657,9 @@ app.get('/api/salidas-programacion', async (req, res) => {
             FROM salidas_discursar s
             JOIN oradores o ON s.id_orador = o.id_orador
             JOIN temas_orador t ON s.id_registro = t.id_registro
-            WHERE MONTH(s.fecha_salida) = ? AND YEAR(s.fecha_salida) = ?
+            WHERE CAST(strftime('%m', s.fecha_salida) AS INTEGER) = ? AND CAST(strftime('%Y', s.fecha_salida) AS INTEGER) = ?
         `;
-        const [rows] = await pool.query(query, [parseInt(mes) + 1, anio]);
+        const [rows] = await pool.query(query, [parseInt(mes) + 1, parseInt(anio)]);
         res.json(rows);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -642,8 +674,8 @@ app.post('/api/salidas-programacion', async (req, res) => {
         await connection.beginTransaction();
         // Limpiar registros del mes para evitar duplicados
         await connection.query(
-            "DELETE FROM salidas_discursar WHERE MONTH(fecha_salida) = ? AND YEAR(fecha_salida) = ?",
-            [parseInt(mes) + 1, anio]
+            "DELETE FROM salidas_discursar WHERE CAST(strftime('%m', fecha_salida) AS INTEGER) = ? AND CAST(strftime('%Y', fecha_salida) AS INTEGER) = ?",
+            [parseInt(mes) + 1, parseInt(anio)]
         );
 
         const values = programacion.map(p => [
@@ -651,8 +683,10 @@ app.post('/api/salidas-programacion', async (req, res) => {
         ]);
 
         if (values.length > 0) {
-            const query = "INSERT INTO salidas_discursar (id_registro, id_rol, fecha_salida, id_orador) VALUES ?";
-            await connection.query(query, [values]);
+            const placeholders = values.map(() => '(?, ?, ?, ?)').join(', ');
+            const flatValues = values.flat();
+            const query = `INSERT INTO salidas_discursar (id_registro, id_rol, fecha_salida, id_orador) VALUES ${placeholders}`;
+            await connection.query(query, flatValues);
         }
         await connection.commit();
         res.json({ message: "Programación de salidas actualizada correctamente" });
@@ -673,12 +707,12 @@ app.get('/api/agenda/confirmada', async (req, res) => {
             FROM agenda a
             JOIN agenda_meses am ON a.id_rol = am.id_rol
             WHERE am.id_mes = ? 
-              AND (YEAR(a.fecha_ini) = ? OR YEAR(a.fecha_fin) = ?)
+              AND (CAST(strftime('%Y', a.fecha_ini) AS INTEGER) = ? OR CAST(strftime('%Y', a.fecha_fin) AS INTEGER) = ?)
               AND a.estatus = 1
             LIMIT 1
         `;
         // En la BD los meses son 1-12, por eso sumamos 1 a 'mes'
-        const [rows] = await pool.query(query, [parseInt(mes) + 1, anio, anio]);
+        const [rows] = await pool.query(query, [parseInt(mes) + 1, parseInt(anio), parseInt(anio)]);
 
         if (rows.length > 0) {
             rows[0].nombre_dia = diasSemanaMap[rows[0].dia_rp] || "No definido";
@@ -698,7 +732,8 @@ app.get('/api/dashboard/visitante-semana', async (req, res) => {
         const query = `
             SELECT nombre, tema, fecha_discurso 
             FROM oradores_visitantes 
-            WHERE YEARWEEK(fecha_discurso, 1) = YEARWEEK(CURDATE(), 1)
+            WHERE strftime('%W', fecha_discurso) = strftime('%W', 'now', 'localtime')
+              AND strftime('%Y', fecha_discurso) = strftime('%Y', 'now', 'localtime')
             LIMIT 1
         `;
         const [rows] = await pool.query(query);
@@ -716,7 +751,8 @@ app.get('/api/dashboard/salida-semana', async (req, res) => {
             FROM salidas_discursar s
             JOIN oradores o ON s.id_orador = o.id_orador
             JOIN temas_orador t ON s.id_registro = t.id_registro
-            WHERE YEARWEEK(s.fecha_salida, 1) = YEARWEEK(CURDATE(), 1)
+            WHERE strftime('%W', s.fecha_salida) = strftime('%W', 'now', 'localtime')
+              AND strftime('%Y', s.fecha_salida) = strftime('%Y', 'now', 'localtime')
             LIMIT 1
         `;
         const [rows] = await pool.query(query);
