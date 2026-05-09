@@ -4,6 +4,8 @@ import cors from 'cors'; // Middleware para permitir peticiones desde otros domi
 import dotenv from 'dotenv';
 import pool from './config/db.js';
 
+import * as oradoresController from './controllers/oradores.js';
+
 dotenv.config();
 
 const app = express();
@@ -94,189 +96,25 @@ Columnas:
 */
 
 // Ruta para obtener oradores con sus temas
-app.get('/api/oradores-temas', async (req, res) => {
-    console.log('Petición recibida: GET /api/oradores-temas');
-    try {
-        const query = `
-            SELECT 
-                t.id_registro,
-                o.id_orador,
-                o.nombre, 
-                o.telefono,
-                o.congregacion, 
-                o.privilegio, 
-                o.aprobado, -- Incluimos el estado de aprobación en la consulta
-                t.numero_tema, 
-                t.titulo, 
-                t.cancion_sugerida 
-            FROM oradores o 
-            LEFT JOIN temas_orador t ON o.id_orador = t.id_orador 
-            ORDER BY o.nombre ASC;
-        `;
-        const [rows] = await pool.query(query);
-        res.json(rows);
-    } catch (err) {
-        console.error('Error en /api/oradores-temas:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
+app.get('/api/oradores-temas', oradoresController.getOradoresTemas);
 
 // Ruta para eliminar un orador y todos sus temas asociados
-app.delete('/api/oradores/:id', async (req, res) => {
-    const { id } = req.params;
-    const connection = await pool.getConnection(); // Obtenemos conexión para manejar la transacción
-    try {
-        await connection.beginTransaction(); // Iniciamos la transacción
-
-        // 1. Eliminamos primero los temas asociados (por la relación de llave foránea)
-        await connection.query("DELETE FROM temas_orador WHERE id_orador = ?", [id]);
-
-        // 2. Eliminamos al orador de la tabla principal
-        const [result] = await connection.query("DELETE FROM oradores WHERE id_orador = ?", [id]);
-
-        if (result.affectedRows === 0) {
-            await connection.rollback();
-            return res.status(404).json({ error: "No se encontró el orador para eliminar" });
-        }
-
-        await connection.commit(); // Confirmamos los cambios en la BD
-        console.log(`Orador ID ${id} eliminado con éxito.`);
-        res.json({ message: "Orador y sus temas eliminados correctamente" });
-    } catch (err) {
-        await connection.rollback(); // Si algo falla, revertimos todo
-        console.error('Error al eliminar orador:', err);
-        res.status(500).json({ error: err.message });
-    } finally {
-        connection.release(); // Liberamos la conexión al pool
-    }
-});
+app.delete('/api/oradores/:id', oradoresController.deleteOrador);
 
 // Ruta para añadir un nuevo orador
-app.post('/api/oradores', async (req, res) => {
-    const { nombre, telefono, privilegio, congregacion, aprobado } = req.body;
-
-    // Validación básica: el nombre del orador es obligatorio
-    if (!nombre) {
-        return res.status(400).json({ error: "El nombre del orador es obligatorio." });
-    }
-
-    try {
-        const query = `
-            INSERT INTO oradores (nombre, telefono, privilegio, congregacion, aprobado)
-            VALUES (?, ?, ?, ?, ?)
-        `;
-        const [result] = await pool.query(query, [
-            nombre,
-            telefono || null, // Permite que el teléfono sea NULL si no se proporciona
-            privilegio,       // 1 para Anciano, 0 para Siervo Ministerial
-            congregacion || 'El Castillo', // Valor por defecto si no se proporciona
-            aprobado          // TRUE o FALSE
-        ]);
-
-        res.status(201).json({ message: "Orador añadido con éxito", id_orador: result.insertId });
-    } catch (err) {
-        console.error('Error al añadir orador:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
+app.post('/api/oradores', oradoresController.createOrador);
 
 // Ruta para actualizar los datos de un orador
-app.put('/api/oradores/:id', async (req, res) => {
-    const { id } = req.params;
-    const { nombre, telefono, privilegio, congregacion, aprobado } = req.body;
-
-    if (!nombre) {
-        return res.status(400).json({ error: "El nombre es obligatorio." });
-    }
-
-    try {
-        const query = `
-            UPDATE oradores 
-            SET nombre = ?, telefono = ?, privilegio = ?, congregacion = ?, aprobado = ? 
-            WHERE id_orador = ?
-        `;
-        const [result] = await pool.query(query, [nombre, telefono, privilegio, congregacion, aprobado, id]);
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ error: "No se encontró el orador para actualizar" });
-        }
-
-        res.json({ message: "Orador actualizado con éxito" });
-    } catch (err) {
-        console.error('Error al actualizar orador:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
+app.put('/api/oradores/:id', oradoresController.updateOrador);
 
 // Ruta para eliminar un tema específico por su ID de registro
-app.delete('/api/temas-orador/:id', async (req, res) => {
-    const { id } = req.params;
-    try {
-        await pool.query("DELETE FROM temas_orador WHERE id_registro = ?", [id]);
-        res.json({ message: "Tema eliminado con éxito" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+app.delete('/api/temas-orador/:id', oradoresController.deleteTema);
 
 // Ruta para añadir un nuevo tema a un orador específico
-app.post('/api/temas-orador', async (req, res) => {
-    const { id_orador, numero_tema, titulo, cancion_sugerida } = req.body;
-
-    if (!id_orador) {
-        return res.status(400).json({ error: "El ID del orador es obligatorio." });
-    }
-
-    try {
-        const query = "INSERT INTO temas_orador (id_orador, numero_tema, titulo, cancion_sugerida) VALUES (?, ?, ?, ?)";
-        await pool.query(query, [id_orador, numero_tema || null, titulo || null, cancion_sugerida || null]);
-        res.status(201).json({ message: "Tema añadido con éxito" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+app.post('/api/temas-orador', oradoresController.createTema);
 
 // Ruta para actualizar un tema específico por su ID de registro
-app.put('/api/temas-orador/:id', async (req, res) => {
-    const { id } = req.params; // id_registro
-    const { numero_tema, titulo, cancion_sugerida } = req.body;
-
-    // Construir la cláusula SET dinámicamente según los campos proporcionados en el cuerpo
-    let updates = [];
-    let params = [];
-
-    if (numero_tema !== undefined) {
-        updates.push("numero_tema = ?");
-        params.push(numero_tema);
-    }
-    if (titulo !== undefined) {
-        updates.push("titulo = ?");
-        params.push(titulo);
-    }
-    if (cancion_sugerida !== undefined) {
-        updates.push("cancion_sugerida = ?");
-        params.push(cancion_sugerida);
-    }
-
-    if (updates.length === 0) {
-        return res.status(400).json({ error: "No se proporcionaron campos para actualizar." });
-    }
-
-    params.push(id); // Añadir id_registro al final de los parámetros
-
-    try {
-        const query = `UPDATE temas_orador SET ${updates.join(', ')} WHERE id_registro = ?`;
-        const [result] = await pool.query(query, params);
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ error: "No se encontró el tema con ese ID de registro." });
-        }
-        res.json({ message: "Tema actualizado con éxito" });
-    } catch (err) {
-        console.error('Error al actualizar tema:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
+app.put('/api/temas-orador/:id', oradoresController.updateTema);
 /////////////////////////// FIN BACKEND PAGINA oradores.html ////////////////////////////////////////
 
 /////////////////////////// BACKEND PAGINA visitantes.html ////////////////////////////////////////////
