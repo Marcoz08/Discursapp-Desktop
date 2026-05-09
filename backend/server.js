@@ -6,6 +6,7 @@ import pool from './config/db.js';
 
 import * as oradoresController from './controllers/oradores.js';
 import * as bosquejosController from './controllers/bosquejos.js';
+import * as visitantesController from './controllers/visitantes.js';
 
 dotenv.config();
 
@@ -27,17 +28,6 @@ Columnas:
 // Middleware
 app.use(cors()); // Habilita CORS para que tu navegador no bloquee las peticiones al API
 app.use(bodyParser.json()); // Configura el servidor para entender datos en formato JSON
-
-// Mapeo constante de días de la semana para evitar JOINs con tablas innecesarias
-const diasSemanaMap = {
-    1: 'Lunes',
-    2: 'Martes',
-    3: 'Miércoles',
-    4: 'Jueves',
-    5: 'Viernes',
-    6: 'Sábado',
-    7: 'Domingo'
-};
 
 console.log('💻 Servidor en modo: LOCAL (SQLite)');
 
@@ -93,125 +83,18 @@ app.put('/api/temas-orador/:id', oradoresController.updateTema);
 /////////////////////////// FIN BACKEND PAGINA oradores.html ////////////////////////////////////////
 
 /////////////////////////// BACKEND PAGINA visitantes.html ////////////////////////////////////////////
-/*ESTRUCTURA DE LA TABLA EN SQL:
-Tabla: reuniones
-Columnas:
-  - id_reunion: INT AUTO_INCREMENT, PRIMARY KEY (ID interno generado para identificar la reunion)
-  - dia_rp: INT NOT NULL, (Dia de la reunion: 1="Lunes", 2="Martes", etc)
-  - hora_reunion: TIME DEFAULT '09:00:00', (Hora a la que se hace la reunion, se establece cada año)
-  - congregacion: VARCHAR(100), (Nombre de la congregacion local)
-
-
-Tabla: dias_semana
-Columnas:
-  - id_dia INT PRIMARY KEY,
-  - nombre_dia VARCHAR(15) NOT NULL, {(1, 'Lunes'), (2, 'Martes'), (3, 'Miércoles'), (4, 'Jueves'), (5, 'Viernes'), (6, 'Sábado'), (7, 'Domingo')}
-
-Tabla: oradores_visitantes
-Columnas:
-  - id_visitante: INT AUTO_INCREMENT, PRIMARY KEY (ID interno generado para identificar el discursante visitante)
-  - nombre: VARCHAR(55) (almacena el nombre del discursante)
-  - num_bosquejo: VARCHAR(5) (almacena el numero de bosquejo)
-  - tema: VARCHAR(255) (Almacena el titulo del discurso)
-  - cancion: VARCHAR(5) (almacena el numero de cancion)
-  - telefono: (VARCHAR) (14) (almacena el numero de telefono)
-  - fecha_discurso: DATE (Almacena la fecha en la que se programo el discurso)
-  - congregacion: VARCHART(20) (congregacion de origen del orador)
-  - asistio: BOOLEAN (TRUE si asistio, FALSE si no se presento)
-
-*/
 
 // Ruta para obtener los datos de la reunión local
-app.get('/api/reunion-local', async (req, res) => {
-    try {
-        const [rows] = await pool.query("SELECT * FROM reuniones LIMIT 1");
-        if (rows.length === 0) return res.status(404).json({ error: "Configuración de reunión no encontrada" });
-        
-        // Añadimos el nombre del día dinámicamente desde el mapa
-        rows[0].nombre_dia = diasSemanaMap[rows[0].dia_rp] || "No definido";
-        res.json(rows[0]);
-    } catch (err) {
-        console.error('Error al obtener reunión local:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
+app.get('/api/reunion-local', visitantesController.getReunionLocal);
 
 // Ruta para actualizar los datos de la reunión local
-app.put('/api/reunion-local/:id', async (req, res) => {
-    const { id } = req.params;
-    const { dia_rp, hora_reunion, congregacion } = req.body;
-
-    try {
-        const query = `
-            UPDATE reuniones 
-            SET dia_rp = ?, hora_reunion = ?, congregacion = ? 
-            WHERE id_reunion = ?
-        `;
-        const [result] = await pool.query(query, [dia_rp, hora_reunion, congregacion, id]);
-        if (result.affectedRows === 0) return res.status(404).json({ error: "No se encontró el registro" });
-        res.json({ message: "Configuración actualizada correctamente" });
-    } catch (err) {
-        console.error('Error al actualizar reunión local:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
+app.put('/api/reunion-local/:id', visitantesController.updateReunionLocal);
 
 // Ruta para obtener la programación de visitantes filtrada por mes y año
-app.get('/api/visitantes-programacion', async (req, res) => {
-    const { mes, anio } = req.query; // mes llega como 0-11 desde el frontend
-    try {
-        const query = `
-            SELECT * FROM oradores_visitantes 
-            WHERE CAST(strftime('%m', fecha_discurso) AS INTEGER) = ? AND CAST(strftime('%Y', fecha_discurso) AS INTEGER) = ?
-        `;
-        // MONTH() en SQL es 1-12, sumamos 1 al mes recibido
-        const [rows] = await pool.query(query, [parseInt(mes) + 1, parseInt(anio)]);
-        res.json(rows);
-    } catch (err) {
-        console.error('Error al obtener programación de visitantes:', err);
-        res.status(500).json({ error: err.message });
-    }
-});
+app.get('/api/visitantes-programacion', visitantesController.getVisitantesProgramacion);
 
 // Ruta para guardar o actualizar la programación completa de un mes
-app.post('/api/visitantes-programacion', async (req, res) => {
-    const { mes, anio, programacion } = req.body; // mes llega como 0-11
-    const connection = await pool.getConnection();
-    try {
-        await connection.beginTransaction();
-
-        // 1. Limpiamos registros previos para ese mes y año para evitar duplicidad al sobreescribir
-        await connection.query(
-            "DELETE FROM oradores_visitantes WHERE CAST(strftime('%m', fecha_discurso) AS INTEGER) = ? AND CAST(strftime('%Y', fecha_discurso) AS INTEGER) = ?",
-            [parseInt(mes) + 1, parseInt(anio)]
-        );
-
-        // 2. Preparamos los valores para la inserción masiva
-        // Filtramos para no guardar filas completamente vacías
-        const values = programacion
-            .filter(p => p.nombre && p.nombre.trim() !== "")
-            .map(p => [
-                p.nombre, p.num_bosquejo || null, p.tema || null, 
-                p.cancion || null, p.fecha_discurso, p.congregacion || null, p.asistio || 0
-            ]);
-
-        if (values.length > 0) {
-            const placeholders = values.map(() => '(?, ?, ?, ?, ?, ?, ?)').join(', ');
-            const flatValues = values.flat();
-            const query = `INSERT INTO oradores_visitantes (nombre, num_bosquejo, tema, cancion, fecha_discurso, congregacion, asistio) VALUES ${placeholders}`;
-            await connection.query(query, flatValues);
-        }
-
-        await connection.commit();
-        res.json({ message: "Programación actualizada correctamente" });
-    } catch (err) {
-        await connection.rollback();
-        console.error('Error al guardar programación:', err);
-        res.status(500).json({ error: err.message });
-    } finally {
-        connection.release();
-    }
-});
+app.post('/api/visitantes-programacion', visitantesController.saveVisitantesProgramacion);
 
 /////////////////////////// FIN BACKEND PAGINA visitantes.html ////////////////////////////////////////
 
@@ -376,30 +259,7 @@ app.delete('/api/agenda/:id', async (req, res) => {
 });
 
 // Ruta para confirmar asistencia de un orador visitante y actualizar historial del bosquejo
-app.post('/api/confirmar-asistencia', async (req, res) => {
-    const { num, fecha } = req.body;
-    if (!num || !fecha) return res.status(400).json({ error: "Datos incompletos" });
-
-    const connection = await pool.getConnection();
-    try {
-        await connection.beginTransaction();
-
-        // 1. Actualizamos lista_bosquejos moviendo la fecha actual al historial y poniendo la nueva fecha
-        await connection.query("UPDATE lista_bosquejos SET fecha_ant = fecha_ult, fecha_ult = ? WHERE num = ?", [fecha, num]);
-
-        // 2. Marcamos como asistido en la tabla de programación de visitantes
-        await connection.query("UPDATE oradores_visitantes SET asistio = TRUE WHERE num_bosquejo = ? AND fecha_discurso = ?", [num, fecha]);
-
-        await connection.commit();
-        res.json({ message: "Asistencia confirmada e historial actualizado" });
-    } catch (err) {
-        await connection.rollback();
-        console.error('Error al confirmar asistencia:', err);
-        res.status(500).json({ error: err.message });
-    } finally {
-        connection.release();
-    }
-});
+app.post('/api/confirmar-asistencia', visitantesController.confirmarAsistencia);
 
 /////////////////////////// BACKEND PAGINA salidas.html ////////////////////////////////////////
 /*ESTRUCTURA DE LA TABLA EN SQL:
@@ -483,7 +343,7 @@ app.get('/api/agenda/confirmada', async (req, res) => {
         const [rows] = await pool.query(query, [parseInt(mes) + 1, parseInt(anio), parseInt(anio)]);
 
         if (rows.length > 0) {
-            rows[0].nombre_dia = diasSemanaMap[rows[0].dia_rp] || "No definido";
+            rows[0].nombre_dia = visitantesController.diasSemanaMap[rows[0].dia_rp] || "No definido";
         }
         
         // Si no hay resultados, devolvemos null de forma explícita
