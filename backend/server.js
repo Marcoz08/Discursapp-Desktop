@@ -30,7 +30,7 @@ app.use(bodyParser.json()); // Configura el servidor para entender datos en form
 // --- CONFIGURACIÓN DE CONEXIÓN (SQLite) ---
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const dbPath = path.resolve(__dirname, '../db/discursapp_sqlite.db');
+const dbPath = path.resolve(__dirname, 'data/discursapp_sqlite.db');
 
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) console.error('Error al conectar a SQLite:', err.message);
