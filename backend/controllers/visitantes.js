@@ -122,3 +122,20 @@ export const confirmarAsistencia = async (req, res) => {
         connection.release();
     }
 };
+
+// Dashboard: Obtener el visitante de la semana actual
+export const getVisitanteSemana = async (req, res) => {
+    try {
+        const query = `
+            SELECT nombre, tema, fecha_discurso 
+            FROM oradores_visitantes 
+            WHERE strftime('%W', fecha_discurso) = strftime('%W', 'now', 'localtime')
+            AND strftime('%Y', fecha_discurso) = strftime('%Y', 'now', 'localtime')
+            LIMIT 1
+        `;
+        const [rows] = await pool.query(query);
+        res.json(rows.length > 0 ? rows[0] : null);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};

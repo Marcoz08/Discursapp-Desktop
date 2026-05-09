@@ -31,8 +31,8 @@ export const getAgenda = async (req, res) => {
     try {
         const query = `
             SELECT a.*, 
-                   GROUP_CONCAT(m.mes, ' - ') as meses_texto,
-                   GROUP_CONCAT(m.id_mes) as meses_ids
+            GROUP_CONCAT(m.mes, ' - ') as meses_texto,
+            GROUP_CONCAT(m.id_mes) as meses_ids
             FROM agenda a
             LEFT JOIN agenda_meses am ON a.id_rol = am.id_rol
             LEFT JOIN meses m ON am.id_mes = m.id_mes
@@ -154,8 +154,8 @@ export const getAgendaConfirmada = async (req, res) => {
             FROM agenda a
             JOIN agenda_meses am ON a.id_rol = am.id_rol
             WHERE am.id_mes = ? 
-              AND (CAST(strftime('%Y', a.fecha_ini) AS INTEGER) = ? OR CAST(strftime('%Y', a.fecha_fin) AS INTEGER) = ?)
-              AND a.estatus = 1
+            AND (CAST(strftime('%Y', a.fecha_ini) AS INTEGER) = ? OR CAST(strftime('%Y', a.fecha_fin) AS INTEGER) = ?)
+            AND a.estatus = 1
             LIMIT 1
         `;
         const [rows] = await pool.query(query, [parseInt(mes) + 1, parseInt(anio), parseInt(anio)]);

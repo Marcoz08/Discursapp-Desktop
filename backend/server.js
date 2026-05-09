@@ -1,6 +1,6 @@
-import express from 'express'; // Framework para crear el servidor web y manejar rutas
-import bodyParser from 'body-parser'; // Middleware para procesar el cuerpo de las peticiones JSON
-import cors from 'cors'; // Middleware para permitir peticiones desde otros dominios (el frontend)
+import express from 'express';           // Framework para crear el servidor web y manejar rutas
+import bodyParser from 'body-parser';    // Middleware para procesar el cuerpo de las peticiones JSON
+import cors from 'cors';                 // Middleware para permitir peticiones desde otros dominios (el frontend)
 import dotenv from 'dotenv';
 import pool from './config/db.js';
 
@@ -8,6 +8,7 @@ import * as oradoresController from './controllers/oradores.js';
 import * as bosquejosController from './controllers/bosquejos.js';
 import * as visitantesController from './controllers/visitantes.js';
 import * as agendaController from './controllers/agenda.js';
+import * as salidasController from './controllers/salidas.js';
 
 dotenv.config();
 
@@ -117,125 +118,24 @@ app.delete('/api/agenda/:id', agendaController.deleteAgenda);
 app.post('/api/confirmar-asistencia', visitantesController.confirmarAsistencia);
 
 /////////////////////////// BACKEND PAGINA salidas.html ////////////////////////////////////////
-/*ESTRUCTURA DE LA TABLA EN SQL:
-Tabla: salidas_discursar (Almacena el orador y los datos necesarios para sus salida a discursar)
-Columnas:
-  - id_registro: Tipo: INT NOT NULL Descipcion: (Dato proveniente de la tabla temas_orador, nos regresa el nombre del orador "id_orador", numero_tema, titulo y cancion sugerida)
-  - id_rol: Tipo INT Descripcion: Se relaciona con la tabla agenda y nos dice a cual rol pertenece la salida.
-  - fecha_salida: Tipo DATE Descripcion: Nos indica la fecha programada para la salida a discursar.
-  - id_orador: Tipo INT Descripcion: se relaciona con tabla oradores, nos da los datos del discursante
-*/
 
 // Ruta para obtener programación de salidas (JOIN relacional)
-app.get('/api/salidas-programacion', async (req, res) => {
-    const { mes, anio } = req.query;
-    try {
-        const query = `
-            SELECT 
-                s.id_registro, s.id_rol, s.fecha_salida, s.id_orador,
-                o.nombre AS nombre_orador,
-                t.numero_tema AS num_bosquejo,
-                t.titulo AS tema,
-                t.cancion_sugerida AS cancion
-            FROM salidas_discursar s
-            JOIN oradores o ON s.id_orador = o.id_orador
-            JOIN temas_orador t ON s.id_registro = t.id_registro
-            WHERE CAST(strftime('%m', s.fecha_salida) AS INTEGER) = ? AND CAST(strftime('%Y', s.fecha_salida) AS INTEGER) = ?
-        `;
-        const [rows] = await pool.query(query, [parseInt(mes) + 1, parseInt(anio)]);
-        res.json(rows);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+app.get('/api/salidas-programacion', salidasController.getSalidasProgramacion);
 
 // Ruta para guardar/actualizar programación de salidas
-app.post('/api/salidas-programacion', async (req, res) => {
-    const { mes, anio, programacion } = req.body;
-    const connection = await pool.getConnection();
-    try {
-        await connection.beginTransaction();
-        // Limpiar registros del mes para evitar duplicados
-        await connection.query(
-            "DELETE FROM salidas_discursar WHERE CAST(strftime('%m', fecha_salida) AS INTEGER) = ? AND CAST(strftime('%Y', fecha_salida) AS INTEGER) = ?",
-            [parseInt(mes) + 1, parseInt(anio)]
-        );
-
-        const values = programacion.map(p => [
-            p.id_registro, p.id_rol, p.fecha_salida, p.id_orador
-        ]);
-
-        if (values.length > 0) {
-            const placeholders = values.map(() => '(?, ?, ?, ?)').join(', ');
-            const flatValues = values.flat();
-            const query = `INSERT INTO salidas_discursar (id_registro, id_rol, fecha_salida, id_orador) VALUES ${placeholders}`;
-            await connection.query(query, flatValues);
-        }
-        await connection.commit();
-        res.json({ message: "Programación de salidas actualizada correctamente" });
-    } catch (err) {
-        await connection.rollback();
-        console.error('Error al guardar salidas:', err);
-        res.status(500).json({ error: err.message });
-    } finally { connection.release(); }
-});
-
+app.post('/api/salidas-programacion', salidasController.saveSalidasProgramacion);
 
 // Ruta para obtener el acuerdo confirmado para una salida específica (mes/año)
 app.get('/api/agenda/confirmada', agendaController.getAgendaConfirmada);
 
 // Endpoint para el dashboard: Obtener el visitante de la semana actual
-app.get('/api/dashboard/visitante-semana', async (req, res) => {
-    try {
-        const query = `
-            SELECT nombre, tema, fecha_discurso 
-            FROM oradores_visitantes 
-            WHERE strftime('%W', fecha_discurso) = strftime('%W', 'now', 'localtime')
-              AND strftime('%Y', fecha_discurso) = strftime('%Y', 'now', 'localtime')
-            LIMIT 1
-        `;
-        const [rows] = await pool.query(query);
-        res.json(rows.length > 0 ? rows[0] : null);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+app.get('/api/dashboard/visitante-semana', visitantesController.getVisitanteSemana);
 
 // Endpoint para el dashboard: Obtener la salida de la semana actual
-app.get('/api/dashboard/salida-semana', async (req, res) => {
-    try {
-        const query = `
-            SELECT o.nombre, t.titulo, s.fecha_salida
-            FROM salidas_discursar s
-            JOIN oradores o ON s.id_orador = o.id_orador
-            JOIN temas_orador t ON s.id_registro = t.id_registro
-            WHERE strftime('%W', s.fecha_salida) = strftime('%W', 'now', 'localtime')
-              AND strftime('%Y', s.fecha_salida) = strftime('%Y', 'now', 'localtime')
-            LIMIT 1
-        `;
-        const [rows] = await pool.query(query);
-        res.json(rows.length > 0 ? rows[0] : null);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+app.get('/api/dashboard/salida-semana', salidasController.getSalidaSemana);
 
 // Endpoint para el dashboard: Obtener los últimos 5 discursos presentados
-app.get('/api/dashboard/ultimos-discursos', async (req, res) => {
-    try {
-        const query = `
-            SELECT num, titulo, fecha_ult 
-            FROM lista_bosquejos 
-            WHERE fecha_ult IS NOT NULL 
-            ORDER BY fecha_ult DESC 
-            LIMIT 5
-        `;
-        const [rows] = await pool.query(query);
-        res.json(rows);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+app.get('/api/dashboard/ultimos-discursos', bosquejosController.getUltimosDiscursos);
 
 /////////////////////////// FIN BACKEND PAGINA salidas.html ////////////////////////////////////////
 

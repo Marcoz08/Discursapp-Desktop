@@ -30,3 +30,20 @@ export const updateBosquejo = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+// Dashboard: Obtener los últimos 5 discursos presentados
+export const getUltimosDiscursos = async (req, res) => {
+    try {
+        const query = `
+            SELECT num, titulo, fecha_ult 
+            FROM lista_bosquejos 
+            WHERE fecha_ult IS NOT NULL 
+            ORDER BY fecha_ult DESC 
+            LIMIT 5
+        `;
+        const [rows] = await pool.query(query);
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
