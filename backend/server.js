@@ -1,10 +1,8 @@
 import express from 'express'; // Framework para crear el servidor web y manejar rutas
-import sqlite3 from 'sqlite3'; // Driver para SQLite
-import path from 'path';
-import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser'; // Middleware para procesar el cuerpo de las peticiones JSON
 import cors from 'cors'; // Middleware para permitir peticiones desde otros dominios (el frontend)
 import dotenv from 'dotenv';
+import pool from './config/db.js';
 
 dotenv.config();
 
@@ -26,49 +24,6 @@ Columnas:
 // Middleware
 app.use(cors()); // Habilita CORS para que tu navegador no bloquee las peticiones al API
 app.use(bodyParser.json()); // Configura el servidor para entender datos en formato JSON
-
-// --- CONFIGURACIÓN DE CONEXIÓN (SQLite) ---
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const dbPath = path.resolve(__dirname, 'data/discursapp_sqlite.db');
-
-const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) console.error('Error al conectar a SQLite:', err.message);
-    else {
-        console.log('Conectado a la base de datos SQLite.');
-        db.run('PRAGMA foreign_keys = ON');
-    }
-});
-
-// Wrapper para simular el comportamiento de mysql2/promise
-const pool = {
-    query: (sql, params = []) => {
-        return new Promise((resolve, reject) => {
-            const isSelect = sql.trim().toUpperCase().startsWith('SELECT');
-            if (isSelect) {
-                db.all(sql, params, (err, rows) => {
-                    if (err) reject(err);
-                    else resolve([rows]);
-                });
-            } else {
-                db.run(sql, params, function (err) {
-                    if (err) reject(err);
-                    else resolve([{ affectedRows: this.changes, insertId: this.lastID }]);
-                });
-            }
-        });
-    },
-    getConnection: () => {
-        return Promise.resolve({
-            query: pool.query,
-            beginTransaction: () => pool.query('BEGIN TRANSACTION'),
-            commit: () => pool.query('COMMIT'),
-            rollback: () => pool.query('ROLLBACK'),
-            release: () => {}
-        });
-    }
-};
-// -------------------------------------------
 
 // Mapeo constante de días de la semana para evitar JOINs con tablas innecesarias
 const diasSemanaMap = {
