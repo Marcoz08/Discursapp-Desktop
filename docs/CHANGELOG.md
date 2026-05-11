@@ -5,6 +5,12 @@ Todos los cambios notables de este proyecto (DiscursApp) se documentarán en est
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- **Refactorización de DB:** Renombrado de la columna `id_registro` a `id_tituloOrador` en las tablas `temas_orador` y `salidas_discursar` para mejorar la claridad semántica en las relaciones orador-tema.
+- **Interfaz:** Renombrada la página `registros.html` a `bosquejos.html` para mayor coherencia con el contenido del catálogo.
+
 ## [1.0.0] - 2026-04-22
 
 ### Added

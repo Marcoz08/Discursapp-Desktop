@@ -6,14 +6,14 @@ export const getSalidasProgramacion = async (req, res) => {
     try {
         const query = `
             SELECT 
-                s.id_registro, s.id_rol, s.fecha_salida, s.id_orador,
+                s.id_salida, s.id_tituloOrador, s.id_rol, s.fecha_salida, s.id_orador,
                 o.nombre AS nombre_orador,
                 t.numero_tema AS num_bosquejo,
                 t.titulo AS tema,
                 t.cancion_sugerida AS cancion
             FROM salidas_discursar s
             JOIN oradores o ON s.id_orador = o.id_orador
-            JOIN temas_orador t ON s.id_registro = t.id_registro
+            JOIN temas_orador t ON s.id_tituloOrador = t.id_tituloOrador
             WHERE CAST(strftime('%m', s.fecha_salida) AS INTEGER) = ? AND CAST(strftime('%Y', s.fecha_salida) AS INTEGER) = ?
         `;
         const [rows] = await pool.query(query, [parseInt(mes) + 1, parseInt(anio)]);
@@ -36,13 +36,13 @@ export const saveSalidasProgramacion = async (req, res) => {
         );
 
         const values = programacion.map(p => [
-            p.id_registro, p.id_rol, p.fecha_salida, p.id_orador
+            p.id_tituloOrador, p.id_rol, p.fecha_salida, p.id_orador
         ]);
 
         if (values.length > 0) {
             const placeholders = values.map(() => '(?, ?, ?, ?)').join(', ');
             const flatValues = values.flat();
-            const query = `INSERT INTO salidas_discursar (id_registro, id_rol, fecha_salida, id_orador) VALUES ${placeholders}`;
+            const query = `INSERT INTO salidas_discursar (id_tituloOrador, id_rol, fecha_salida, id_orador) VALUES ${placeholders}`;
             await connection.query(query, flatValues);
         }
         await connection.commit();
@@ -61,7 +61,7 @@ export const getSalidaSemana = async (req, res) => {
             SELECT o.nombre, t.titulo, s.fecha_salida
             FROM salidas_discursar s
             JOIN oradores o ON s.id_orador = o.id_orador
-            JOIN temas_orador t ON s.id_registro = t.id_registro
+            JOIN temas_orador t ON s.id_tituloOrador = t.id_tituloOrador
             WHERE strftime('%W', s.fecha_salida) = strftime('%W', 'now', 'localtime')
               AND strftime('%Y', s.fecha_salida) = strftime('%Y', 'now', 'localtime')
             LIMIT 1

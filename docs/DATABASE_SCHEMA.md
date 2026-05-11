@@ -7,6 +7,9 @@ Este documento detalla la arquitectura de la base de datos SQLite utilizada en e
 - **Oradores** <1---N> **Temas_Orador**
 - **Lista_Bosquejos** <1---N> **Temas_Orador**
 - **Agenda** <1---N> **Agenda_Meses** <N---1> **Meses**
+- **Salidas_Discursar** <N---1> **Temas_Orador**
+- **Salidas_Discursar** <N---1> **Agenda**
+- **Salidas_Discursar** <N---1> **Oradores**
 
 ---
 
@@ -16,7 +19,8 @@ Este documento detalla la arquitectura de la base de datos SQLite utilizada en e
 Almacena el catálogo oficial de discursos públicos y su historial de presentación.
 | Columna | Tipo | Descripción |
 | :--- | :--- | :--- |
-| `num` | INT (PK) | Número oficial del bosquejo. |
+| `id_bosquejo` | INT (PK AI) | Identificador técnico único. |
+| `num` | INT | Número oficial del bosquejo. |
 | `titulo` | VARCHAR(255) | Título completo del discurso. |
 | `fecha_ult` | DATE | Fecha de la última vez que se presentó en la congregación local. |
 | `fecha_ant` | DATE | Registro histórico de la penúltima presentación. |
@@ -36,7 +40,7 @@ Registro de oradores locales y sus datos de contacto.
 Relaciona a los oradores con los discursos que tienen preparados.
 | Columna | Tipo | Descripción |
 | :--- | :--- | :--- |
-| `id_registro` | INT (PK AI) | ID único del registro. |
+| `id_tituloOrador` | INT (PK AI) | ID único del registro. |
 | `id_orador` | INT (FK) | Referencia a `oradores.id_orador`. |
 | `numero_tema` | INT (FK) | Referencia a `lista_bosquejos.num`. |
 | `titulo` | VARCHAR(255) | Título del tema (puede ser personalizado). |
@@ -93,3 +97,12 @@ Programación mensual de oradores que visitan la congregación.
 | `congregacion`| VARCHAR | Congregación de origen del visitante. |
 | `asistio` | BOOLEAN | Confirmación de asistencia realizada. |
 
+### 9. `salidas_discursar`
+Almacena el orador y los datos necesarios para su salida a discursar.
+| Columna | Tipo | Descripción |
+| :--- | :--- | :--- |
+| `id_salida` | INT (PK AI) | Identificador único de la salida. |
+| `id_tituloOrador` | INT (FK) | Referencia a `temas_orador.id_tituloOrador`. Vincula al orador con el tema seleccionado. |
+| `id_rol` | INT (FK) | Referencia a `agenda.id_rol`. Asocia la salida a un acuerdo específico de la agenda. |
+| `fecha_salida` | DATE | Fecha programada para la salida a discursar. |
+| `id_orador` | INT (FK) | Referencia a `oradores.id_orador`. |

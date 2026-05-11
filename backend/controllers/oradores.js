@@ -6,7 +6,7 @@ export const getOradoresTemas = async (req, res) => {
     try {
         const query = `
             SELECT 
-                t.id_registro,
+                t.id_tituloOrador,
                 o.id_orador,
                 o.nombre, 
                 o.telefono,
@@ -117,7 +117,7 @@ export const updateTema = async (req, res) => {
 
     params.push(id);
     try {
-        const query = `UPDATE temas_orador SET ${updates.join(', ')} WHERE id_registro = ?`;
+        const query = `UPDATE temas_orador SET ${updates.join(', ')} WHERE id_tituloOrador = ?`;
         const [result] = await pool.query(query, params);
         if (result.affectedRows === 0) return res.status(404).json({ error: "No se encontró el tema" });
         res.json({ message: "Tema actualizado con éxito" });
@@ -129,7 +129,7 @@ export const updateTema = async (req, res) => {
 export const deleteTema = async (req, res) => {
     const { id } = req.params;
     try {
-        await pool.query("DELETE FROM temas_orador WHERE id_registro = ?", [id]);
+        await pool.query("DELETE FROM temas_orador WHERE id_tituloOrador = ?", [id]);
         res.json({ message: "Tema eliminado con éxito" });
     } catch (err) {
         res.status(500).json({ error: err.message });
