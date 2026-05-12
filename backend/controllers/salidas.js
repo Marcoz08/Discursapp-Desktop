@@ -63,11 +63,33 @@ export const getSalidaSemana = async (req, res) => {
             JOIN oradores o ON s.id_orador = o.id_orador
             JOIN temas_orador t ON s.id_tituloOrador = t.id_tituloOrador
             WHERE strftime('%W', s.fecha_salida) = strftime('%W', 'now', 'localtime')
-              AND strftime('%Y', s.fecha_salida) = strftime('%Y', 'now', 'localtime')
+            AND strftime('%Y', s.fecha_salida) = strftime('%Y', 'now', 'localtime')
             LIMIT 1
         `;
         const [rows] = await pool.query(query);
         res.json(rows.length > 0 ? rows[0] : null);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+// Obtener historial completo de salidas
+export const getHistoricoSalidas = async (req, res) => {
+    try {
+        const query = `
+            SELECT 
+                s.fecha_salida, 
+                o.nombre AS nombre_orador,
+                t.titulo AS tema,
+                a.congregacion AS destino
+            FROM salidas_discursar s
+            JOIN oradores o ON s.id_orador = o.id_orador
+            JOIN temas_orador t ON s.id_tituloOrador = t.id_tituloOrador
+            JOIN agenda a ON s.id_rol = a.id_rol
+            ORDER BY s.fecha_salida DESC
+        `;
+        const [rows] = await pool.query(query);
+        res.json(rows);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

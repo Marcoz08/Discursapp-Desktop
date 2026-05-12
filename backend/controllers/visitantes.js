@@ -139,3 +139,19 @@ export const getVisitanteSemana = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+// Obtener historial completo de visitas (solo confirmadas)
+export const getHistoricoVisitas = async (req, res) => {
+    try {
+        const query = `
+            SELECT fecha_discurso, nombre, tema, congregacion, asistio
+            FROM oradores_visitantes
+            WHERE asistio = 1
+            ORDER BY fecha_discurso DESC
+        `;
+        const [rows] = await pool.query(query);
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};

@@ -42,6 +42,10 @@ router.get('/agenda/confirmada', agendaController.getAgendaConfirmada);
 router.get('/salidas-programacion', salidasController.getSalidasProgramacion);
 router.post('/salidas-programacion', salidasController.saveSalidasProgramacion);
 
+// --- Historial ---
+router.get('/salidas/historico', salidasController.getHistoricoSalidas);
+router.get('/visitantes/historico', visitantesController.getHistoricoVisitas);
+
 // --- Dashboard ---
 router.get('/dashboard/visitante-semana', visitantesController.getVisitanteSemana);
 router.get('/dashboard/salida-semana', salidasController.getSalidaSemana);

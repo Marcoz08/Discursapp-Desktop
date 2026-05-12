@@ -320,12 +320,8 @@
                     </table>
                   </div>
                   <div class="card-footer clearfix bg-body">
-                    <ul class="pagination pagination-sm m-0 float-end">
-                      <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                      <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                      <li class="page-item"><a class="page-link" href="#">2</a></li>
-                      <li class="page-item"><a class="page-link" href="#">3</a></li>
-                      <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                    <ul class="pagination pagination-sm m-0 float-end" id="pagination-salidas">
+                      <!-- Paginación dinámica -->
                     </ul>
                   </div>
                 </div>
@@ -364,12 +360,8 @@
                     </table>
                   </div>
                   <div class="card-footer clearfix bg-body">
-                    <ul class="pagination pagination-sm m-0 float-end">
-                      <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                      <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                      <li class="page-item"><a class="page-link" href="#">2</a></li>
-                      <li class="page-item"><a class="page-link" href="#">3</a></li>
-                      <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                    <ul class="pagination pagination-sm m-0 float-end" id="pagination-visitas">
+                      <!-- Paginación dinámica -->
                     </ul>
                   </div>
                 </div>
@@ -446,14 +438,130 @@
     </script>
     <!--end::OverlayScrollbars Configure-->
 
-    <!-- Lógica para cargar historiales -->
+    <!-- Lógica de Historial -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
+        const recordsPerPage = 10;
+        let allSalidas = [];
+        let allVisitas = [];
+        let filteredSalidas = [];
+        let filteredVisitas = [];
+        let pageSalidas = 1;
+        let pageVisitas = 1;
+
         const salidasBody = document.getElementById("historico-salidas-body");
         const visitasBody = document.getElementById("historico-visitas-body");
+        const searchSalidas = document.getElementById("search-salidas");
+        const searchVisitas = document.getElementById("search-visitas");
 
-        // En el futuro, aquí se realizarán los fetch a los nuevos endpoints de historial
-        console.log("Vista de historial cargada visualmente.");
+        const API_BASE = 'http://localhost:3000/api';
+
+        async function fetchData() {
+          try {
+            const [resS, resV] = await Promise.all([
+              fetch(`${API_BASE}/salidas/historico`),
+              fetch(`${API_BASE}/visitantes/historico`)
+            ]);
+
+            if (!resS.ok || !resV.ok) {
+              throw new Error(`Error HTTP: Salidas(${resS.status}) / Visitas(${resV.status})`);
+            }
+
+            allSalidas = await resS.json() || [];
+            allVisitas = await resV.json() || [];
+
+            filteredSalidas = [...allSalidas];
+            filteredVisitas = [...allVisitas];
+            renderAll();
+          } catch (error) {
+            console.error("Error al cargar datos:", error);
+            if (salidasBody) salidasBody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Error al cargar datos</td></tr>';
+            if (visitasBody) visitasBody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Error al cargar datos</td></tr>';
+          }
+        }
+
+        function renderAll() {
+          renderSalidas();
+          renderVisitas();
+        }
+
+        function renderSalidas() {
+          if (!salidasBody) return;
+          const start = (pageSalidas - 1) * recordsPerPage;
+          const end = start + recordsPerPage;
+          const items = filteredSalidas.slice(start, end);
+
+          salidasBody.innerHTML = items.map(s => `
+            <tr>
+              <td>${new Date(s.fecha_salida).toLocaleDateString('es-MX')}</td>
+              <td>${s.nombre_orador}</td>
+              <td>${s.tema}</td>
+              <td>${s.destino}</td>
+            </tr>
+          `).join('') || '<tr><td colspan="4" class="text-center text-muted">No hay registros</td></tr>';
+
+          updatePagination("pagination-salidas", filteredSalidas.length, pageSalidas, (p) => {
+            pageSalidas = p;
+            renderSalidas();
+          });
+        }
+
+        function renderVisitas() {
+          if (!visitasBody) return;
+          const start = (pageVisitas - 1) * recordsPerPage;
+          const end = start + recordsPerPage;
+          const items = filteredVisitas.slice(start, end);
+
+          visitasBody.innerHTML = items.map(v => `
+            <tr>
+              <td>${new Date(v.fecha_discurso).toLocaleDateString('es-MX')}</td>
+              <td>${v.nombre}</td>
+              <td>${v.tema}</td>
+              <td>${v.congregacion}</td>
+              <td class="text-center"><i class="bi bi-check-circle-fill text-success"></i></td>
+            </tr>
+          `).join('') || '<tr><td colspan="5" class="text-center text-muted">No hay registros</td></tr>';
+
+          updatePagination("pagination-visitas", filteredVisitas.length, pageVisitas, (p) => {
+            pageVisitas = p;
+            renderVisitas();
+          });
+        }
+
+        function updatePagination(id, totalItems, currentPage, callback) {
+          const totalPages = Math.ceil(totalItems / recordsPerPage);
+          const container = document.getElementById(id);
+          if (!container) return;
+
+          let html = `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}"><a class="page-link" href="#" data-page="${currentPage - 1}">&laquo;</a></li>`;
+          for (let i = 1; i <= totalPages; i++) {
+            html += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+          }
+          html += `<li class="page-item ${currentPage === totalPages || totalPages === 0 ? 'disabled' : ''}"><a class="page-link" href="#" data-page="${currentPage + 1}">&raquo;</a></li>`;
+
+          container.innerHTML = html;
+          container.querySelectorAll('a[data-page]').forEach(link => {
+            link.onclick = (e) => {
+              e.preventDefault();
+              const p = parseInt(link.dataset.page);
+              if (p > 0 && p <= totalPages) callback(p);
+            };
+          });
+        }
+
+        if (searchSalidas) searchSalidas.addEventListener('input', (e) => {
+          const term = e.target.value.toLowerCase();
+          filteredSalidas = allSalidas.filter(s => s.nombre_orador.toLowerCase().includes(term) || s.tema.toLowerCase().includes(term) || s.destino.toLowerCase().includes(term));
+          pageSalidas = 1; renderSalidas();
+        });
+
+        if (searchVisitas) searchVisitas.addEventListener('input', (e) => {
+          const term = e.target.value.toLowerCase();
+          filteredVisitas = allVisitas.filter(v => v.nombre.toLowerCase().includes(term) || v.tema.toLowerCase().includes(term) || v.congregacion.toLowerCase().includes(term));
+          pageVisitas = 1; renderVisitas();
+        });
+
+        fetchData();
       });
     </script>
     <!--end::Script-->
