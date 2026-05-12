@@ -31,6 +31,7 @@ router.get('/reuniones-especiales-tipos', visitantesController.getTiposReunionEs
 router.get('/visitantes-programacion', visitantesController.getVisitantesProgramacion);
 router.post('/visitantes-programacion', visitantesController.saveVisitantesProgramacion);
 router.post('/confirmar-asistencia', visitantesController.confirmarAsistencia);
+router.post('/desconfirmar-asistencia', visitantesController.desconfirmarAsistencia);
 
 // --- Agenda ---
 router.get('/agenda', agendaController.getAgenda);

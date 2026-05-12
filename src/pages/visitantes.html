@@ -735,6 +735,41 @@
             </div>
           </div>
         </div>
+
+        <!-- Modal para Quitar Confirmación -->
+        <div
+          class="modal fade"
+          id="unconfirmAttendanceModal"
+          tabindex="-1"
+          aria-labelledby="unconfirmAttendanceModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title" id="unconfirmAttendanceModalLabel">
+                  <i class="bi bi-exclamation-triangle-fill me-2"></i>Quitar Confirmación de Asistencia
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <p>¿Está seguro de que desea quitar la confirmación de asistencia para el discursante del bosquejo <strong id="unconfirm-bosquejo-num"></strong> en la fecha <strong id="unconfirm-fecha"></strong>?</p>
+                <p class="text-danger small">Esta acción revertirá el estado de asistencia y la fecha de última presentación del bosquejo.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="btn-unconfirm-attendance-final" class="btn btn-warning">
+                  <i class="bi bi-x-circle me-1"></i> Quitar Confirmación
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
       <!--end::App Main-->
 
@@ -1158,17 +1193,19 @@
 
                   tr.innerHTML = `
                     <td><input type="text" class="form-control form-control-sm" placeholder="Nombre" value="${dataRow?.nombre || ""}"></td>
-                    <td><input type="number" class="form-control form-control-sm text-center num-input" value="${dataRow?.num_bosquejo || ""}"></td>
+                    <td><input type="text" class="form-control form-control-sm text-center num-input" value="${dataRow?.num_bosquejo || ""}"></td>
                     <td><input type="text" class="form-control form-control-sm tema-input" list="bosquejos-list" placeholder="Tema" value="${dataRow?.tema || ""}"></td>
                     <td class="text-center status-cell">
                       ${specialMenuHtml}
                     </td>
-                    <td><input type="number" class="form-control form-control-sm text-center" value="${dataRow?.cancion || ""}"></td>
+                    <td><input type="text" class="form-control form-control-sm text-center cancion-input" value="${dataRow?.cancion || ""}"></td>
                     <td><input type="text" class="form-control form-control-sm" placeholder="Congregación" value="${dataRow?.congregacion || ""}"></td>
                     <td class="text-center text-muted">${defaultTime}</td>
                     <td class="text-center fw-bold text-secondary">${displayDateStr}</td>
                     <td class="text-center">--</td>
                   `;
+                  // Si al cargar ya es un evento especial, resaltamos la fila
+                  if (dataRow?.nombre === "-----") tr.classList.add("table-info");
                 } else {
                   if (isConfirmed) tr.classList.add("table-success"); // Fondo verde suave
 
@@ -1180,20 +1217,26 @@
                     <td class="text-center"><span class="badge text-bg-light border">${dataRow?.num_bosquejo || "--"}</span></td>
                     <td>${dataRow?.tema || '<span class="text-muted italic">Sin asignar</span>'}</td>
                     <td class="text-center">${getStatusIcon(dataRow?.num_bosquejo, isConfirmed)}</td>
-                    <td class="text-center">${dataRow?.cancion ? "Cant. " + dataRow.cancion : "--"}</td>
+                    <td class="text-center">${dataRow?.cancion ? "" + dataRow.cancion : "--"}</td>
                     <td><small class="text-muted">${dataRow?.congregacion || "--"}</small></td>
                     <td class="text-center text-muted"><small>${defaultTime}</small></td>
                     <td class="text-center fw-bold text-secondary">${displayDateStr}</td>
                     <td class="text-center">
                       ${
                         dataRow?.num_bosquejo
-                          ? `
-                        <button class="btn btn-sm btn-outline-success btn-confirm-attendance" 
-                          data-num="${dataRow.num_bosquejo}" 
-                          data-fecha="${fullDateStr}"
-                          title="Confirmar asistencia">
-                          <i class="bi bi-check-lg"></i> Confirmar
-                        </button>`
+                          ? isConfirmed // Si ya está confirmado
+                            ? `<button class="btn btn-sm btn-success btn-unconfirm-attendance"
+                                 data-num="${dataRow.num_bosquejo}"
+                                 data-fecha="${fullDateStr}"
+                                 title="Quitar confirmación de asistencia">
+                                 <i class="bi bi-check-all"></i> Confirmado
+                               </button>` // Botón para desconfirmar
+                            : `<button class="btn btn-sm btn-outline-success btn-confirm-attendance"
+                                 data-num="${dataRow.num_bosquejo}"
+                                 data-fecha="${fullDateStr}"
+                                 title="Confirmar asistencia">
+                                 <i class="bi bi-check-lg"></i> Confirmar
+                               </button>` // Botón para confirmar
                           : "--"
                       }
                     </td>
@@ -1294,7 +1337,17 @@
             e.preventDefault();
             const row = e.target.closest("tr");
             const temaInput = row.querySelector(".tema-input");
-            if (temaInput) temaInput.value = e.target.textContent;
+            if (temaInput) {
+              temaInput.value = e.target.textContent;
+              
+              // Llenar los demás campos con "-----" y resaltar la fila en azul claro
+              row.querySelectorAll("input").forEach(input => {
+                if (!input.classList.contains("tema-input")) {
+                  input.value = "-----";
+                }
+              });
+              row.classList.add("table-info");
+            }
           }
         });
 
@@ -1343,6 +1396,57 @@
                 error.error || "Error al confirmar asistencia",
                 "danger",
               );
+            }
+          } catch (error) {
+            showNotification("Error de conexión con el servidor.", "danger");
+          }
+        });
+
+        // --- NUEVA LÓGICA PARA QUITAR CONFIRMACIÓN DE ASISTENCIA ---
+        const unconfirmAttendanceModal = new bootstrap.Modal(
+          document.getElementById("unconfirmAttendanceModal"),
+        );
+        const btnUnconfirmAttendanceFinal = document.getElementById(
+          "btn-unconfirm-attendance-final",
+        );
+        let pendingUnconfirmData = null;
+
+        tablaVisitasBody.addEventListener("click", (e) => {
+          const unconfirmBtn = e.target.closest(".btn-unconfirm-attendance");
+          if (unconfirmBtn) {
+            pendingUnconfirmData = {
+              num: unconfirmBtn.dataset.num,
+              fecha: unconfirmBtn.dataset.fecha,
+            };
+            // Mostrar los datos en el modal para confirmación visual
+            document.getElementById("unconfirm-bosquejo-num").textContent = pendingUnconfirmData.num;
+            document.getElementById("unconfirm-fecha").textContent = new Date(pendingUnconfirmData.fecha).toLocaleDateString('es-MX');
+            unconfirmAttendanceModal.show();
+          }
+        });
+
+        btnUnconfirmAttendanceFinal.addEventListener("click", async () => {
+          if (!pendingUnconfirmData) return;
+          try {
+            const response = await fetch(
+              `http://localhost:3000/api/desconfirmar-asistencia`, // Nuevo endpoint para desconfirmar
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(pendingUnconfirmData),
+              },
+            );
+
+            if (response.ok) {
+              unconfirmAttendanceModal.hide();
+              showNotification(
+                "Confirmación de asistencia eliminada y registro revertido.",
+                "success",
+              );
+              fetchBosquejosList(); // Refrescar iconos semáforo y botones
+            } else {
+              const error = await response.json();
+              showNotification(error.error || "Error al quitar confirmación de asistencia", "danger");
             }
           } catch (error) {
             showNotification("Error de conexión con el servidor.", "danger");
@@ -1404,18 +1508,7 @@
           try {
             const response = await fetch("http://localhost:3000/api/reuniones-especiales-tipos");
             if (response.ok) {
-              const data = await response.json();
-              // Si la tabla está vacía, cargamos valores por defecto comunes
-              if (data.length === 0) {
-                tiposReunionEspecial = [
-                  { tipo_reunion: "Asamblea de Circuito" },
-                  { tipo_reunion: "Asamblea Regional" },
-                  { tipo_reunion: "Visita del Superintendente" },
-                  { tipo_reunion: "Reunión Especial" }
-                ];
-              } else {
-                tiposReunionEspecial = data;
-              }
+              tiposReunionEspecial = await response.json();
               // Si el usuario ya está viendo la tabla, refrescamos para mostrar los menús
               if (isEditingProgram) updateProgramacionTable();
             }

@@ -123,6 +123,29 @@ export const confirmarAsistencia = async (req, res) => {
     }
 };
 
+// Desconfirmar asistencia de un orador visitante y revertir historial del bosquejo
+export const desconfirmarAsistencia = async (req, res) => {
+    const { num, fecha } = req.body;
+    if (!num || !fecha) return res.status(400).json({ error: "Datos incompletos" });
+
+    const connection = await pool.getConnection();
+    try {
+        await connection.beginTransaction();
+        // Revertir la fecha_ult a fecha_ant y limpiar fecha_ant
+        await connection.query("UPDATE lista_bosquejos SET fecha_ult = fecha_ant, fecha_ant = NULL WHERE num = ?", [num]);
+        // Establecer asistio a FALSE (0) en oradores_visitantes
+        await connection.query("UPDATE oradores_visitantes SET asistio = FALSE WHERE num_bosquejo = ? AND fecha_discurso = ?", [num, fecha]);
+        await connection.commit();
+        res.json({ message: "Asistencia desconfirmada e historial revertido" });
+    } catch (err) {
+        await connection.rollback();
+        console.error('Error al desconfirmar asistencia:', err);
+        res.status(500).json({ error: err.message });
+    } finally {
+        connection.release();
+    }
+};
+
 // Dashboard: Obtener el visitante de la semana actual
 export const getVisitanteSemana = async (req, res) => {
     try {
