@@ -884,6 +884,32 @@
 
         // Establecer mes y año actuales por defecto
         const today = new Date();
+        const currentYear = today.getFullYear();
+
+        // Intentar recuperar el mes y año guardados de la sesión
+        const savedMes = sessionStorage.getItem("visitantes_mes");
+        const savedAnio = sessionStorage.getItem("visitantes_anio");
+
+        // Establecer mes inicial (el guardado o el actual por defecto)
+        if (savedMes !== null) {
+          selectMes.value = savedMes;
+        } else {
+          selectMes.value = today.getMonth().toString();
+        }
+
+        // Generar opciones de año dinámicamente (año actual y los dos siguientes)
+        selectAnio.innerHTML = ""; // Limpiar opciones existentes
+        for (let i = 0; i < 3; i++) {
+          const year = currentYear + i;
+          selectAnio.innerHTML += `<option value="${year}">${year}</option>`;
+        }
+
+        // Establecer año inicial (el guardado o el actual por defecto)
+        if (savedAnio !== null) {
+          selectAnio.value = savedAnio;
+        } else {
+          selectAnio.value = currentYear.toString();
+        }
 
         // Lógica para alternar el modo edición
         btnEditProgram.addEventListener("click", () => {
@@ -903,19 +929,6 @@
           }
           updateProgramacionTable();
         });
-
-        const currentMonth = today.getMonth(); // 0-indexed
-        const currentYear = today.getFullYear();
-
-        selectMes.value = currentMonth.toString();
-
-        // Generar opciones de año dinámicamente (año actual y los dos siguientes)
-        selectAnio.innerHTML = ""; // Limpiar opciones existentes
-        for (let i = 0; i < 3; i++) {
-          const year = currentYear + i;
-          selectAnio.innerHTML += `<option value="${year}">${year}</option>`;
-        }
-        selectAnio.value = currentYear.toString();
 
         // --- Lógica para Exportación a PDF ---
         const configPdfModal = new bootstrap.Modal(
@@ -1453,9 +1466,16 @@
           }
         });
 
-        // Escuchar cambios en los selectores de mes y año
-        selectMes.addEventListener("change", updateProgramacionTable);
-        selectAnio.addEventListener("change", updateProgramacionTable);
+        // Escuchar cambios en los selectores para actualizar tabla y persistir estado
+        selectMes.addEventListener("change", () => {
+          sessionStorage.setItem("visitantes_mes", selectMes.value);
+          updateProgramacionTable();
+        });
+
+        selectAnio.addEventListener("change", () => {
+          sessionStorage.setItem("visitantes_anio", selectAnio.value);
+          updateProgramacionTable();
+        });
 
         const editLocalModal = new bootstrap.Modal(
           document.getElementById("editLocalModal"),

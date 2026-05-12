@@ -761,20 +761,26 @@
         const currentMonth = today.getMonth();
         const currentYear = today.getFullYear();
 
+        // Intentar recuperar el mes y año guardados de la sesión
+        const savedMes = sessionStorage.getItem("salidas_mes");
+        const savedAnio = sessionStorage.getItem("salidas_anio");
+
         let currentConfirmedAgenda = null;
         let isEditingSalidas = false;
         let oradoresLocalesTemas = [];
         let allOradoresTemasRaw = []; // Almacena la lista completa para filtrar temas
 
         // Configuración inicial de selectores
-        if (selectMes) selectMes.value = currentMonth.toString();
+        if (selectMes) {
+          selectMes.value = savedMes !== null ? savedMes : currentMonth.toString();
+        }
 
         if (selectAnio) {
           for (let i = 0; i < 3; i++) {
             const year = currentYear + i;
             selectAnio.innerHTML += `<option value="${year}">${year}</option>`;
           }
-          selectAnio.value = currentYear.toString();
+          selectAnio.value = savedAnio !== null ? savedAnio : currentYear.toString();
 
           if (pdfSelectAnio) {
             pdfSelectAnio.innerHTML = selectAnio.innerHTML;
@@ -1302,9 +1308,16 @@
 
         fetchOradoresLocales();
 
-        // Escuchar cambios en los selectores para actualizar la info
-        selectMes.addEventListener("change", fetchConfirmedSalida);
-        selectAnio.addEventListener("change", fetchConfirmedSalida);
+        // Escuchar cambios en los selectores para actualizar tabla y persistir estado
+        selectMes.addEventListener("change", () => {
+          sessionStorage.setItem("salidas_mes", selectMes.value);
+          fetchConfirmedSalida();
+        });
+
+        selectAnio.addEventListener("change", () => {
+          sessionStorage.setItem("salidas_anio", selectAnio.value);
+          fetchConfirmedSalida();
+        });
 
         // Ejecución inicial al cargar la página
         fetchConfirmedSalida();
