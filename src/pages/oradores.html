@@ -1243,20 +1243,22 @@
             );
             temasBody.innerHTML = "";
             oratorRows.forEach((row) => {
-              if (row.numero_tema || row.titulo) {
+              if (row.id_tituloOrador && (row.numero_tema || row.titulo)) {
                 const tr = document.createElement("tr");
                 // Almacenar los valores originales para detectar cambios
-                originalTopicValuesInModal.set(row.id_registro.toString(), {
+                originalTopicValuesInModal.set(row.id_tituloOrador.toString(), {
                   numero_tema: row.numero_tema,
                   titulo: row.titulo,
                   cancion_sugerida: row.cancion_sugerida,
                 });
+                // Escapar comillas dobles para que no rompan el atributo value en el HTML
+                const safeTitulo = (row.titulo || "").toString().replace(/"/g, '&quot;');
                 tr.innerHTML = `
-                  <td><input type="number" class="form-control form-control-sm topic-edit-input" data-id-registro="${row.id_registro}" data-field="numero_tema" value="${row.numero_tema || ""}"></td>
-                  <td><input type="text" class="form-control form-control-sm topic-edit-input" data-id-registro="${row.id_registro}" data-field="titulo" value="${row.titulo || ""}"></td>
-                  <td><input type="number" class="form-control form-control-sm topic-edit-input" data-id-registro="${row.id_registro}" data-field="cancion_sugerida" value="${row.cancion_sugerida || ""}"></td>
+                  <td><input type="number" class="form-control form-control-sm topic-edit-input" data-id-titulo-orador="${row.id_tituloOrador}" data-field="numero_tema" value="${row.numero_tema || ""}"></td>
+                  <td><input type="text" class="form-control form-control-sm topic-edit-input" data-id-titulo-orador="${row.id_tituloOrador}" data-field="titulo" value="${safeTitulo}"></td>
+                  <td><input type="number" class="form-control form-control-sm topic-edit-input" data-id-titulo-orador="${row.id_tituloOrador}" data-field="cancion_sugerida" value="${row.cancion_sugerida || ""}"></td>
                   <td class="text-end">
-                    <button type="button" class="btn btn-sm btn-link text-danger remove-topic-btn" data-id-registro="${row.id_registro}" title="Eliminar tema">
+                    <button type="button" class="btn btn-sm btn-link text-danger remove-topic-btn" data-id-titulo-orador="${row.id_tituloOrador}" title="Eliminar tema">
                       <i class="bi bi-trash"></i>
                     </button>
                   </td>
@@ -1359,11 +1361,11 @@
             const changedTopics = new Map(); // Map<id_registro, {field: value, ...}>
 
             topicInputs.forEach((input) => {
-              const idRegistro = input.dataset.idRegistro;
+              const idTituloOrador = input.dataset.idTituloOrador;
               const field = input.dataset.field;
               let currentInputValue = input.value; // Valor como string del input
 
-              const originalTopic = originalTopicValuesInModal.get(idRegistro);
+              const originalTopic = originalTopicValuesInModal.get(idTituloOrador);
               if (!originalTopic) return; // No debería ocurrir para temas existentes
 
               let originalValue = originalTopic[field];
@@ -1382,15 +1384,15 @@
 
               // Comparar el valor procesado actual con el valor original
               if (processedCurrentValue !== originalValue) {
-                if (!changedTopics.has(idRegistro))
-                  changedTopics.set(idRegistro, {});
-                changedTopics.get(idRegistro)[field] = processedCurrentValue;
+                if (!changedTopics.has(idTituloOrador))
+                  changedTopics.set(idTituloOrador, {});
+                changedTopics.get(idTituloOrador)[field] = processedCurrentValue;
               }
             });
 
-            for (const [idRegistro, updates] of changedTopics.entries()) {
+            for (const [idTituloOrador, updates] of changedTopics.entries()) {
               topicUpdatePromises.push(
-                fetch(`http://localhost:3000/api/temas-orador/${idRegistro}`, {
+                fetch(`http://localhost:3000/api/temas-orador/${idTituloOrador}`, {
                   method: "PUT",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify(updates),
@@ -1456,13 +1458,13 @@
             const btn = e.target.closest(".remove-topic-btn");
             if (btn) {
               const row = btn.closest("tr");
-              const idRegistro = btn.dataset.idRegistro;
+              const idTituloOrador = btn.dataset.idTituloOrador;
               if (
-                idRegistro &&
-                idRegistro !== "null" &&
+                idTituloOrador &&
+                idTituloOrador !== "null" &&
                 !row.classList.contains("new-topic-row")
               ) {
-                temasPendientesEliminar.push(idRegistro.toString());
+                temasPendientesEliminar.push(idTituloOrador.toString());
               }
               row.remove();
               const body = document.getElementById("edit-speaker-temas-body");
@@ -1493,11 +1495,12 @@
           if (temasBody.innerHTML.includes("Sin temas registrados"))
             temasBody.innerHTML = "";
 
+          const safeTitulo = titulo.replace(/"/g, '&quot;');
           const tr = document.createElement("tr");
           tr.classList.add("new-topic-row");
           tr.innerHTML = `
             <td><input type="number" class="form-control form-control-sm topic-new-input" data-field="numero_tema" value="${numero_tema}"></td>
-            <td><input type="text" class="form-control form-control-sm topic-new-input" data-field="titulo" value="${titulo}"></td>
+            <td><input type="text" class="form-control form-control-sm topic-new-input" data-field="titulo" value="${safeTitulo}"></td>
             <td><input type="number" class="form-control form-control-sm topic-new-input" data-field="cancion_sugerida" value="${cancion_sugerida}"></td>
             <td class="text-end">
               <button type="button" class="btn btn-sm btn-link text-danger remove-topic-btn" title="Eliminar tema">

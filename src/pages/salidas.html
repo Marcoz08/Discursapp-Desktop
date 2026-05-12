@@ -1016,7 +1016,7 @@
             // Limpiar campos dependientes
             row.querySelector(".num-input").value = "";
             row.querySelector(".cancion-input").value = "";
-            delete row.dataset.idRegistro;
+            delete row.dataset.idTituloOrador;
 
             if (selectedId !== "") {
               row.dataset.idOrador = selectedId;
@@ -1026,9 +1026,9 @@
               let topicOptions =
                 '<option value="">-- Seleccionar tema --</option>';
               allOradoresTemasRaw
-                .filter((t) => t.id_orador == selectedId && t.id_registro)
+                .filter((t) => t.id_orador == selectedId && t.id_tituloOrador)
                 .forEach((topic) => {
-                  topicOptions += `<option value="${topic.id_registro}" data-num="${topic.numero_tema || ""}" data-cancion="${topic.cancion_sugerida || ""}">${topic.titulo}</option>`;
+                  topicOptions += `<option value="${topic.id_tituloOrador}" data-num="${topic.numero_tema || ""}" data-cancion="${topic.cancion_sugerida || ""}">${topic.titulo}</option>`;
                 });
               temaSelect.innerHTML = topicOptions;
             } else {
@@ -1044,11 +1044,11 @@
             if (opt.value !== "") {
               row.querySelector(".num-input").value = opt.dataset.num;
               row.querySelector(".cancion-input").value = opt.dataset.cancion;
-              row.dataset.idRegistro = opt.value;
+              row.dataset.idTituloOrador = opt.value;
             } else {
               row.querySelector(".num-input").value = "";
               row.querySelector(".cancion-input").value = "";
-              delete row.dataset.idRegistro;
+              delete row.dataset.idTituloOrador;
             }
           }
         });
@@ -1137,12 +1137,12 @@
                   if (data && data.id_orador) {
                     allOradoresTemasRaw
                       .filter(
-                        (t) => t.id_orador === data.id_orador && t.id_registro,
+                        (t) => t.id_orador === data.id_orador && t.id_tituloOrador,
                       )
                       .forEach((topic) => {
                         const isSelected =
-                          data.id_registro === topic.id_registro;
-                        topicOptions += `<option value="${topic.id_registro}" data-num="${topic.numero_tema || ""}" data-cancion="${topic.cancion_sugerida || ""}" ${isSelected ? "selected" : ""}>${topic.titulo}</option>`;
+                          data.id_tituloOrador === topic.id_tituloOrador;
+                        topicOptions += `<option value="${topic.id_tituloOrador}" data-num="${topic.numero_tema || ""}" data-cancion="${topic.cancion_sugerida || ""}" ${isSelected ? "selected" : ""}>${topic.titulo}</option>`;
                       });
                   }
 
@@ -1231,7 +1231,7 @@
             const select = row.querySelector(".orador-select");
             if (select && select.value !== "") {
               programacion.push({
-                id_registro: row.dataset.idRegistro,
+                id_tituloOrador: row.dataset.idTituloOrador,
                 id_rol: currentConfirmedAgenda.id_rol,
                 id_orador: row.dataset.idOrador,
                 fecha_salida: row.dataset.fecha,

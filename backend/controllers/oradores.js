@@ -14,10 +14,11 @@ export const getOradoresTemas = async (req, res) => {
                 o.privilegio, 
                 o.aprobado,
                 t.numero_tema, 
-                t.titulo, 
+                COALESCE(t.titulo, lb.titulo) AS titulo, 
                 t.cancion_sugerida 
             FROM oradores o 
             LEFT JOIN temas_orador t ON o.id_orador = t.id_orador 
+            LEFT JOIN lista_bosquejos lb ON t.numero_tema = lb.num
             ORDER BY o.nombre ASC;
         `;
         const [rows] = await pool.query(query);

@@ -3,7 +3,7 @@
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Discursapp | Registro de bosquejos</title>
+    <title>Discursapp | Bosquejos</title>
 
     <!--begin::Accessibility Meta Tags-->
     <meta
@@ -267,8 +267,8 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-sm-6">
-                <h2 class="mb-0"><strong>Registros</strong></h2>
-                <p class="text-secondary mb-0">Historial de presentación</p>
+                <h2 class="mb-0"><strong>Bosquejos</strong></h2>
+                <p class="text-secondary mb-0">Listado de temas y registro de ultima presentación</p>
               </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
@@ -276,7 +276,7 @@
                     <a href="./index.html">Home</a>
                   </li>
                   <li class="breadcrumb-item active" aria-current="page">
-                    Registro de bosquejos
+                    Bosquejos
                   </li>
                 </ol>
               </div>
@@ -287,9 +287,9 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-12">
-                <div class="card">
+                <div class="card card-outline card-primary shadow-sm mb-4">
                   <div class="card-header">
-                    <h3 class="card-title">Lista de Bosquejos</h3>
+                    <h3 class="card-title fw-bold">Lista de bosquejos de discursos públicos (S-34)</h3>
                     <div class="card-tools d-flex">
                       <select
                         id="sort-date"
@@ -335,6 +335,39 @@
                         </tr>
                       </thead>
                       <tbody id="bosquejos-table-body">
+                        <!-- Los datos se cargarán aquí dinámicamente -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Tabla de Discursos Especiales -->
+                <div class="card card-outline card-info shadow-sm">
+                  <div class="card-header">
+                    <h3 class="card-title fw-bold">Discursos Especiales</h3>
+                    <div class="card-tools">
+                      <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
+                        <i class="bi bi-dash-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    class="card-body table-responsive p-0"
+                    style="max-height: 400px"
+                  >
+                    <table
+                      class="table table-head-fixed table-hover text-nowrap"
+                    >
+                      <thead>
+                        <tr>
+                          <th>Núm.</th>
+                          <th>Título del Discurso</th>
+                          <th>Última fecha</th>
+                          <th>Estatus</th>
+                          <th>Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody id="especiales-table-body">
                         <!-- Los datos se cargarán aquí dinámicamente -->
                       </tbody>
                     </table>
@@ -540,7 +573,8 @@
     <!-- Lógica para cargar datos desde el servidor -->
     <script>
       document.addEventListener("DOMContentLoaded", async function () {
-        const tableBody = document.getElementById("bosquejos-table-body");
+        const tableBodyRegulares = document.getElementById("bosquejos-table-body");
+        const tableBodyEspeciales = document.getElementById("especiales-table-body");
         const searchInput = document.querySelector(
           'input[name="table_search"]',
         );
@@ -556,7 +590,9 @@
             updateDisplay();
           } catch (error) {
             console.error("Error:", error);
-            tableBody.innerHTML =
+            tableBodyRegulares.innerHTML =
+              '<tr><td colspan="5" class="text-center text-danger">Error al conectar con el servidor</td></tr>';
+            tableBodyEspeciales.innerHTML =
               '<tr><td colspan="5" class="text-center text-danger">Error al conectar con el servidor</td></tr>';
           }
         }
@@ -587,11 +623,21 @@
             });
           }
 
-          renderTable(filtered);
+          // Separar por categoría s34 (1 = Regular, 0 = Especial)
+          const regulares = filtered.filter(b => b.s34 === 1);
+          const especiales = filtered.filter(b => b.s34 === 0);
+
+          renderTable(regulares, tableBodyRegulares);
+          renderTable(especiales, tableBodyEspeciales);
         }
 
-        function renderTable(data) {
-          tableBody.innerHTML = "";
+        function renderTable(data, container) {
+          container.innerHTML = "";
+          if (data.length === 0) {
+            container.innerHTML = '<tr><td colspan="5" class="text-center text-muted p-3">No se encontraron registros en esta categoría</td></tr>';
+            return;
+          }
+
           const now = new Date();
           const threeMonthsAgo = new Date();
           threeMonthsAgo.setMonth(now.getMonth() - 3);
@@ -636,7 +682,7 @@
             }
 
             tr.innerHTML = `
-              <td>${item.num}</td>
+              <td>${item.num || '--'}</td>
               <td>${item.titulo}</td>
               <td>${fechaStr}</td>
               <td><span class="badge ${badgeClass}" ${badgeStyle}>${statusText}</span></td>
@@ -658,12 +704,12 @@
                 </button>
               </td>
             `;
-            tableBody.appendChild(tr);
+            container.appendChild(tr);
           });
         }
 
-        // Abrir modal y cargar datos
-        tableBody.addEventListener("click", (e) => {
+        // Abrir modal y cargar datos (Delegación de eventos en el contenedor de la aplicación)
+        document.querySelector('.app-main').addEventListener("click", (e) => {
           const dateBtn = e.target.closest(".edit-btn");
           const titleBtn = e.target.closest(".edit-title-btn");
 

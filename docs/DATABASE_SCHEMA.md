@@ -24,6 +24,7 @@ Almacena el catálogo oficial de discursos públicos y su historial de presentac
 | `titulo` | VARCHAR(255) | Título completo del discurso. |
 | `fecha_ult` | DATE | Fecha de la última vez que se presentó en la congregación local. |
 | `fecha_ant` | DATE | Registro histórico de la penúltima presentación. |
+| `s34` | BOOLEAN | Indica si el bosquejo pertenece al catálogo regular S-34 (1) o es especial (0). Default: 1. |
 
 ### 2. `oradores`
 Registro de oradores locales y sus datos de contacto.
