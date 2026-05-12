@@ -25,6 +25,7 @@ router.put('/temas-orador/:id', oradoresController.updateTema);
 // --- Reunión Local ---
 router.get('/reunion-local', visitantesController.getReunionLocal);
 router.put('/reunion-local/:id', visitantesController.updateReunionLocal);
+router.get('/reuniones-especiales-tipos', visitantesController.getTiposReunionEspecial);
 
 // --- Visitantes ---
 router.get('/visitantes-programacion', visitantesController.getVisitantesProgramacion);

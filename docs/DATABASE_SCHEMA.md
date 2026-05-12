@@ -108,3 +108,12 @@ Almacena el orador y los datos necesarios para su salida a discursar.
 | `id_rol` | INT (FK) | Referencia a `agenda.id_rol`. Asocia la salida a un acuerdo específico de la agenda. |
 | `fecha_salida` | DATE | Fecha programada para la salida a discursar. |
 | `id_orador` | INT (FK) | Referencia a `oradores.id_orador`. |
+
+### 10. `reuniones_especiales`
+Almacena información sobre eventos fuera de la programación ordinaria (Asambleas, visitas de superintendente, etc).
+| Columna | Tipo | Descripción |
+| :--- | :--- | :--- |
+| `id_ReuEsp` | INTEGER (PK AI) | Identificador único del evento. |
+| `fecha` | DATE | Fecha en la que ocurrirá el evento. |
+| `hora_reunion` | TEXT | Hora de inicio programada. |
+| `tipo_reunion` | VARCHAR(255) | Tipo o nombre de la reunión especial. |

@@ -155,3 +155,15 @@ export const getHistoricoVisitas = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+// Obtener tipos de reuniones especiales únicas para el selector
+export const getTiposReunionEspecial = async (req, res) => {
+    try {
+        const query = "SELECT DISTINCT tipo_reunion FROM reuniones_especiales ORDER BY tipo_reunion ASC";
+        const [rows] = await pool.query(query);
+        res.json(rows);
+    } catch (err) {
+        console.error('Error al obtener tipos de reunión:', err);
+        res.status(500).json({ error: err.message });
+    }
+};

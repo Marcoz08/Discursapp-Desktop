@@ -7,6 +7,9 @@ y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Unreleased]
 
+### Added
+- **Nueva Tabla:** Creada la tabla `reuniones_especiales` para el registro de eventos y reuniones fuera de la programación ordinaria.
+
 ### Changed
 - **Refactorización de DB:** Renombrado de la columna `id_registro` a `id_tituloOrador` en las tablas `temas_orador` y `salidas_discursar` para mejorar la claridad semántica en las relaciones orador-tema.
 - **Interfaz:** Renombrada la página `registros.html` a `bosquejos.html` para mayor coherencia con el contenido del catálogo.

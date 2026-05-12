@@ -825,6 +825,7 @@
         const congEl = document.getElementById("local-congregacion");
         const tablaVisitasBody = document.getElementById("tabla-visitas-body");
         let bosquejosList = []; // Almacenará la lista de bosquejos para el autocompletado
+        let tiposReunionEspecial = []; // Tipos cargados desde la DB
 
         // Mapeo constante para asignar identificadores a los dias de la semana
         const diasSemanaMap = {
@@ -1139,11 +1140,29 @@
                 tr.dataset.asistio = isConfirmed ? 1 : 0;
 
                 if (isEditingProgram) {
+                  // Generar el menú desplegable (flecha)
+                  let specialMenuHtml = '';
+                  if (tiposReunionEspecial.length > 0) {
+                    specialMenuHtml = `
+                      <div class="dropdown">
+                        <button class="btn btn-xs btn-outline-secondary dropdown-toggle border-0" type="button" 
+                                data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="viewport" title="Evento especial">
+                          <i class="bi bi-chevron-down text-primary"></i>
+                        </button>
+                        <ul class="dropdown-menu shadow">
+                          ${tiposReunionEspecial.map(tipo => `<li><a class="dropdown-item btn-select-special" href="#">${tipo.tipo_reunion}</a></li>`).join('')}
+                        </ul>
+                      </div>
+                    `;
+                  }
+
                   tr.innerHTML = `
                     <td><input type="text" class="form-control form-control-sm" placeholder="Nombre" value="${dataRow?.nombre || ""}"></td>
                     <td><input type="number" class="form-control form-control-sm text-center num-input" value="${dataRow?.num_bosquejo || ""}"></td>
                     <td><input type="text" class="form-control form-control-sm tema-input" list="bosquejos-list" placeholder="Tema" value="${dataRow?.tema || ""}"></td>
-                    <td class="text-center status-cell">${getStatusIcon(dataRow?.num_bosquejo, isConfirmed)}</td>
+                    <td class="text-center status-cell">
+                      ${specialMenuHtml}
+                    </td>
                     <td><input type="number" class="form-control form-control-sm text-center" value="${dataRow?.cancion || ""}"></td>
                     <td><input type="text" class="form-control form-control-sm" placeholder="Congregación" value="${dataRow?.congregacion || ""}"></td>
                     <td class="text-center text-muted">${defaultTime}</td>
@@ -1269,6 +1288,16 @@
           }
         });
 
+        // Manejar selección de reunión especial desde el dropdown
+        tablaVisitasBody.addEventListener("click", (e) => {
+          if (e.target.classList.contains("btn-select-special")) {
+            e.preventDefault();
+            const row = e.target.closest("tr");
+            const temaInput = row.querySelector(".tema-input");
+            if (temaInput) temaInput.value = e.target.textContent;
+          }
+        });
+
         // Lógica para confirmar asistencia
         const confirmAttendanceModal = new bootstrap.Modal(
           document.getElementById("confirmAttendanceModal"),
@@ -1368,6 +1397,30 @@
             updateProgramacionTable(); // Actualizar iconos una vez cargada la lista
           } catch (error) {
             console.error("Error al cargar la lista de bosquejos:", error);
+          }
+        }
+
+        async function fetchTiposReunion() {
+          try {
+            const response = await fetch("http://localhost:3000/api/reuniones-especiales-tipos");
+            if (response.ok) {
+              const data = await response.json();
+              // Si la tabla está vacía, cargamos valores por defecto comunes
+              if (data.length === 0) {
+                tiposReunionEspecial = [
+                  { tipo_reunion: "Asamblea de Circuito" },
+                  { tipo_reunion: "Asamblea Regional" },
+                  { tipo_reunion: "Visita del Superintendente" },
+                  { tipo_reunion: "Reunión Especial" }
+                ];
+              } else {
+                tiposReunionEspecial = data;
+              }
+              // Si el usuario ya está viendo la tabla, refrescamos para mostrar los menús
+              if (isEditingProgram) updateProgramacionTable();
+            }
+          } catch (error) {
+            console.error("Error al cargar tipos de reunión:", error);
           }
         }
 
@@ -1472,6 +1525,7 @@
 
         fetchInfoLocal();
         fetchBosquejosList();
+        fetchTiposReunion();
       });
     </script>
 
