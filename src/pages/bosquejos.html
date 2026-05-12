@@ -344,8 +344,11 @@
                 <!-- Tabla de Discursos Especiales -->
                 <div class="card card-outline card-info shadow-sm">
                   <div class="card-header">
-                    <h3 class="card-title fw-bold">Discursos Especiales</h3>
-                    <div class="card-tools">
+                    <h3 class="card-title fw-bold">Discursos especiales</h3>
+                    <div class="card-tools d-flex">
+                      <button id="btn-add-special" class="btn btn-sm btn-primary me-2">
+                        <i class="bi bi-plus-lg me-1"></i> Añadir bosquejo
+                      </button>
                       <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
                         <i class="bi bi-dash-lg"></i>
                       </button>
@@ -360,7 +363,7 @@
                     >
                       <thead>
                         <tr>
-                          <th>Núm.</th>
+                          <th>Código</th>
                           <th>Título del Discurso</th>
                           <th>Última fecha</th>
                           <th>Estatus</th>
@@ -455,7 +458,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="editTitleModalLabel">
-                Editar Título del Discurso
+                Editar título del discurso
               </h5>
               <button
                 type="button"
@@ -468,6 +471,16 @@
               <p id="edit-title-info" class="text-muted small"></p>
               <form id="editTitleForm">
                 <input type="hidden" id="edit-title-id" />
+                <div class="mb-3" id="edit-clave-container" style="display: none;">
+                  <label for="edit-clave-input" class="form-label"
+                    >Código o serie</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="edit-clave-input"
+                  />
+                </div>
                 <div class="mb-3">
                   <label for="edit-titulo-input" class="form-label"
                     >Nuevo título</label
@@ -496,7 +509,50 @@
                 Cancelar
               </button>
               <button type="button" id="save-title-btn" class="btn btn-primary">
-                Guardar Cambios
+                Guardar cambios
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal para Añadir Discurso Especial -->
+      <div
+        class="modal fade"
+        id="addSpecialModal"
+        tabindex="-1"
+        aria-labelledby="addSpecialModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+              <h5 class="modal-title" id="addSpecialModalLabel">
+                <i class="bi bi-plus-circle me-2"></i>Añadir discurso especial
+              </h5>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form id="addSpecialForm">
+                <div class="mb-3">
+                  <label for="add-clave-input" class="form-label">Código o serie</label>
+                  <input type="text" class="form-control" id="add-clave-input" placeholder="Ej: S-134" required />
+                </div>
+                <div class="mb-3">
+                  <label for="add-titulo-input" class="form-label">Título del discurso</label>
+                  <input type="text" class="form-control" id="add-titulo-input" placeholder="Nombre completo del tema" required />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" id="btn-save-new-special" class="btn btn-primary">
+                <i class="bi bi-save me-1"></i> Guardar discurso
               </button>
             </div>
           </div>
@@ -605,7 +661,8 @@
           let filtered = bosquejosOriginales.filter(
             (b) =>
               b.titulo.toLowerCase().includes(term) ||
-              b.num.toString().includes(term),
+              (b.num && b.num.toString().includes(term)) ||
+              (b.clave && b.clave.toLowerCase().includes(term)),
           );
 
           // 2. Ordenar
@@ -662,8 +719,13 @@
             let badgeClass = "";
             let badgeStyle = "";
             let statusText = "";
+            
+            const displayId = item.s34 === 0 ? (item.clave || '--') : (item.num || '--');
 
-            if (!item.fecha_ult) {
+            if (item.s34 === 0) {
+              badgeClass = "text-bg-secondary";
+              statusText = "No aplica";
+            } else if (!item.fecha_ult) {
               badgeClass = "text-bg-success"; // Verde
               statusText = "Disponible";
             } else {
@@ -682,22 +744,24 @@
             }
 
             tr.innerHTML = `
-              <td>${item.num || '--'}</td>
+              <td>${displayId}</td>
               <td>${item.titulo}</td>
               <td>${fechaStr}</td>
               <td><span class="badge ${badgeClass}" ${badgeStyle}>${statusText}</span></td>
               <td>
                 <button class="btn btn-sm btn-outline-primary edit-btn" 
-                        data-id="${item.num}" 
-                        data-num="${item.num}" 
+                        data-id="${item.id_bosquejo}" 
+                        data-num="${displayId}" 
                         data-titulo="${item.titulo}" 
                         data-fecha="${rawFecha}"
                         title="Modificar fecha">
                   <i class="bi bi-calendar-event"></i>
                 </button>
                 <button class="btn btn-sm btn-outline-secondary edit-title-btn ms-1" 
-                        data-id="${item.num}" 
-                        data-num="${item.num}" 
+                        data-id="${item.id_bosquejo}" 
+                        data-num="${displayId}" 
+                        data-clave="${item.clave || ''}"
+                        data-s34="${item.s34}"
                         data-titulo="${item.titulo}" 
                         title="Editar tema">
                   <i class="bi bi-pencil-square"></i>
@@ -721,14 +785,59 @@
             document.getElementById("edit-fecha").value = fecha;
             new bootstrap.Modal(document.getElementById("editModal")).show();
           } else if (titleBtn) {
-            const { id, num, titulo } = titleBtn.dataset;
+            const { id, num, titulo, clave, s34 } = titleBtn.dataset;
+            const isEspecial = parseInt(s34) === 0;
             document.getElementById("edit-title-id").value = id;
             document.getElementById("edit-title-info").innerText =
-              `Actualizando Bosquejo #${num}`;
+              isEspecial ? `Actualizando Discurso Especial: ${num}` : `Actualizando Bosquejo #${num}`;
             document.getElementById("edit-titulo-input").value = titulo;
+
+            // Mostrar/Ocultar campo de clave y cargar valor
+            document.getElementById("edit-clave-container").style.display = isEspecial ? "block" : "none";
+            document.getElementById("edit-clave-input").value = isEspecial ? clave : "";
+
             new bootstrap.Modal(
               document.getElementById("editTitleModal"),
             ).show();
+          }
+        });
+
+        // Lógica para el modal de añadir discurso especial
+        const btnAddSpecial = document.getElementById("btn-add-special");
+        const addSpecialModal = new bootstrap.Modal(document.getElementById("addSpecialModal"));
+        const btnSaveNewSpecial = document.getElementById("btn-save-new-special");
+
+        btnAddSpecial.addEventListener("click", () => {
+          document.getElementById("addSpecialForm").reset();
+          addSpecialModal.show();
+        });
+
+        btnSaveNewSpecial.addEventListener("click", async () => {
+          const titulo = document.getElementById("add-titulo-input").value;
+          const clave = document.getElementById("add-clave-input").value;
+
+          if (!titulo.trim() || !clave.trim()) {
+            showNotification("Todos los campos son obligatorios", "danger");
+            return;
+          }
+
+          try {
+            const response = await fetch("http://localhost:3000/api/bosquejos", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ titulo, clave, s34: 0 }),
+            });
+
+            if (response.ok) {
+              addSpecialModal.hide();
+              showNotification("Discurso especial añadido con éxito", "success");
+              fetchBosquejos();
+            } else {
+              const error = await response.json();
+              showNotification(error.error || "Error al añadir discurso", "danger");
+            }
+          } catch (error) {
+            showNotification("Error de conexión con el servidor", "danger");
           }
         });
 
@@ -877,10 +986,17 @@
             const id = document.getElementById("edit-title-id").value;
             const nuevoTitulo =
               document.getElementById("edit-titulo-input").value;
+            const nuevaClave = document.getElementById("edit-clave-input").value;
 
             if (!nuevoTitulo.trim()) {
               showNotification("El título no puede estar vacío", "danger");
               return;
+            }
+
+            const updateData = { titulo: nuevoTitulo };
+            // Solo enviar la clave si el contenedor está visible (es un discurso especial)
+            if (document.getElementById("edit-clave-container").style.display !== "none") {
+              updateData.clave = nuevaClave;
             }
 
             try {
@@ -889,7 +1005,7 @@
                 {
                   method: "PUT",
                   headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ titulo: nuevoTitulo }),
+                  body: JSON.stringify(updateData),
                 },
               );
 

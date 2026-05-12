@@ -10,20 +10,49 @@ export const getBosquejos = async (req, res) => {
     }
 };
 
+// Crear un nuevo bosquejo (útil para discursos especiales)
+export const createBosquejo = async (req, res) => {
+    const { titulo, clave, s34, num } = req.body;
+    try {
+        const query = "INSERT INTO lista_bosquejos (titulo, clave, s34, num) VALUES (?, ?, ?, ?)";
+        const [result] = await pool.query(query, [titulo, clave || '', s34 !== undefined ? s34 : 1, num || null]);
+        res.status(201).json({ message: "Bosquejo creado con éxito", id_bosquejo: result.insertId });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 // Actualizar un bosquejo (título o fecha)
 export const updateBosquejo = async (req, res) => {
-    const { num } = req.params;
-    const { fecha_ult, titulo, s34 } = req.body;
-    console.log(`Petición de actualización para Núm ${num}:`, { fecha_ult, titulo, s34 });
+    const { id } = req.params; // Cambiamos num por id (id_bosquejo)
+    const { fecha_ult, titulo, s34, clave } = req.body;
+    console.log(`Petición de actualización para ID ${id}:`, { fecha_ult, titulo, s34, clave });
     try {
-        let result;
+        const updates = [];
+        const values = [];
+
         if (titulo !== undefined) {
-            [result] = await pool.query("UPDATE lista_bosquejos SET titulo = ? WHERE num = ?", [titulo, num]);
-        } else if (s34 !== undefined) {
-            [result] = await pool.query("UPDATE lista_bosquejos SET s34 = ? WHERE num = ?", [s34 ? 1 : 0, num]);
-        } else {
-            [result] = await pool.query("UPDATE lista_bosquejos SET fecha_ult = ? WHERE num = ?", [fecha_ult || null, num]);
+            updates.push("titulo = ?");
+            values.push(titulo);
         }
+        if (clave !== undefined) {
+            updates.push("clave = ?");
+            values.push(clave);
+        }
+        if (s34 !== undefined) {
+            updates.push("s34 = ?");
+            values.push(s34 ? 1 : 0);
+        }
+        if (fecha_ult !== undefined) {
+            updates.push("fecha_ult = ?");
+            values.push(fecha_ult || null);
+        }
+
+        if (updates.length === 0) return res.status(400).json({ error: "No se proporcionaron datos para actualizar" });
+
+        values.push(id);
+        const query = `UPDATE lista_bosquejos SET ${updates.join(", ")} WHERE id_bosquejo = ?`;
+        const [result] = await pool.query(query, values);
 
         if (result.affectedRows === 0) return res.status(404).json({ error: "No se encontró el registro con ese número" });
         res.json({ message: "Actualizado con éxito" });

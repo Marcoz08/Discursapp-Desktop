@@ -20,11 +20,12 @@ Almacena el catálogo oficial de discursos públicos y su historial de presentac
 | Columna | Tipo | Descripción |
 | :--- | :--- | :--- |
 | `id_bosquejo` | INT (PK AI) | Identificador técnico único. |
-| `num` | INT | Número oficial del bosquejo. |
+| `num` | INT | Número oficial del bosquejo (Opcional). |
 | `titulo` | VARCHAR(255) | Título completo del discurso. |
 | `fecha_ult` | DATE | Fecha de la última vez que se presentó en la congregación local. |
 | `fecha_ant` | DATE | Registro histórico de la penúltima presentación. |
 | `s34` | BOOLEAN | Indica si el bosquejo pertenece al catálogo regular S-34 (1) o es especial (0). Default: 1. |
+| `clave` | VARCHAR(10) | Clave identificadora o abreviatura del bosquejo. Default: ''. |
 
 ### 2. `oradores`
 Registro de oradores locales y sus datos de contacto.
@@ -43,7 +44,7 @@ Relaciona a los oradores con los discursos que tienen preparados.
 | :--- | :--- | :--- |
 | `id_tituloOrador` | INT (PK AI) | ID único del registro. |
 | `id_orador` | INT (FK) | Referencia a `oradores.id_orador`. |
-| `numero_tema` | INT (FK) | Referencia a `lista_bosquejos.num`. |
+| `id_bosquejo` | INT (FK) | Referencia a `lista_bosquejos.id_bosquejo`. |
 | `titulo` | VARCHAR(255) | Título del tema (puede ser personalizado). |
 | `cancion_sugerida`| INT | Número de canción asociada al tema. |
 

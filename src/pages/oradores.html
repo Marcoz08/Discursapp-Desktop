@@ -517,6 +517,7 @@
                       type="text"
                       id="new-topic-title"
                       class="form-control form-control-sm"
+                      list="bosquejos-list"
                       placeholder="Título"
                     />
                   </div>
@@ -706,6 +707,9 @@
 
       <!--end::App Main-->
 
+      <!-- Datalist para el autocompletado de temas -->
+      <datalist id="bosquejos-list"></datalist>
+
       <!--begin::Footer-->
       <footer class="app-footer">
         <!--begin::To the end-->
@@ -781,6 +785,7 @@
         const tableBody = document.getElementById("oradores-table-body");
         const searchInput = document.getElementById("search-orador");
         let oradoresData = [];
+        let bosquejosList = [];
         let isEditMode = false;
         let originalTopicValuesInModal = new Map(); // Map<id_registro (string), {numero_tema: number|null, titulo: string|null, cancion_sugerida: number|null}>
         let temasPendientesEliminar = [];
@@ -802,6 +807,31 @@
             tableBody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error: ${error.message}</td></tr>`;
           }
         }
+
+        async function fetchBosquejosList() {
+          try {
+            const response = await fetch("http://localhost:3000/api/bosquejos");
+            if (!response.ok)
+              throw new Error("Error al obtener lista de bosquejos");
+
+            bosquejosList = await response.json();
+            const datalist = document.getElementById("bosquejos-list");
+            datalist.innerHTML = bosquejosList
+              .map((b) => `<option value="${b.titulo}">`)
+              .join("");
+          } catch (error) {
+            console.error("Error al cargar la lista de bosquejos:", error);
+          }
+        }
+
+        // Lógica para autocompletar el número de bosquejo en el nuevo tema
+        document.getElementById("new-topic-title").addEventListener("input", (e) => {
+          const selectedTitle = e.target.value;
+          const bosquejo = bosquejosList.find((b) => b.titulo === selectedTitle);
+          if (bosquejo) {
+            document.getElementById("new-topic-num").value = bosquejo.num;
+          }
+        });
 
         function renderTable(data) {
           tableBody.innerHTML = "";
@@ -1255,7 +1285,7 @@
                 const safeTitulo = (row.titulo || "").toString().replace(/"/g, '&quot;');
                 tr.innerHTML = `
                   <td><input type="number" class="form-control form-control-sm topic-edit-input" data-id-titulo-orador="${row.id_tituloOrador}" data-field="numero_tema" value="${row.numero_tema || ""}"></td>
-                  <td><input type="text" class="form-control form-control-sm topic-edit-input" data-id-titulo-orador="${row.id_tituloOrador}" data-field="titulo" value="${safeTitulo}"></td>
+                  <td><input type="text" class="form-control form-control-sm topic-edit-input" data-id-titulo-orador="${row.id_tituloOrador}" data-field="titulo" list="bosquejos-list" value="${safeTitulo}"></td>
                   <td><input type="number" class="form-control form-control-sm topic-edit-input" data-id-titulo-orador="${row.id_tituloOrador}" data-field="cancion_sugerida" value="${row.cancion_sugerida || ""}"></td>
                   <td class="text-end">
                     <button type="button" class="btn btn-sm btn-link text-danger remove-topic-btn" data-id-titulo-orador="${row.id_tituloOrador}" title="Eliminar tema">
@@ -1475,6 +1505,19 @@
             }
           });
 
+        // Lógica para autocompletar el número de tema en la tabla del modal (filas existentes o recién agregadas)
+        document.getElementById("edit-speaker-temas-body").addEventListener("input", (e) => {
+          if (e.target.dataset.field === "titulo") {
+            const selectedTitle = e.target.value;
+            const bosquejo = bosquejosList.find((b) => b.titulo === selectedTitle);
+            if (bosquejo) {
+              const row = e.target.closest("tr");
+              const numInput = row.querySelector('input[data-field="numero_tema"]');
+              if (numInput) numInput.value = bosquejo.num;
+            }
+          }
+        });
+
         btnSaveNewTopic.addEventListener("click", () => {
           const numero_tema = document.getElementById("new-topic-num").value;
           const titulo = document
@@ -1500,7 +1543,7 @@
           tr.classList.add("new-topic-row");
           tr.innerHTML = `
             <td><input type="number" class="form-control form-control-sm topic-new-input" data-field="numero_tema" value="${numero_tema}"></td>
-            <td><input type="text" class="form-control form-control-sm topic-new-input" data-field="titulo" value="${safeTitulo}"></td>
+            <td><input type="text" class="form-control form-control-sm topic-new-input" data-field="titulo" list="bosquejos-list" value="${safeTitulo}"></td>
             <td><input type="number" class="form-control form-control-sm topic-new-input" data-field="cancion_sugerida" value="${cancion_sugerida}"></td>
             <td class="text-end">
               <button type="button" class="btn btn-sm btn-link text-danger remove-topic-btn" title="Eliminar tema">
@@ -1639,6 +1682,7 @@
         });
 
         fetchOradores();
+        fetchBosquejosList();
       });
     </script>
     <!--end::Script-->
