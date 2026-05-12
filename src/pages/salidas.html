@@ -995,8 +995,9 @@
         // Alternar modo edición
         btnEditSalidas.addEventListener("click", () => {
           if (!currentConfirmedAgenda) {
-            alert(
+            showNotification(
               "No hay un rol confirmado para este periodo. Primero agende el rol en la sección 'Agenda de roles'.",
+              "danger"
             );
             return;
           }
@@ -1231,7 +1232,10 @@
           const programacion = [];
 
           if (!currentConfirmedAgenda || !currentConfirmedAgenda.id_rol) {
-            alert("No hay un rol confirmado válido para este periodo.");
+            showNotification(
+              "No hay un rol confirmado válido para este periodo.",
+              "danger"
+            );
             return;
           }
 
@@ -1261,14 +1265,14 @@
               },
             );
             if (response.ok) {
-              alert("Programación de salidas guardada con éxito.");
+              showNotification("Programación de salidas guardada con éxito.", "success");
               btnEditSalidas.click();
             } else {
-              alert("Error al guardar la programación.");
+              showNotification("Error al guardar la programación.", "danger");
             }
           } catch (e) {
             console.error(e);
-            alert("Error de conexión al guardar.");
+            showNotification("Error de conexión al guardar.", "danger");
           }
         });
 
