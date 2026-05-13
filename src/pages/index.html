@@ -93,29 +93,14 @@
           <ul class="navbar-nav ms-auto">
             <!--begin::Notifications Dropdown Menu-->
             <li class="nav-item dropdown">
-              <a class="nav-link" data-bs-toggle="dropdown" href="#">
+              <a class="nav-link" data-bs-toggle="dropdown" href="#" id="notif-toggle">
                 <i class="bi bi-bell-fill"></i>
-                <span class="navbar-badge badge text-bg-warning">15</span>
+                <span class="navbar-badge badge text-bg-warning" id="notif-count" style="display: none;">0</span>
               </a>
-              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                <span class="dropdown-item dropdown-header">15 Notificaciones</span>
+              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end" id="notif-content" style="min-width: 450px;">
+                <span class="dropdown-item dropdown-header" id="notif-header">0 Notificaciones</span>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <i class="bi bi-envelope me-2"></i> 4 nuevos mensajes
-                  <span class="float-end text-secondary fs-7">3 mins</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <i class="bi bi-people-fill me-2"></i> 8 solicitudes
-                  <span class="float-end text-secondary fs-7">12 horas</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <i class="bi bi-file-earmark-fill me-2"></i> 3 reportes
-                  <span class="float-end text-secondary fs-7">2 días</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">Ver todas las notificaciones</a>
+                <!-- Contenido dinámico -->
               </div>
             </li>
             <!--end::Notifications Dropdown Menu-->
@@ -592,6 +577,66 @@
         updateRoles();
         updateWeeklyCards();
         updateRecentSpeeches();
+        updateSystemNotifications();
+
+        // Refrescar al hacer clic en la campana para ver cambios inmediatos
+        document.getElementById('notif-toggle').addEventListener('click', updateSystemNotifications);
+
+        async function updateSystemNotifications() {
+          const badge = document.getElementById('notif-count');
+          const header = document.getElementById('notif-header');
+          const container = document.getElementById('notif-content');
+          
+          try {
+            const response = await fetch('http://localhost:3000/api/notificaciones/sistema');
+            const notifications = await response.json();
+            
+            if (notifications.length > 0) {
+              badge.textContent = notifications.length;
+              badge.style.display = 'block';
+              header.textContent = `${notifications.length} Notificaciones`;
+              
+              // Limpiar pero mantener el header
+              container.innerHTML = `<span class="dropdown-item dropdown-header">${notifications.length} Notificaciones</span>`;
+              
+              notifications.forEach(n => {
+                const divider = document.createElement('div');
+                divider.className = 'dropdown-divider';
+                
+                const item = document.createElement('a');
+                item.href = n.link;
+                item.className = 'dropdown-item';
+                item.innerHTML = `
+                  <i class="bi ${n.icon} me-2 ${n.color}"></i> ${n.mensaje}
+                `;
+                
+                container.appendChild(divider);
+                container.appendChild(item);
+              });
+
+              // Añadir pie de página al final de la lista dinámica
+              const footerDivider = document.createElement('div');
+              footerDivider.className = 'dropdown-divider';
+              container.appendChild(footerDivider);
+
+              const footerLink = document.createElement('a');
+              footerLink.href = "#"; 
+              footerLink.className = 'dropdown-item dropdown-footer';
+              footerLink.textContent = 'Abrir centro de notificaciones';
+              container.appendChild(footerLink);
+
+            } else {
+              badge.style.display = 'none';
+              container.innerHTML = `
+                <span class="dropdown-item dropdown-header">No hay notificaciones pendientes</span>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item dropdown-footer">Abrir centro de notificaciones</a>
+              `;
+            }
+          } catch (e) {
+            console.error('Error al cargar notificaciones:', e);
+          }
+        }
       });
     </script>
 
