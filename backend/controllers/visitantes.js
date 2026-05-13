@@ -128,6 +128,12 @@ export const desconfirmarAsistencia = async (req, res) => {
     const { num, fecha } = req.body;
     if (!num || !fecha) return res.status(400).json({ error: "Datos incompletos" });
 
+    // Validar que la fecha del discurso ya haya pasado (o sea hoy)
+    const hoy = new Date().toISOString().split('T')[0];
+    if (fecha > hoy) {
+        return res.status(400).json({ error: "No se puede confirmar un discurso programado para una fecha futura." });
+    }
+
     const connection = await pool.getConnection();
     try {
         await connection.beginTransaction();

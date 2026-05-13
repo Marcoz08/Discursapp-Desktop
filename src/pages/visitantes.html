@@ -803,6 +803,8 @@
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
     <script src="../js/adminlte.js"></script>
+    <!-- Sistema de notificaciones centralizado -->
+    <script src="../js/notificaciones_fe.js"></script>
     <!-- jspdf y autotable para exportación a PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.6.0/jspdf.plugin.autotable.min.js"></script>
@@ -1145,6 +1147,7 @@
               `http://localhost:3000/api/visitantes-programacion?mes=${mes}&anio=${anio}`,
             );
             const programacion = await response.json();
+            const hoyStr = new Date().toISOString().split('T')[0];
 
             tablaVisitasBody.innerHTML = "";
 
@@ -1158,6 +1161,7 @@
                   .padStart(2, "0");
                 const fullDateStr = `${anio}-${monthNum}-${dayNum}`; // Formato YYYY-MM-DD para comparar
                 const displayDateStr = `${dayNum}-${mesesShort[mes]}`;
+                const esFuturo = fullDateStr > hoyStr;
 
                 // Buscar si hay datos guardados para esta fecha específica
                 const dataRow = programacion.find((p) => {
@@ -1228,10 +1232,11 @@
                                  title="Quitar confirmación de asistencia">
                                  <i class="bi bi-check-all"></i> Confirmado
                                </button>` // Botón para desconfirmar
-                            : `<button class="btn btn-sm btn-outline-success btn-confirm-attendance"
+                            : `<button class="btn btn-sm btn-outline-success btn-confirm-attendance ${esFuturo ? 'disabled' : ''}"
                                  data-num="${dataRow.num_bosquejo}"
                                  data-fecha="${fullDateStr}"
-                                 title="Confirmar asistencia">
+                                 ${esFuturo ? 'disabled' : ''}
+                                 title="${esFuturo ? 'No se puede confirmar un discurso futuro' : 'Confirmar asistencia'}">
                                  <i class="bi bi-check-lg"></i> Confirmar
                                </button>` // Botón para confirmar
                           : "--"
@@ -1360,6 +1365,9 @@
         tablaVisitasBody.addEventListener("click", (e) => {
           const confirmBtn = e.target.closest(".btn-confirm-attendance");
           if (confirmBtn) {
+            // Evitar que el modal se abra si el botón está deshabilitado
+            if (confirmBtn.hasAttribute('disabled') || confirmBtn.classList.contains('disabled')) return;
+
             pendingAttendanceData = {
               num: confirmBtn.dataset.num,
               fecha: confirmBtn.dataset.fecha,
@@ -1367,39 +1375,6 @@
             confirmAttendanceModal.show();
           }
         });
-
-        // Lógica de notificaciones dinámicas
-        updateSystemNotifications();
-        document.getElementById('notif-toggle').addEventListener('click', updateSystemNotifications);
-
-        async function updateSystemNotifications() {
-          const badge = document.getElementById('notif-count');
-          const header = document.getElementById('notif-header');
-          const container = document.getElementById('notif-content');
-          try {
-            const response = await fetch('http://localhost:3000/api/notificaciones/sistema');
-            const notifications = await response.json();
-            if (notifications.length > 0) {
-              badge.textContent = notifications.length;
-              badge.style.display = 'block';
-              container.innerHTML = `<span class="dropdown-item dropdown-header" id="notif-header">${notifications.length} Notificaciones</span>`;
-              notifications.forEach(n => {
-                const divider = document.createElement('div');
-                divider.className = 'dropdown-divider';
-                const item = document.createElement('a');
-                item.href = n.link;
-                item.className = 'dropdown-item';
-                item.innerHTML = `<i class="bi ${n.icon} me-2 ${n.color}"></i> ${n.mensaje}`;
-                container.appendChild(divider);
-                container.appendChild(item);
-              });
-              container.innerHTML += `<div class="dropdown-divider"></div><a href="#" class="dropdown-item dropdown-footer">Abrir centro de notificaciones</a>`;
-            } else {
-              badge.style.display = 'none';
-              container.innerHTML = `<span class="dropdown-item dropdown-header">No hay notificaciones pendientes</span><div class="dropdown-divider"></div><a href="#" class="dropdown-item dropdown-footer">Abrir centro de notificaciones</a>`;
-            }
-          } catch (e) { console.error('Error notificaciones:', e); }
-        }
 
         btnConfirmAttendanceFinal.addEventListener("click", async () => {
           if (!pendingAttendanceData) return;
