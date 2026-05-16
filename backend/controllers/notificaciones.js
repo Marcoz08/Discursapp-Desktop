@@ -132,10 +132,10 @@ export const getSystemNotifications = async (req, res) => {
             // Buscamos si hay registros creados y si alguno está vacío
             const [nextMonthProg] = await pool.query(
                 `SELECT 
-                    COUNT(*) as total,
-                    SUM(CASE WHEN nombre IS NULL OR nombre = '' THEN 1 ELSE 0 END) as vacios
-                 FROM oradores_visitantes 
-                 WHERE strftime('%m', fecha_discurso) = ? AND strftime('%Y', fecha_discurso) = ?`,
+                COUNT(*) as total,
+                SUM(CASE WHEN nombre IS NULL OR nombre = '' THEN 1 ELSE 0 END) as vacios
+                FROM oradores_visitantes 
+                WHERE strftime('%m', fecha_discurso) = ? AND strftime('%Y', fecha_discurso) = ?`,
                 [mesSiguienteVal, anioSiguienteVal]
             );
 

@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="es">
+  <!--begin::Head-->
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Discursapp | Dashboard</title>
+
+    <!--begin::Accessibility Meta Tags-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#007bff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
+    <!--end::Accessibility Meta Tags-->
+
+    <!--begin::Primary Meta Tags-->
+    <meta name="title" content="Administrador de roles de discursos" />
+    <meta name="author" content="Marco Antonio Zatarain" />
+    <meta
+      name="description"
+      content="Aplicación web diseñada para asistir el manejo de los discursos públicos dentro de las congregaciones de los Testigos de Jehova"
+    />
+    <meta
+      name="keywords"
+      content="coordinar discursos, agenda de roles, discursos públicos, visitas entre congregaciones"
+    />
+    <!--end::Primary Meta Tags-->
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../assets/discursapp_favicon.ico" />
+
+    <!--begin::Accessibility Features-->
+    <!-- Skip links will be dynamically added by accessibility.js -->
+    <meta name="supported-color-schemes" content="light dark" />
+    <link rel="preload" href="../css/adminlte.css" as="style" />
+    <!--end::Accessibility Features-->
+
+    <!--begin::Fonts-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
+      integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
+      crossorigin="anonymous"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <!--end::Fonts-->
+
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css"
+      crossorigin="anonymous"
+    />
+    <!--end::Third Party Plugin(OverlayScrollbars)-->
+
+    <!--begin::Third Party Plugin(Bootstrap Icons)-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+      crossorigin="anonymous"
+    />
+    <!--end::Third Party Plugin(Bootstrap Icons)-->
+
+    <!--begin::Required Plugin(AdminLTE)-->
+    <link rel="stylesheet" href="../css/adminlte.css" />
+    <!--end::Required Plugin(AdminLTE)-->
+    <!--begin::Theme Manager-->
+    <script src="../js/theme.js"></script>
+    <!--end::Theme Manager-->
+  </head>
+  <!--end::Head-->
+  <!--begin::Body-->
+  <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <!--begin::App Wrapper-->
+    <div class="app-wrapper">
+      <!--begin::Header-->
+      <nav class="app-header navbar navbar-expand bg-body">
+        <!--begin::Container-->
+        <div class="container-fluid">
+          <!--begin::Start Navbar Links-->
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                <i class="bi bi-list"></i>
+              </a>
+            </li>
+            <li class="nav-item d-none d-md-block">
+              <a href="#" class="nav-link">Home</a>
+            </li>
+          </ul>
+          <!--end::Start Navbar Links-->
+          
+          <ul class="navbar-nav ms-auto">
+            <!--begin::Notifications Dropdown Menu-->
+            <li class="nav-item dropdown">
+              <a class="nav-link" data-bs-toggle="dropdown" href="#" id="notif-toggle">
+                <i class="bi bi-bell-fill"></i>
+                <span class="navbar-badge badge text-bg-warning" id="notif-count" style="display: none;">0</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end" id="notif-content" style="min-width: 450px;">
+                <span class="dropdown-item dropdown-header" id="notif-header">0 Notificaciones</span>
+                <div class="dropdown-divider"></div>
+                <!-- Contenido dinámico -->
+              </div>
+            </li>
+            <!--end::Notifications Dropdown Menu-->
+          </ul>
+        </div>
+        <!--end::Container-->
+      </nav>
+      <!--end::Header-->
+      <!--begin::Sidebar-->
+      <aside class="app-sidebar shadow" data-bs-theme="dark" style="background-color: #0A2F7C;">
+        <!--begin::Sidebar Brand-->
+        <div class="sidebar-brand h-auto">
+          <!--begin::Brand Link-->
+          <a href="./index.html" class="brand-link d-flex flex-column align-items-center h-auto py-3">
+            <!--begin::Brand Image-->
+            <img
+              src="../assets/logo_discursapp_blanco.svg"
+              alt="Discursapp Logo"
+              class="opacity-75 shadow mb-2"
+              width="48"
+              height="48"
+            />
+            <!--end::Brand Image-->
+            <!--begin::Brand Text-->
+            <span class="brand-text fw-light">Administrador de roles</span>
+            <!--end::Brand Text-->
+          </a>
+          <!--end::Brand Link-->
+        </div>
+        <!--end::Sidebar Brand-->
+        <!--begin::Sidebar Wrapper-->
+        <div class="sidebar-wrapper">
+          <nav class="mt-2">
+            <!--begin::Sidebar Menu-->
+            <ul
+              class="nav sidebar-menu flex-column"
+              data-lte-toggle="treeview"
+              role="navigation"
+              aria-label="Main navigation"
+              data-accordion="false"
+              id="navigation"
+            >
+              <li class="nav-item">
+                <a href="./index.html" class="nav-link active">
+                  <i class="nav-icon bi bi-house-door-fill"></i>
+                <p>Volver al Dashboard</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon bi bi-card-list"></i>
+                  <p>
+                    Registros
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="./bosquejos.html" class="nav-link ms-3">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Bosquejos</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="./historico.html" class="nav-link ms-3">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Historial</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a href="./visitantes.html" class="nav-link">
+                  <i class="nav-icon bi bi-journal-bookmark-fill"></i>
+                  <p>Nos visitan</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./salidas.html" class="nav-link">
+                  <i class="nav-icon bi bi-arrow-up-right-square-fill"></i>
+                  <p>Salidas</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./agenda.html" class="nav-link">
+                  <i class="nav-icon bi bi-calendar-check-fill"></i>
+                  <p>Agenda de roles</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./oradores.html" class="nav-link">
+                  <i class="nav-icon bi bi-people-fill"></i>
+                  <p>Oradores locales</p>
+                </a>
+              </li>
+              <li class="nav-item mt-auto" style="border-top: 3px solid rgba(255,255,255,0.1); padding-top: 0.5rem; margin-top: 1rem;">
+                <a href="./configuracion.html" class="nav-link">
+                  <i class="nav-icon bi bi-gear-fill"></i>
+                  <p>Configuración</p>
+                </a>
+              </li>
+            </ul>
+            <!--end::Sidebar Menu-->
+          </nav>
+        </div>
+        <!--end::Sidebar Wrapper-->
+      </aside>
+      <!--end::Sidebar-->
+      <!--begin::App Main-->
+      <main class="app-main">
+        <!--begin::App Content Header-->
+        <div class="app-content-header">
+          <!--begin::Container-->
+          <div class="container-fluid">
+            <!--begin::Row-->
+            <div class="row">
+              <div class="col-sm-6">
+                <h3 class="mb-0">Centro de Notificaciones</h3>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-end">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Notificaciones</li>
+                </ol>
+              </div>
+            </div>
+            <!--end::Row-->
+          </div>
+          <!--end::Container-->
+        </div>
+        <!--end::App Content Header-->
+        <!--begin::App Content-->
+        <div class="app-content">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-12">
+                <div class="card shadow-sm mb-4">
+                  <div class="card-header border-0 py-3">
+                    <h3 class="card-title fw-bold text-secondary">
+                      <i class="bi bi-bell-fill me-2"></i>Tareas y avisos del sistema
+                    </h3>
+                  </div>
+                  <div class="card-body p-0">
+                    <div class="list-group list-group-flush" id="notifications-detailed-list">
+                      <div class="p-5 text-center text-muted">
+                        <div class="spinner-border text-primary mb-3" role="status"></div>
+                        <p>Cargando lista detallada de notificaciones...</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-footer bg-white text-muted small">
+                    <i class="bi bi-info-circle me-1"></i> Estas notificaciones se generan automáticamente en base a tareas pendientes o recordarorios.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--end::App Content-->
+      </main>
+      <!--end::App Main-->
+
+      <!--begin::Footer-->
+      <footer class="app-footer">
+        <!--begin::To the end-->
+        <div class="float-end d-none d-sm-inline">v1.3.1c</div>
+        <!--end::To the end-->
+        <!--begin::Copyright-->
+        <strong>
+          Copyright &copy; 2026&nbsp;
+        </strong>
+        Developed by
+        <strong> 
+          <a href="https://github.com/Marcoz08" class="text-decoration-none">MarcoZ</a>.
+        </strong>
+        <!--end::Copyright-->
+      </footer>
+      <!--end::Footer-->
+    </div>
+    <!--end::App Wrapper-->
+    <!--begin::Script-->
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Third Party Plugin(OverlayScrollbars)--><!--begin::Required Plugin(popperjs for Bootstrap 5)-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Required Plugin(popperjs for Bootstrap 5)--><!--begin::Required Plugin(Bootstrap 5)-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
+    <script src="../js/adminlte.js"></script>
+    <!-- Sistema de notificaciones centralizado -->
+    <script src="../js/notificaciones_fe.js"></script>
+    <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
+    <script>
+      const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+      const Default = {
+        scrollbarTheme: 'os-theme-light',
+        scrollbarAutoHide: 'leave',
+        scrollbarClickScroll: true,
+      };
+      document.addEventListener('DOMContentLoaded', function () {
+        const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+
+        // Disable OverlayScrollbars on mobile devices to prevent touch interference
+        const isMobile = window.innerWidth <= 992;
+
+        if (
+          sidebarWrapper &&
+          OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined &&
+          !isMobile
+        ) {
+          OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+            scrollbars: {
+              theme: Default.scrollbarTheme,
+              autoHide: Default.scrollbarAutoHide,
+              clickScroll: Default.scrollbarClickScroll,
+            },
+          });
+        }
+      });
+    </script>
+    <!--end::OverlayScrollbars Configure-->
+
+    <script>
+      document.addEventListener('DOMContentLoaded', async function () {
+        const notificationsList = document.getElementById('notifications-detailed-list');
+        
+        async function loadDetailedNotifications() {
+          try {
+            const response = await fetch('http://localhost:3000/api/notificaciones');
+            if (!response.ok) throw new Error('Error al conectar con el servidor');
+            
+            const data = await response.json();
+            renderNotifications(data);
+          } catch (error) {
+            notificationsList.innerHTML = `<div class="p-5 text-center text-danger"><i class="bi bi-exclamation-octagon fs-1 mb-3"></i><p>${error.message}</p></div>`;
+          }
+        }
+
+        function renderNotifications(data) {
+          if (data.length === 0) {
+            notificationsList.innerHTML = `<div class="p-5 text-center text-muted"><i class="bi bi-check2-circle fs-1 text-success mb-3"></i><p>¡Todo al día! No tienes notificaciones pendientes.</p></div>`;
+            return;
+          }
+
+          notificationsList.innerHTML = '';
+          data.forEach((notif, index) => {
+            const item = document.createElement('div');
+            item.className = 'list-group-item p-4';
+            item.innerHTML = `
+              <div class="d-flex align-items-start gap-3">
+                <div class="flex-shrink-0">
+                  <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                    <i class="bi ${notif.icon} fs-4 ${notif.color}"></i>
+                  </div>
+                </div>
+                <div class="flex-grow-1">
+                  <div class="d-flex w-100 justify-content-between align-items-center mb-2">
+                    <h5 class="mb-0 fw-bold">${notif.mensaje}</h5>
+                    <small class="text-muted">Sistema</small>
+                  </div>
+                  <p class="text-secondary mb-3">${notif.detalle || 'Esta notificación requiere tu atención inmediata.'}</p>
+                  <div class="d-flex gap-2">
+                    <a href="${notif.link}" class="btn btn-sm btn-primary">
+                      <i class="bi bi-box-arrow-up-right me-1"></i> Ir a la página
+                    </a>
+                    <button class="btn btn-sm btn-outline-success action-btn" data-action="complete" data-index="${index}">
+                      <i class="bi bi-check2"></i> Marcar como completada
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary action-btn" data-action="skip" data-index="${index}">
+                      Omitir
+                    </button>
+                    <button class="btn btn-sm btn-link text-decoration-none action-btn" data-action="later" data-index="${index}">
+                      <i class="bi bi-clock-history me-1"></i> Recordármelo después
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+            notificationsList.appendChild(item);
+          });
+        }
+
+        // Manejo de eventos para botones de acción
+        notificationsList.addEventListener('click', (e) => {
+          const btn = e.target.closest('.action-btn');
+          if (!btn) return;
+          
+          const action = btn.dataset.action;
+          const row = btn.closest('.list-group-item');
+          
+          if (action === 'complete' || action === 'skip' || action === 'later') {
+            row.classList.add('fade-out');
+            setTimeout(() => row.remove(), 300);
+            // Opcional: mostrar un pequeño aviso de confirmación
+            console.log(`Acción ${action} ejecutada en notificación.`);
+          }
+          // Aquí se podría llamar a un endpoint de la API para persistir estas preferencias del usuario
+        });
+
+        loadDetailedNotifications();
+      });
+    </script>
+
+    <!-- OPTIONAL SCRIPTS -->
+
+    <!-- sortablejs -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- sortablejs -->
+    <script>
+      new Sortable(document.querySelector('.connectedSortable'), {
+        group: 'shared',
+        handle: '.card-header',
+      });
+
+      const cardHeaders = document.querySelectorAll('.connectedSortable .card-header');
+      cardHeaders.forEach((cardHeader) => {
+        cardHeader.style.cursor = 'move';
+      });
+    </script>
+
+    <!-- apexcharts -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
+      integrity="sha256-+vh8GkaU7C9/wbSLIcwq82tQ2wTf44aOHA8HlBMwRI8="
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- ChartJS -->
+    <script>
+      // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
+      // IT'S ALL JUST JUNK FOR DEMO
+      // ++++++++++++++++++++++++++++++++++++++++++
+
+      const sales_chart_options = {
+        series: [
+          {
+            name: 'Digital Goods',
+            data: [28, 48, 40, 19, 86, 27, 90],
+          },
+          {
+            name: 'Electronics',
+            data: [65, 59, 80, 81, 56, 55, 40],
+          },
+        ],
+        chart: {
+          height: 300,
+          type: 'area',
+          toolbar: {
+            show: false,
+          },
+        },
+        legend: {
+          show: false,
+        },
+        colors: ['#0d6efd', '#20c997'],
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          curve: 'smooth',
+        },
+        xaxis: {
+          type: 'datetime',
+          categories: [
+            '2023-01-01',
+            '2023-02-01',
+            '2023-03-01',
+            '2023-04-01',
+            '2023-05-01',
+            '2023-06-01',
+            '2023-07-01',
+          ],
+        },
+        tooltip: {
+          x: {
+            format: 'MMMM yyyy',
+          },
+        },
+      };
+
+      const sales_chart = new ApexCharts(
+        document.querySelector('#revenue-chart'),
+        sales_chart_options,
+      );
+      sales_chart.render();
+    </script>
+
+    <!-- jsvectormap -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/js/jsvectormap.min.js"
+      integrity="sha256-/t1nN2956BT869E6H4V1dnt0X5pAQHPytli+1nTZm2Y="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/maps/world.js"
+      integrity="sha256-XPpPaZlU8S/HWf7FZLAncLg2SAkP8ScUTII89x9D3lY="
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- jsvectormap -->
+    <script>
+      // World map by jsVectorMap
+      new jsVectorMap({
+        selector: '#world-map',
+        map: 'world',
+      });
+
+      // Sparkline charts
+      const option_sparkline1 = {
+        series: [
+          {
+            data: [1000, 1200, 920, 927, 931, 1027, 819, 930, 1021],
+          },
+        ],
+        chart: {
+          type: 'area',
+          height: 50,
+          sparkline: {
+            enabled: true,
+          },
+        },
+        stroke: {
+          curve: 'straight',
+        },
+        fill: {
+          opacity: 0.3,
+        },
+        yaxis: {
+          min: 0,
+        },
+        colors: ['#DCE6EC'],
+      };
+
+      const sparkline1 = new ApexCharts(document.querySelector('#sparkline-1'), option_sparkline1);
+      sparkline1.render();
+
+      const option_sparkline2 = {
+        series: [
+          {
+            data: [515, 519, 520, 522, 652, 810, 370, 627, 319, 630, 921],
+          },
+        ],
+        chart: {
+          type: 'area',
+          height: 50,
+          sparkline: {
+            enabled: true,
+          },
+        },
+        stroke: {
+          curve: 'straight',
+        },
+        fill: {
+          opacity: 0.3,
+        },
+        yaxis: {
+          min: 0,
+        },
+        colors: ['#DCE6EC'],
+      };
+
+      const sparkline2 = new ApexCharts(document.querySelector('#sparkline-2'), option_sparkline2);
+      sparkline2.render();
+
+      const option_sparkline3 = {
+        series: [
+          {
+            data: [15, 19, 20, 22, 33, 27, 31, 27, 19, 30, 21],
+          },
+        ],
+        chart: {
+          type: 'area',
+          height: 50,
+          sparkline: {
+            enabled: true,
+          },
+        },
+        stroke: {
+          curve: 'straight',
+        },
+        fill: {
+          opacity: 0.3,
+        },
+        yaxis: {
+          min: 0,
+        },
+        colors: ['#DCE6EC'],
+      };
+
+      const sparkline3 = new ApexCharts(document.querySelector('#sparkline-3'), option_sparkline3);
+      sparkline3.render();
+    </script>
+    <!--end::Script-->
+  </body>
+  <!--end::Body-->
+</html>

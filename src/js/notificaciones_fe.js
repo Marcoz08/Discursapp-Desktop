@@ -32,14 +32,14 @@ async function updateSystemNotifications() {
             // Añadir el pie de página
             container.innerHTML += `
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">Abrir centro de notificaciones</a>
+                <a href="./notificaciones.html" class="dropdown-item dropdown-footer">Abrir centro de notificaciones</a>
             `;
         } else {
             badge.style.display = 'none';
             container.innerHTML = `
                 <span class="dropdown-item dropdown-header">No hay notificaciones pendientes</span>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">Abrir centro de notificaciones</a>
+                <a href="./notificaciones.html" class="dropdown-item dropdown-footer">Abrir centro de notificaciones</a>
             `;
         }
     } catch (e) {

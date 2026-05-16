@@ -6,6 +6,7 @@ import * as agendaController from '../controllers/agenda.js';
 import * as salidasController from '../controllers/salidas.js';
 import * as notificacionesController from '../controllers/notificaciones.js';
 
+
 const router = express.Router();
 
 // --- Bosquejos ---
@@ -55,6 +56,7 @@ router.get('/dashboard/salida-semana', salidasController.getSalidaSemana);
 router.get('/dashboard/ultimos-discursos', bosquejosController.getUltimosDiscursos);
 
 // --- Notificaciones ---
+router.get('/notificaciones', notificacionesController.getSystemNotifications);
 router.get('/notificaciones/sistema', notificacionesController.getSystemNotifications);
 
 export default router;
