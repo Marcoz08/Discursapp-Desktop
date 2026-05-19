@@ -119,29 +119,13 @@
           <ul class="navbar-nav ms-auto">
             <!--begin::Notifications Dropdown Menu-->
             <li class="nav-item dropdown">
-              <a class="nav-link" data-bs-toggle="dropdown" href="#">
+              <a class="nav-link" data-bs-toggle="dropdown" href="#" id="notif-toggle">
                 <i class="bi bi-bell-fill"></i>
-                <span class="navbar-badge badge text-bg-warning">15</span>
+                <span class="navbar-badge badge text-bg-warning" id="notif-count" style="display: none;">0</span>
               </a>
-              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
-                <span class="dropdown-item dropdown-header">15 Notificaciones</span>
+              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end" id="notif-content" style="min-width: 450px;">
+                <span class="dropdown-item dropdown-header" id="notif-header">0 Notificaciones</span>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <i class="bi bi-envelope me-2"></i> 4 nuevos mensajes
-                  <span class="float-end text-secondary fs-7">3 mins</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <i class="bi bi-people-fill me-2"></i> 8 solicitudes
-                  <span class="float-end text-secondary fs-7">12 horas</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                  <i class="bi bi-file-earmark-fill me-2"></i> 3 reportes
-                  <span class="float-end text-secondary fs-7">2 días</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="./notificaciones.html" class="dropdown-item dropdown-footer">Abrir centro de notificaciones</a>
               </div>
             </li>
             <!--end::Notifications Dropdown Menu-->
@@ -589,7 +573,9 @@
     ></script>
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
     <script src="../js/adminlte.js"></script>
-    <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
+    <!--end::Required Plugin(AdminLTE)--><!--begin::Shared Notification Script-->
+    <script src="../js/notificaciones_fe.js"></script>
+    <!--end::Shared Notification Script--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
       const Default = {
