@@ -5,6 +5,23 @@ async function updateSystemNotifications() {
 
     if (!badge || !container) return;
 
+    // Respetar la preferencia del usuario guardada en localStorage
+    try {
+        const saved = localStorage.getItem('notificaciones_enabled');
+        if (saved === 'false') {
+            // Mostrar estado desactivado y no realizar la petición
+            badge.style.display = 'none';
+            container.innerHTML = `
+                <span class="dropdown-item dropdown-header">Notificaciones desactivadas</span>
+                <div class="dropdown-divider"></div>
+                <a href="./configuracion.html" class="dropdown-item dropdown-footer">Activar en configuración</a>
+            `;
+            return;
+        }
+    } catch (err) {
+        console.warn('No se pudo leer preferencia de notificaciones:', err);
+    }
+
     try {
         const response = await fetch('http://localhost:3000/api/notificaciones/sistema');
         const notifications = await response.json();
@@ -50,3 +67,10 @@ async function updateSystemNotifications() {
 // Inicialización automática
 document.addEventListener('DOMContentLoaded', updateSystemNotifications);
 document.getElementById('notif-toggle')?.addEventListener('click', updateSystemNotifications);
+
+// Escuchar cambios en otras pestañas para actualizar el estado
+window.addEventListener('storage', (e) => {
+    if (e.key === 'notificaciones_enabled') {
+        try { updateSystemNotifications(); } catch (err) { /* silent */ }
+    }
+});

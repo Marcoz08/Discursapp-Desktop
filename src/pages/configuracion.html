@@ -81,6 +81,11 @@
     <!--end::Required Plugin(AdminLTE)-->
     <!--begin::Theme Manager-->
     <script src="../js/theme.js"></script>
+    <style>
+      #theme-selector .btn-check:checked + .btn small {
+        color: white !important;
+      }
+    </style>
     <!--end::Theme Manager-->
   </head>
   <!--end::Head-->
@@ -321,6 +326,48 @@
               </div>
             </div>
             <!--end::Row-->
+            <!--begin::Row: Notificaciones -->
+            <div class="row">
+              <div class="col-lg-8 col-12">
+                <div class="card shadow-sm mb-4">
+                  <div class="card-header border-0 py-3">
+                    <h3 class="card-title fw-bold text-secondary">
+                      <i class="bi bi-bell-fill me-2"></i>Notificaciones
+                    </h3>
+                  </div>
+                  <div class="card-body">
+                    <p class="text-secondary mb-4">
+                      Activa o desactiva las notificaciones del sistema.
+                    </p>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" id="notifications-enabled" checked>
+                      <label class="form-check-label" for="notifications-enabled">Notificaciones habilitadas</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--end::Row: Notificaciones -->
+            <!--begin::Row: Restablecer datos -->
+            <div class="row">
+              <div class="col-lg-8 col-12">
+                <div class="card shadow-sm mb-4">
+                  <div class="card-header border-0 py-3">
+                    <h3 class="card-title fw-bold text-danger">
+                      <i class="bi bi-trash-fill me-2"></i>Restablecer datos
+                    </h3>
+                  </div>
+                  <div class="card-body">
+                    <p class="text-secondary mb-3">
+                      Esta acción borrará todo el contenido de la aplicación; registros, oradores, agenda, historial, etc.
+                    </p>
+                    <p class="text-danger mb-4">**LOS DATOS BORRADOS SE PERDERAN PARA PARA SIEMPRE.**</p>
+                    <button class="btn btn-outline-danger" id="btn-open-clear-modal">Restablecer datos</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--end::Row: Restablecer datos -->
           </div>
         </div>
         <!--end::App Content-->
@@ -333,6 +380,35 @@
         id="toastContainer"
         style="z-index: 1055"
       ></div>
+
+      <!-- Modal: Confirmar borrado de datos -->
+      <div class="modal fade" id="clearDataModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+              <h5 class="modal-title">Confirmar restablecimiento de datos</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p class="fw-semibold text-danger">ADVERTENCIA: Esta operación eliminará de forma irreversible el contenido de la base de datos (registros, oradores, agenda, historial, salidas, etc.).</p>
+              <ul>
+                <li>La lista de bosquejos se mantendrá intacta, las fechas y registros seran borrados.</li>
+                <li>Asegúrate de tener una copia de seguridad si lo necesitas.</li>
+                <li>Esta acción no se puede deshacer.</li>
+              </ul>
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="confirm-check">
+                <label class="form-check-label" for="confirm-check">He leído las advertencias y deseo continuar</label>
+              </div>
+              <div id="clear-result" class="text-muted small"></div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" id="btn-confirm-clear" class="btn btn-danger" disabled>Confirmar y borrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!--begin::Footer-->
       <footer class="app-footer text-center">
@@ -462,6 +538,64 @@
             toastElement.remove(),
           );
         }
+
+          // --- Logic for clearing database contents ---
+          (function () {
+            const openBtn = document.getElementById('btn-open-clear-modal');
+            const modalEl = document.getElementById('clearDataModal');
+            const confirmCheck = document.getElementById('confirm-check');
+            const confirmBtn = document.getElementById('btn-confirm-clear');
+            const resultDiv = document.getElementById('clear-result');
+
+            if (!openBtn || !modalEl) return;
+
+            const modal = new bootstrap.Modal(modalEl, { keyboard: false });
+
+            openBtn.addEventListener('click', () => {
+              confirmCheck.checked = false;
+              confirmBtn.disabled = true;
+              resultDiv.textContent = '';
+              modal.show();
+            });
+
+            function updateConfirmState() {
+              const ok = confirmCheck.checked;
+              confirmBtn.disabled = !ok;
+            }
+
+            confirmCheck.addEventListener('change', updateConfirmState);
+
+            confirmBtn.addEventListener('click', async () => {
+              if (confirmBtn.disabled) return;
+              confirmBtn.disabled = true;
+              confirmBtn.innerHTML = 'Borrando...';
+              resultDiv.textContent = '';
+
+              try {
+                const resp = await fetch('http://localhost:3000/api/admin/clear-data', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' }
+                });
+                const data = await resp.json();
+                if (resp.ok) {
+                  resultDiv.textContent = data.message || 'Operación completada.';
+                  showNotification('Datos restablecidos correctamente', 'success');
+                  try { if (typeof updateSystemNotifications === 'function') updateSystemNotifications(); } catch(e){}
+                  modal.hide();
+                } else {
+                  resultDiv.textContent = data.error || 'Error al restablecer datos';
+                  showNotification('Error al restablecer datos', 'danger');
+                }
+              } catch (err) {
+                console.error(err);
+                resultDiv.textContent = 'Error de conexión al servidor';
+                showNotification('Error de conexión al servidor', 'danger');
+              } finally {
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = 'Confirmar y borrar';
+              }
+            });
+          })();
       });
     </script>
     <!--end::Script-->

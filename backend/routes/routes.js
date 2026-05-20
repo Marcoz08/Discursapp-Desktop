@@ -6,6 +6,7 @@ import * as agendaController from '../controllers/agenda.js';
 import * as salidasController from '../controllers/salidas.js';
 import * as notificacionesController from '../controllers/notificaciones.js';
 import * as historicoController from '../controllers/historico.js';
+import * as adminController from '../controllers/admin.js';
 
 
 const router = express.Router();
@@ -60,5 +61,8 @@ router.get('/dashboard/ultimos-discursos', bosquejosController.getUltimosDiscurs
 // --- Notificaciones ---
 router.get('/notificaciones', notificacionesController.getSystemNotifications);
 router.get('/notificaciones/sistema', notificacionesController.getSystemNotifications);
+
+// --- Admin: limpiar datos ---
+router.post('/admin/clear-data', adminController.clearDatabaseContents);
 
 export default router;
