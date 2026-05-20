@@ -277,11 +277,14 @@
                     <h3 class="card-title fw-bold text-primary">
                       <i class="bi bi-arrow-up-right-square-fill me-2"></i>Historial de salidas locales
                     </h3>
-                    <div class="card-tools">
-                      <div class="input-group input-group-sm" style="width: 250px">
-                        <input type="text" id="search-salidas" class="form-control" placeholder="Buscar en salidas...">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
-                      </div>
+                  <div class="card-tools d-flex">
+                    <button id="btn-add-manual" class="btn btn-sm btn-primary me-2">
+                      <i class="bi bi-plus-circle-fill me-1"></i> Añadir salida
+                    </button>
+                    <div class="input-group input-group-sm" style="width: 250px">
+                      <input type="text" id="search-salidas" class="form-control" placeholder="Buscar en salidas...">
+                      <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    </div>
                     </div>
                   </div>
                   <div class="card-body table-responsive p-0" style="max-height: 480px">
@@ -316,7 +319,10 @@
                     <h3 class="card-title fw-bold text-info">
                       <i class="bi bi-journal-bookmark-fill me-2"></i>Historial de visitas recibidas
                     </h3>
-                    <div class="card-tools">
+                    <div class="card-tools d-flex">
+                      <button id="btn-add-visit-manual" class="btn btn-sm btn-info me-2 text-white">
+                        <i class="bi bi-plus-circle-fill me-1"></i> Añadir visita
+                      </button>
                       <div class="input-group input-group-sm" style="width: 250px">
                         <input type="text" id="search-visitas" class="form-control" placeholder="Buscar en visitas...">
                         <span class="input-group-text"><i class="bi bi-search"></i></span>
@@ -354,6 +360,89 @@
         </div>
       </div>
     
+      <!-- Modal para Registro Manual en Historial -->
+      <div class="modal fade" id="manualRecordModal" tabindex="-1" aria-labelledby="manualRecordModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+              <h5 class="modal-title" id="manualRecordModalLabel">
+                <i class="bi bi-journal-plus me-2"></i>Añadir salida manualmente
+              </h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="manualForm">
+                <div class="mb-3">
+                  <label for="m-fecha" class="form-label fw-bold">Fecha</label>
+                  <input type="date" id="m-fecha" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                  <label for="m-nombre" class="form-label fw-bold">Nombre del Orador</label>
+                  <input type="text" id="m-nombre" class="form-control" placeholder="Nombre completo" required>
+                </div>
+                <div class="mb-3">
+                  <label for="m-titulo" class="form-label fw-bold">Título del Discurso</label>
+                  <input type="text" id="m-titulo" class="form-control" placeholder="Título del tema">
+                </div>
+                <div class="mb-3">
+                  <label for="m-congregacion" class="form-label fw-bold">Congregación</label>
+                  <input type="text" id="m-congregacion" class="form-control" placeholder="Nombre de la congregación">
+                </div>
+              </form>
+              <div class="alert alert-info py-2 small mb-0">
+                <i class="bi bi-info-circle me-1"></i> Estos registros se guardan permanentemente en el historial general.
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" id="btn-save-manual" class="btn btn-primary">
+                <i class="bi bi-save me-1"></i> Guardar en Historial
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal para Registro Manual de Visitas -->
+      <div class="modal fade" id="manualVisitModal" tabindex="-1" aria-labelledby="manualVisitModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+              <h5 class="modal-title" id="manualVisitModalLabel">
+                <i class="bi bi-journal-plus me-2"></i>Añadir visita manualmente
+              </h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="manualVisitForm">
+                <div class="mb-3">
+                  <label for="v-fecha" class="form-label fw-bold">Fecha</label>
+                  <input type="date" id="v-fecha" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                  <label for="v-nombre" class="form-label fw-bold">Nombre del Orador Visitante</label>
+                  <input type="text" id="v-nombre" class="form-control" placeholder="Nombre completo" required>
+                </div>
+                <div class="mb-3">
+                  <label for="v-titulo" class="form-label fw-bold">Título del Discurso</label>
+                  <input type="text" id="v-titulo" class="form-control" placeholder="Título del tema">
+                </div>
+                <div class="mb-3">
+                  <label for="v-congregacion" class="form-label fw-bold">Congregación de Origen</label>
+                  <input type="text" id="v-congregacion" class="form-control" placeholder="Nombre de la congregación">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" id="btn-save-visit-manual" class="btn btn-info text-white">
+                <i class="bi bi-save me-1"></i> Guardar en Historial
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!--begin::Footer-->
       <footer class="app-footer text-center">
         <!--begin::To the end-->
@@ -434,6 +523,16 @@
         const searchVisitas = document.getElementById("search-visitas");
 
         const API_BASE = 'http://localhost:3000/api';
+
+        // Referencias para el nuevo modal
+        const btnAddManual = document.getElementById("btn-add-manual");
+        const manualModal = new bootstrap.Modal(document.getElementById("manualRecordModal"));
+        const btnSaveManual = document.getElementById("btn-save-manual");
+
+        // Referencias para el modal de visitas
+        const btnAddVisitManual = document.getElementById("btn-add-visit-manual");
+        const manualVisitModal = new bootstrap.Modal(document.getElementById("manualVisitModal"));
+        const btnSaveVisitManual = document.getElementById("btn-save-visit-manual");
 
         async function fetchData() {
           try {
@@ -538,6 +637,80 @@
           const term = e.target.value.toLowerCase();
           filteredVisitas = allVisitas.filter(v => v.nombre.toLowerCase().includes(term) || v.tema.toLowerCase().includes(term) || v.congregacion.toLowerCase().includes(term));
           pageVisitas = 1; renderVisitas();
+        });
+
+        // Lógica para el guardado manual
+        btnAddManual.addEventListener("click", () => manualModal.show());
+
+        btnSaveManual.addEventListener("click", async () => {
+          const formData = {
+            fecha: document.getElementById("m-fecha").value,
+            nombre: document.getElementById("m-nombre").value,
+            titulo: document.getElementById("m-titulo").value,
+            congregacion: document.getElementById("m-congregacion").value,
+            tipo_registro: 0 // 0 para salida por defecto
+          };
+
+          if (!formData.fecha || !formData.nombre) {
+            alert("La fecha y el nombre son obligatorios.");
+            return;
+          }
+
+          try {
+            const response = await fetch(`${API_BASE}/historico`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+              manualModal.hide();
+              document.getElementById("manualForm").reset();
+              if (typeof showNotification === 'function') showNotification("Registro añadido correctamente", "success");
+              fetchData();
+            } else {
+              alert("Error al guardar el registro manual.");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+          }
+        });
+
+        // Lógica para el guardado manual de visitas
+        btnAddVisitManual.addEventListener("click", () => manualVisitModal.show());
+
+        btnSaveVisitManual.addEventListener("click", async () => {
+          const formData = {
+            fecha: document.getElementById("v-fecha").value,
+            nombre: document.getElementById("v-nombre").value,
+            titulo: document.getElementById("v-titulo").value,
+            congregacion: document.getElementById("v-congregacion").value,
+            tipo_registro: 1 // 1 para visita
+          };
+
+          if (!formData.fecha || !formData.nombre) {
+            alert("La fecha y el nombre son obligatorios.");
+            return;
+          }
+
+          try {
+            const response = await fetch(`${API_BASE}/historico`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+              manualVisitModal.hide();
+              document.getElementById("manualVisitForm").reset();
+              if (typeof showNotification === 'function') showNotification("Visita añadida correctamente", "success");
+              fetchData();
+            } else {
+              alert("Error al guardar la visita manual.");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+          }
         });
 
         fetchData();

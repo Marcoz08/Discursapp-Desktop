@@ -77,16 +77,20 @@ export const getSalidaSemana = async (req, res) => {
 export const getHistoricoSalidas = async (req, res) => {
     try {
         const query = `
-            SELECT 
-                s.fecha_salida, 
-                o.nombre AS nombre_orador,
-                t.titulo AS tema,
-                a.congregacion AS destino
-            FROM salidas_discursar s
-            JOIN oradores o ON s.id_orador = o.id_orador
-            JOIN temas_orador t ON s.id_tituloOrador = t.id_tituloOrador
-            JOIN agenda a ON s.id_rol = a.id_rol
-            ORDER BY s.fecha_salida DESC
+            SELECT fecha_salida, nombre_orador, tema, destino FROM (
+                SELECT 
+                    s.fecha_salida, 
+                    o.nombre AS nombre_orador,
+                    t.titulo AS tema,
+                    a.congregacion AS destino
+                FROM salidas_discursar s
+                JOIN oradores o ON s.id_orador = o.id_orador
+                JOIN temas_orador t ON s.id_tituloOrador = t.id_tituloOrador
+                JOIN agenda a ON s.id_rol = a.id_rol
+                UNION ALL
+                SELECT fecha, nombre, titulo, congregacion FROM historico WHERE tipo_registro = 0
+            ) AS combined_salidas
+            ORDER BY fecha_salida DESC
         `;
         const [rows] = await pool.query(query);
         res.json(rows);

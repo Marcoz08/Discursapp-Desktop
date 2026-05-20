@@ -117,3 +117,14 @@ Almacena información sobre eventos fuera de la programación ordinaria (Asamble
 | `fecha` | DATE | Fecha en la que ocurrirá el evento. |
 | `hora_reunion` | TEXT | Hora de inicio programada. |
 | `tipo_reunion` | VARCHAR(255) | Tipo o nombre de la reunión especial. |
+
+### 11. `historico`
+Almacena un registro sobre eventos fuera de los roles o eventos pasados (Salidas a discursar de ultimo momento, invitaciones personales a discursar, etc).
+| Columna | Tipo | Descripción |
+| :--- | :--- | :--- |
+| `id_historico` | INTEGER (PK AI) | Identificador único del registro. |
+| `fecha` | DATE | Fecha en la que ocurrirá el evento. |
+| `nombre` | TEXT | Nombre del orador. |
+| `titulo` | TEXT | Titulo del bosquejo.|
+| `congregacion` | TEXT | Hora de inicio programada. |
+| `tipo_registro` | INTEGER | `1` para visita, `0` para salida.  |

@@ -5,6 +5,7 @@ import * as visitantesController from '../controllers/visitantes.js';
 import * as agendaController from '../controllers/agenda.js';
 import * as salidasController from '../controllers/salidas.js';
 import * as notificacionesController from '../controllers/notificaciones.js';
+import * as historicoController from '../controllers/historico.js';
 
 
 const router = express.Router();
@@ -49,6 +50,7 @@ router.post('/salidas-programacion', salidasController.saveSalidasProgramacion);
 // --- Historial ---
 router.get('/salidas/historico', salidasController.getHistoricoSalidas);
 router.get('/visitantes/historico', visitantesController.getHistoricoVisitas);
+router.post('/historico', historicoController.createHistorico);
 
 // --- Dashboard ---
 router.get('/dashboard/visitante-semana', visitantesController.getVisitanteSemana);

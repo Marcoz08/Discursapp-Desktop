@@ -173,9 +173,14 @@ export const getVisitanteSemana = async (req, res) => {
 export const getHistoricoVisitas = async (req, res) => {
     try {
         const query = `
-            SELECT fecha_discurso, nombre, tema, congregacion, asistio
-            FROM oradores_visitantes
-            WHERE asistio = 1
+            SELECT fecha_discurso, nombre, tema, congregacion, asistio FROM (
+                SELECT fecha_discurso, nombre, tema, congregacion, asistio
+                FROM oradores_visitantes
+                WHERE asistio = 1
+                UNION ALL
+                SELECT fecha, nombre, titulo, congregacion, 1 AS asistio 
+                FROM historico WHERE tipo_registro = 1
+            ) AS combined_visitas
             ORDER BY fecha_discurso DESC
         `;
         const [rows] = await pool.query(query);
