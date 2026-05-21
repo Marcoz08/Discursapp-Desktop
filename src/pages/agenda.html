@@ -569,7 +569,7 @@
           const id = document.getElementById('edit-rol-id').value;
           // Obtener meses seleccionados
           const mesesSeleccionados = Array.from(document.querySelectorAll('.month-check:checked'))
-                                         .map(chk => parseInt(chk.value));
+          .map(chk => parseInt(chk.value));
 
           // Construir hora en formato HH:mm:ss para la base de datos
           const h = parseInt(document.getElementById('hora_h').value);

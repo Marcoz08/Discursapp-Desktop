@@ -13,7 +13,8 @@ const router = express.Router();
 
 // --- Bosquejos ---
 router.get('/bosquejos', bosquejosController.getBosquejos);
-router.put('/bosquejos/:num', bosquejosController.updateBosquejo);
+router.post('/bosquejos', bosquejosController.createBosquejo);
+router.put('/bosquejos/:id', bosquejosController.updateBosquejo);
 
 // --- Oradores ---
 router.get('/oradores-temas', oradoresController.getOradoresTemas);
