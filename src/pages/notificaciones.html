@@ -3,7 +3,7 @@
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Discursapp | Dashboard</title>
+    <title>Discursapp | notificaciones</title>
 
     <!--begin::Accessibility Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
@@ -210,7 +210,7 @@
       </aside>
       <!--end::Sidebar-->
       <!--begin::App Main-->
-      <main class="app-main">
+      <main class="app-main app-main-wrapper">
         <!--begin::App Content Header-->
         <div class="app-content-header">
           <!--begin::Container-->
@@ -264,17 +264,13 @@
       <!--end::App Main-->
 
       <!--begin::Footer-->
-      <footer class="app-footer">
+      <footer class="app-footer text-center">
         <!--begin::To the end-->
         <div class="float-end d-none d-sm-inline">v1.3.1c</div>
         <!--end::To the end-->
         <!--begin::Copyright-->
         <strong>
           Copyright &copy; 2026&nbsp;
-        </strong>
-        Developed by
-        <strong> 
-          <a href="https://github.com/Marcoz08" class="text-decoration-none">MarcoZ</a>.
         </strong>
         <!--end::Copyright-->
       </footer>
@@ -331,87 +327,6 @@
       });
     </script>
     <!--end::OverlayScrollbars Configure-->
-
-    <script>
-      document.addEventListener('DOMContentLoaded', async function () {
-        const notificationsList = document.getElementById('notifications-detailed-list');
-        
-        async function loadDetailedNotifications() {
-          try {
-            const response = await fetch('http://localhost:3000/api/notificaciones');
-            if (!response.ok) throw new Error('Error al conectar con el servidor');
-            
-            const data = await response.json();
-            renderNotifications(data);
-          } catch (error) {
-            notificationsList.innerHTML = `<div class="p-5 text-center text-danger"><i class="bi bi-exclamation-octagon fs-1 mb-3"></i><p>${error.message}</p></div>`;
-          }
-        }
-
-        function renderNotifications(data) {
-          if (data.length === 0) {
-            notificationsList.innerHTML = `<div class="p-5 text-center text-muted"><i class="bi bi-check2-circle fs-1 text-success mb-3"></i><p>¡Todo al día! No tienes notificaciones pendientes.</p></div>`;
-            return;
-          }
-
-          notificationsList.innerHTML = '';
-          data.forEach((notif, index) => {
-            const item = document.createElement('div');
-            item.className = 'list-group-item p-4';
-            item.innerHTML = `
-              <div class="d-flex align-items-start gap-3">
-                <div class="flex-shrink-0">
-                  <div class="rounded-circle bg-body-secondary d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                    <i class="bi ${notif.icon} fs-4 ${notif.color}"></i>
-                  </div>
-                </div>
-                <div class="flex-grow-1">
-                  <div class="d-flex w-100 justify-content-between align-items-center mb-2">
-                    <h5 class="mb-0 fw-bold">${notif.mensaje}</h5>
-                    <small class="text-muted">Sistema</small>
-                  </div>
-                  <p class="text-secondary mb-3">${notif.detalle || 'Esta notificación requiere tu atención inmediata.'}</p>
-                  <div class="d-flex gap-2">
-                    <a href="${notif.link}" class="btn btn-sm btn-primary">
-                      <i class="bi bi-box-arrow-up-right me-1"></i> Ir a la página
-                    </a>
-                    <button class="btn btn-sm btn-outline-success action-btn" data-action="complete" data-index="${index}">
-                      <i class="bi bi-check2"></i> Marcar como completada
-                    </button>
-                    <button class="btn btn-sm btn-outline-secondary action-btn" data-action="skip" data-index="${index}">
-                      Omitir
-                    </button>
-                    <button class="btn btn-sm btn-link text-decoration-none action-btn" data-action="later" data-index="${index}">
-                      <i class="bi bi-clock-history me-1"></i> Recordármelo después
-                    </button>
-                  </div>
-                </div>
-              </div>
-            `;
-            notificationsList.appendChild(item);
-          });
-        }
-
-        // Manejo de eventos para botones de acción
-        notificationsList.addEventListener('click', (e) => {
-          const btn = e.target.closest('.action-btn');
-          if (!btn) return;
-          
-          const action = btn.dataset.action;
-          const row = btn.closest('.list-group-item');
-          
-          if (action === 'complete' || action === 'skip' || action === 'later') {
-            row.classList.add('fade-out');
-            setTimeout(() => row.remove(), 300);
-            // Opcional: mostrar un pequeño aviso de confirmación
-            console.log(`Acción ${action} ejecutada en notificación.`);
-          }
-          // Aquí se podría llamar a un endpoint de la API para persistir estas preferencias del usuario
-        });
-
-        loadDetailedNotifications();
-      });
-    </script>
 
     <!-- OPTIONAL SCRIPTS -->
 

@@ -3,7 +3,7 @@
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Discursapp | Registro de bosquejos</title>
+    <title>Discursapp | Configuración</title>
 
     <!--begin::Accessibility Meta Tags-->
     <meta
@@ -441,6 +441,23 @@
     <!--end::Required Plugin(Bootstrap 5)--><!--begin::Required Plugin(AdminLTE)-->
     <script src="../js/adminlte.js"></script>
     <script src="../js/notificaciones_fe.js"></script>
+    <script>
+      (async () => {
+        try {
+          const response = await fetch("../js/configuracion_fe.js");
+          if (!response.ok) {
+            throw new Error(`No se pudo cargar configuracion_fe.js: ${response.status}`);
+          }
+
+          const source = await response.text();
+          const script = document.createElement("script");
+          script.textContent = `(function () {\n${source}\n})();`;
+          document.body.appendChild(script);
+        } catch (error) {
+          console.error("No se pudo cargar configuracion_fe.js", error);
+        }
+      })();
+    </script>
     <!--end::Required Plugin(AdminLTE)--><!--begin::OverlayScrollbars Configure-->
     <script>
       const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
@@ -471,134 +488,6 @@
       });
     </script>
     <!--end::OverlayScrollbars Configure-->
-
-
-    <!-- Lógica de la página de configuración -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // --- Theme selector logic ---
-        const currentTheme = window.DiscursAppTheme.current;
-        const radioLight = document.getElementById("theme-light");
-        const radioDark = document.getElementById("theme-dark");
-
-        // Mark the currently active theme
-        if (currentTheme === "dark") {
-          radioDark.checked = true;
-        } else {
-          radioLight.checked = true;
-        }
-
-        // Listen for changes
-        document
-          .getElementById("theme-selector")
-          .addEventListener("change", function (e) {
-            if (e.target.name !== "theme-option") return;
-            const selected = e.target.value;
-            window.DiscursAppTheme.set(selected);
-            showNotification(
-              selected === "dark"
-                ? "Tema oscuro activado."
-                : "Tema claro activado.",
-              "success",
-            );
-          });
-
-        /**
-         * Función reutilizable para mostrar notificaciones (Toasts)
-         */
-        function showNotification(message, type = "success") {
-          const toastContainer = document.getElementById("toastContainer");
-          const toastId = "toast-" + Date.now();
-          const bgClass =
-            type === "success" ? "text-bg-success" : "text-bg-danger";
-          const icon =
-            type === "success"
-              ? "bi-check-circle-fill"
-              : "bi-exclamation-triangle-fill";
-
-          const toastHTML = `
-            <div id="${toastId}" class="toast align-items-center ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
-              <div class="d-flex">
-                <div class="toast-body">
-                  <div class="d-flex align-items-center">
-                    <i class="bi ${icon} fs-5 me-2"></i>
-                    <div>${message}</div>
-                  </div>
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-              </div>
-            </div>
-          `;
-
-          toastContainer.insertAdjacentHTML("beforeend", toastHTML);
-          const toastElement = document.getElementById(toastId);
-          const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
-          toast.show();
-          toastElement.addEventListener("hidden.bs.toast", () =>
-            toastElement.remove(),
-          );
-        }
-
-          // --- Logic for clearing database contents ---
-          (function () {
-            const openBtn = document.getElementById('btn-open-clear-modal');
-            const modalEl = document.getElementById('clearDataModal');
-            const confirmCheck = document.getElementById('confirm-check');
-            const confirmBtn = document.getElementById('btn-confirm-clear');
-            const resultDiv = document.getElementById('clear-result');
-
-            if (!openBtn || !modalEl) return;
-
-            const modal = new bootstrap.Modal(modalEl, { keyboard: false });
-
-            openBtn.addEventListener('click', () => {
-              confirmCheck.checked = false;
-              confirmBtn.disabled = true;
-              resultDiv.textContent = '';
-              modal.show();
-            });
-
-            function updateConfirmState() {
-              const ok = confirmCheck.checked;
-              confirmBtn.disabled = !ok;
-            }
-
-            confirmCheck.addEventListener('change', updateConfirmState);
-
-            confirmBtn.addEventListener('click', async () => {
-              if (confirmBtn.disabled) return;
-              confirmBtn.disabled = true;
-              confirmBtn.innerHTML = 'Borrando...';
-              resultDiv.textContent = '';
-
-              try {
-                const resp = await fetch('http://localhost:3000/api/admin/clear-data', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' }
-                });
-                const data = await resp.json();
-                if (resp.ok) {
-                  resultDiv.textContent = data.message || 'Operación completada.';
-                  showNotification('Datos restablecidos correctamente', 'success');
-                  try { if (typeof updateSystemNotifications === 'function') updateSystemNotifications(); } catch(e){}
-                  modal.hide();
-                } else {
-                  resultDiv.textContent = data.error || 'Error al restablecer datos';
-                  showNotification('Error al restablecer datos', 'danger');
-                }
-              } catch (err) {
-                console.error(err);
-                resultDiv.textContent = 'Error de conexión al servidor';
-                showNotification('Error de conexión al servidor', 'danger');
-              } finally {
-                confirmBtn.disabled = false;
-                confirmBtn.innerHTML = 'Confirmar y borrar';
-              }
-            });
-          })();
-      });
-    </script>
-    <!--end::Script-->
   </body>
   <!--end::Body-->
 </html>
