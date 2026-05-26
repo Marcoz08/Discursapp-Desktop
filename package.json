@@ -1,12 +1,16 @@
 {
   "name": "discursapp",
   "description": "Aplicación web para coordinar discursos",
-  "version": "1.2.0c",
+  "version": "1.2.0d",
   "type": "module",
-  "main": "backend/server.js",
+  "main": "main.js",
   "scripts": {
-    "start": "node backend/server.js"
+    "start": "node backend/server.js",
+    "dev": "electron .",
+    "test": "echo 'Error: no test specified' && exit 1"
   },
+  "author": "MarcoZ",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^2.2.2",
     "cors": "^2.8.6",
@@ -14,5 +18,8 @@
     "express": "^5.2.1",
     "mysql2": "^3.20.0",
     "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "electron": "^42.2.0"
   }
 }
