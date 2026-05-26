@@ -1,7 +1,7 @@
-﻿const API_BASE_URL = 'http://localhost:3000/api';
-
-document.addEventListener("DOMContentLoaded", async function () {
-        const horaEl = document.getElementById("local-hora");
+﻿document.addEventListener("DOMContentLoaded", async function () {
+  const API_BASE_URL = 'http://localhost:3000/api';
+  console.log('[visitantes] visitantes_fe.js cargado');
+  const horaEl = document.getElementById("local-hora");
         const diaEl = document.getElementById("local-dia");
         const congEl = document.getElementById("local-congregacion");
         const tablaVisitasBody = document.getElementById("tabla-visitas-body");
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         // Generar opciones de año dinámicamente (año actual y los dos siguientes)
         selectAnio.innerHTML = ""; // Limpiar opciones existentes
-        for (let i = 0; i < 3; i++) {
+        for (let i = -5; i <= 3; i++) { // Mostrar 5 años atrás, el actual y 5 años adelante
           const year = currentYear + i;
           selectAnio.innerHTML += `<option value="${year}">${year}</option>`;
         }
@@ -77,47 +77,54 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
 
         // --- Lógica para Exportación a PDF ---
-        const configPdfModal = new bootstrap.Modal(
-          document.getElementById("configPdfModal"),
-        );
+        const configPdfModalEl = document.getElementById("configPdfModal");
+        const configPdfModal = configPdfModalEl ? new bootstrap.Modal(configPdfModalEl) : null;
         const pdfSelectAnio = document.getElementById("pdf-select-anio");
         const btnPdfSelectAll = document.getElementById("btn-pdf-select-all");
-        const btnGeneratePdfFinal = document.getElementById(
-          "btn-generate-pdf-final",
-        );
+        const btnGeneratePdfFinal = document.getElementById("btn-generate-pdf-final");
 
-        // Poblar select de año del modal PDF con las mismas opciones que el principal
-        pdfSelectAnio.innerHTML = selectAnio.innerHTML;
-        pdfSelectAnio.value = selectAnio.value;
+        // Poblar select de año del modal PDF con las mismas opciones que el principal (si existe)
+        if (pdfSelectAnio) {
+          pdfSelectAnio.innerHTML = selectAnio.innerHTML;
+          pdfSelectAnio.value = selectAnio.value;
+        } else {
+          console.warn('[visitantes] pdf-select-anio no encontrado en el DOM');
+        }
 
-        btnExportPdf.addEventListener("click", () => {
-          configPdfModal.show();
-        });
+        if (btnExportPdf && configPdfModal) {
+          btnExportPdf.addEventListener("click", () => configPdfModal.show());
+        } else if (!btnExportPdf) {
+          console.warn('[visitantes] btn-export-pdf no encontrado');
+        }
 
         // Lógica de "Seleccionar todos / Desmarcar todos"
-        btnPdfSelectAll.addEventListener("click", () => {
-          const checks = document.querySelectorAll(".pdf-month-check");
-          const allChecked = Array.from(checks).every((c) => c.checked);
-          checks.forEach((c) => (c.checked = !allChecked));
-          btnPdfSelectAll.textContent = allChecked
-            ? "Seleccionar todos"
-            : "Desmarcar todos";
-        });
+        if (btnPdfSelectAll) {
+          btnPdfSelectAll.addEventListener("click", () => {
+            const checks = document.querySelectorAll(".pdf-month-check");
+            const allChecked = Array.from(checks).every((c) => c.checked);
+            checks.forEach((c) => (c.checked = !allChecked));
+            btnPdfSelectAll.textContent = allChecked
+              ? "Seleccionar todos"
+              : "Desmarcar todos";
+          });
+        }
 
-        btnGeneratePdfFinal.addEventListener("click", async () => {
-          const anio = pdfSelectAnio.value;
-          const mesesSeleccionados = Array.from(
-            document.querySelectorAll(".pdf-month-check:checked"),
-          ).map((c) => parseInt(c.value));
+        if (btnGeneratePdfFinal) {
+          btnGeneratePdfFinal.addEventListener("click", async () => {
+            const anio = pdfSelectAnio ? pdfSelectAnio.value : selectAnio.value;
+            const mesesSeleccionados = Array.from(
+              document.querySelectorAll(".pdf-month-check:checked"),
+            ).map((c) => parseInt(c.value));
 
-          if (mesesSeleccionados.length === 0) {
-            showNotification("Por favor seleccione al menos un mes.", "danger");
-            return;
-          }
+            if (mesesSeleccionados.length === 0) {
+              showNotification("Por favor seleccione al menos un mes.", "danger");
+              return;
+            }
 
-          await generateProgramacionPDF(anio, mesesSeleccionados);
-          configPdfModal.hide();
-        });
+            await generateProgramacionPDF(anio, mesesSeleccionados);
+            if (configPdfModal) configPdfModal.hide();
+          });
+        }
 
         async function generateProgramacionPDF(anio, meses) {
           const { jsPDF } = window.jspdf;
@@ -280,7 +287,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         // Función para generar las filas de la tabla según el mes/año y el día de reunión
         async function updateProgramacionTable() {
-          if (!currentLocalData) return;
+          if (!currentLocalData) {
+            // Si no hay datos locales, mostrar mensaje informativo
+            tablaVisitasBody.innerHTML = '<tr><td colspan="9" class="text-center p-4 text-muted"><i class="bi bi-info-circle me-2"></i>Por favor, configura la reunión local primero.</td></tr>';
+            return;
+          }
 
           const mes = parseInt(selectMes.value);
           const anio = parseInt(selectAnio.value);
@@ -306,15 +317,18 @@ document.addEventListener("DOMContentLoaded", async function () {
             const response = await fetch(
               `${API_BASE_URL}/visitantes-programacion?mes=${mes}&anio=${anio}`,
             );
-            const programacion = await response.json();
+            const programacion = response.ok ? await response.json() : [];
+            console.log("[visitantes] programacion", { mes, anio, count: programacion.length, targetDay, rows: programacion });
             const hoyStr = new Date().toISOString().split('T')[0];
 
             tablaVisitasBody.innerHTML = "";
 
             // Usamos las 12:00 PM para evitar desfases por cambios de horario (DST) en la medianoche
             let date = new Date(anio, mes, 1, 12, 0, 0);
+            let renderedRows = 0;
             while (date.getMonth() === mes) {
               if (date.getDay() === targetDay) {
+                renderedRows += 1;
                 const dayNum = date.getDate().toString().padStart(2, "0");
                 const monthNum = (date.getMonth() + 1)
                   .toString()
@@ -324,10 +338,11 @@ document.addEventListener("DOMContentLoaded", async function () {
                 const esFuturo = fullDateStr > hoyStr;
 
                 // Buscar si hay datos guardados para esta fecha específica
-                const dataRow = programacion.find((p) => {
-                  const pDateStr = p.fecha_discurso.split("T")[0];
+                const dataRow = Array.isArray(programacion) 
+                  ? programacion.find((p) => {
+                  const pDateStr = p.fecha_discurso?.split(/[T ]/)[0];
                   return pDateStr === fullDateStr;
-                });
+                }) : null;
 
                 const tr = document.createElement("tr");
                 tr.dataset.fecha = fullDateStr; // Guardamos la fecha real para el guardado
@@ -369,7 +384,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                   if (dataRow?.nombre === "-----") tr.classList.add("table-info");
                 } else {
                   if (isConfirmed) tr.classList.add("table-success"); // Fondo verde suave
-
                   tr.innerHTML = `
                     <td>
                       <i class="bi bi-person-circle text-primary me-2"></i>
@@ -408,6 +422,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               }
               date.setDate(date.getDate() + 1);
             }
+            console.log("[visitantes] renderedRows", renderedRows);
           } catch (error) {
             console.error("Error al cargar la programación:", error);
           }
@@ -643,6 +658,7 @@ document.addEventListener("DOMContentLoaded", async function () {
               throw new Error("No se pudo obtener la información");
 
             currentLocalData = await response.json();
+            console.log("[visitantes] reunion-local", currentLocalData);
 
             // Formatear hora (de HH:mm:ss a 12h AM/PM)
             const [h, m] = currentLocalData.hora_reunion.split(":");
@@ -656,7 +672,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             // Una vez que tenemos los datos locales, generamos la tabla inicial
             updateProgramacionTable();
           } catch (error) {
-            console.error("Error:", error);
+            console.error("[visitantes] Error al cargar datos locales:", error);
+            tablaVisitasBody.innerHTML = '<tr><td colspan="9" class="text-center p-4 text-danger"><i class="bi bi-exclamation-triangle me-2"></i>Error al cargar la configuración. Asegúrate que el servidor está corriendo.</td></tr>';
           }
         }
 
@@ -794,7 +811,3 @@ document.addEventListener("DOMContentLoaded", async function () {
         fetchTiposReunion();
       });
     
-
-
-
-

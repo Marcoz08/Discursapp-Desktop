@@ -1,7 +1,8 @@
 const API_BASE_URL = "http://localhost:3000/api";
 
       document.addEventListener("DOMContentLoaded", function () {
-        const selectMes = document.getElementById("select-mes-salidas");
+              console.log('[salidas] salidas_fe.js cargado');
+              const selectMes = document.getElementById("select-mes-salidas");
         const selectAnio = document.getElementById("select-anio-salidas");
         const congEl = document.getElementById("local-congregacion");
         const diaEl = document.getElementById("local-dia");
@@ -10,14 +11,11 @@ const API_BASE_URL = "http://localhost:3000/api";
         const btnEditSalidas = document.getElementById("btn-edit-salidas");
         const btnSaveSalidas = document.getElementById("btn-save-salidas");
         const btnExportPdf = document.getElementById("btn-export-pdf");
-        const configPdfModal = new bootstrap.Modal(
-          document.getElementById("configPdfModal"),
-        );
-        const pdfSelectAnio = document.getElementById("pdf-select-anio");
-        const btnPdfSelectAll = document.getElementById("btn-pdf-select-all");
-        const btnGeneratePdfFinal = document.getElementById(
-          "btn-generate-pdf-final",
-        );
+              const configPdfModalEl = document.getElementById("configPdfModal");
+              const configPdfModal = configPdfModalEl ? new bootstrap.Modal(configPdfModalEl) : null;
+              const pdfSelectAnio = document.getElementById("pdf-select-anio");
+              const btnPdfSelectAll = document.getElementById("btn-pdf-select-all");
+              const btnGeneratePdfFinal = document.getElementById("btn-generate-pdf-final");
 
         const today = new Date();
         const currentMonth = today.getMonth();
@@ -51,35 +49,39 @@ const API_BASE_URL = "http://localhost:3000/api";
         }
 
         // Evento para abrir el modal de configuración de PDF
-        btnExportPdf.addEventListener("click", () => {
-          configPdfModal.show();
-        });
+        if (btnExportPdf && configPdfModal) {
+          btnExportPdf.addEventListener("click", () => configPdfModal.show());
+        }
 
         // Lógica de "Seleccionar todos / Desmarcar todos" en el modal PDF
-        btnPdfSelectAll.addEventListener("click", () => {
-          const checks = document.querySelectorAll(".pdf-month-check");
-          const allChecked = Array.from(checks).every((c) => c.checked);
-          checks.forEach((c) => (c.checked = !allChecked));
-          btnPdfSelectAll.textContent = allChecked
-            ? "Seleccionar todos"
-            : "Desmarcar todos";
-        });
+        if (btnPdfSelectAll) {
+          btnPdfSelectAll.addEventListener("click", () => {
+            const checks = document.querySelectorAll(".pdf-month-check");
+            const allChecked = Array.from(checks).every((c) => c.checked);
+            checks.forEach((c) => (c.checked = !allChecked));
+            btnPdfSelectAll.textContent = allChecked
+              ? "Seleccionar todos"
+              : "Desmarcar todos";
+          });
+        }
 
         // Evento para generar el PDF final
-        btnGeneratePdfFinal.addEventListener("click", async () => {
-          const anio = pdfSelectAnio.value;
-          const mesesSeleccionados = Array.from(
-            document.querySelectorAll(".pdf-month-check:checked"),
-          ).map((c) => parseInt(c.value));
+        if (btnGeneratePdfFinal) {
+          btnGeneratePdfFinal.addEventListener("click", async () => {
+            const anio = pdfSelectAnio ? pdfSelectAnio.value : selectAnio.value;
+            const mesesSeleccionados = Array.from(
+              document.querySelectorAll(".pdf-month-check:checked"),
+            ).map((c) => parseInt(c.value));
 
-          if (mesesSeleccionados.length === 0) {
-            showNotification("Por favor seleccione al menos un mes.", "danger");
-            return;
-          }
+            if (mesesSeleccionados.length === 0) {
+              showNotification("Por favor seleccione al menos un mes.", "danger");
+              return;
+            }
 
-          await generateSalidasPDF(anio, mesesSeleccionados);
-          configPdfModal.hide();
-        });
+            await generateSalidasPDF(anio, mesesSeleccionados);
+            if (configPdfModal) configPdfModal.hide();
+          });
+        }
 
         async function generateSalidasPDF(anio, meses) {
           const { jsPDF } = window.jspdf;
@@ -234,7 +236,7 @@ const API_BASE_URL = "http://localhost:3000/api";
         async function fetchOradoresLocales() {
           try {
             const response = await fetch(
-              "${API_BASE_URL}/oradores-temas",
+              `${API_BASE_URL}/oradores-temas`,
             );
             allOradoresTemasRaw = await response.json();
 
@@ -325,7 +327,7 @@ const API_BASE_URL = "http://localhost:3000/api";
         async function renderSalidasTable() {
           if (!currentConfirmedAgenda) {
             tablaSalidasBody.innerHTML =
-              '<tr><td colspan="6" class="text-center p-4 text-muted"><i class="bi bi-calendar-x me-2"></i>Sin rol confirmado para este periodo</td></tr>';
+              '<tr><td colspan="6" class="text-center p-4 text-muted"><i class="bi bi-calendar-x me-2"></i>Sin rol confirmado. Crea un rol confirmado en <a href="./agenda.html" class="fw-bold">Agenda de roles</a></td></tr>';
             return;
           }
 
@@ -364,12 +366,15 @@ const API_BASE_URL = "http://localhost:3000/api";
               `${API_BASE_URL}/salidas-programacion?mes=${mes}&anio=${anio}`,
             );
             const programacion = response.ok ? await response.json() : [];
+            console.log("[salidas] programacion", { mes, anio, count: programacion.length, targetDay, agenda: currentConfirmedAgenda });
 
             tablaSalidasBody.innerHTML = "";
             // Iteramos por todos los días del mes para encontrar los días de reunión (targetDay)
             let date = new Date(anio, mes, 1, 12, 0, 0);
+            let renderedRows = 0;
             while (date.getMonth() === mes) {
               if (date.getDay() === targetDay) {
+                renderedRows += 1;
                 const fullDateStr = new Date(
                   date.getTime() - date.getTimezoneOffset() * 60000,
                 )
@@ -426,8 +431,6 @@ const API_BASE_URL = "http://localhost:3000/api";
                   if (data) {
                     tr.dataset.idOrador = data.id_orador;
                     tr.dataset.idTituloOrador = data.id_tituloOrador;
-                    tr.dataset.idTituloOrador = data.id_tituloOrador;
-                    tr.dataset.idTituloOrador = data.id_tituloOrador;
                   }
                 } else {
                   tr.innerHTML = `
@@ -443,6 +446,7 @@ const API_BASE_URL = "http://localhost:3000/api";
               }
               date.setDate(date.getDate() + 1);
             }
+            console.log("[salidas] renderedRows", renderedRows);
           } catch (e) {
             console.error("Error al renderizar tabla:", e);
           }
@@ -456,7 +460,9 @@ const API_BASE_URL = "http://localhost:3000/api";
             const response = await fetch(
               `${API_BASE_URL}/agenda/confirmada?mes=${mes}&anio=${anio}`,
             );
-            const data = await response.json();
+            const data = response.ok ? await response.json() : null;
+            console.log("[salidas] fetchConfirmedSalida", { mes, anio, data });
+            
             if (data && data.congregacion) {
               currentConfirmedAgenda = data;
               congEl.textContent = data.congregacion;
@@ -484,7 +490,8 @@ const API_BASE_URL = "http://localhost:3000/api";
             }
             renderSalidasTable();
           } catch (error) {
-            console.error("Error al obtener datos de salida:", error);
+            console.error("[salidas] Error al obtener datos de salida:", error);
+            tablaSalidasBody.innerHTML = '<tr><td colspan="6" class="text-center p-4 text-danger"><i class="bi bi-exclamation-triangle me-2"></i>Error al cargar. Asegúrate que el servidor está corriendo.</td></tr>';
           }
         }
 
@@ -515,7 +522,7 @@ const API_BASE_URL = "http://localhost:3000/api";
 
           try {
             const response = await fetch(
-              "${API_BASE_URL}/salidas-programacion",
+              `${API_BASE_URL}/salidas-programacion`,
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

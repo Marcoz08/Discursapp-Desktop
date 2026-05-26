@@ -14,7 +14,7 @@ const port = 3000;       // Puerto donde correrá el servidor localmente
 app.use(cors());              // Habilita CORS para que tu navegador no bloquee las peticiones al API
 app.use(bodyParser.json());   // Configura el servidor para entender datos en formato JSON
 
-console.log('💻 Servidor en modo: LOCAL (SQLite)');
+console.log('<-- Servidor en modo: LOCAL (SQLite) -->');
 
 app.use('/api', router);
 
