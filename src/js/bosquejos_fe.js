@@ -1,5 +1,5 @@
 ﻿document.addEventListener('DOMContentLoaded', async function () {
-  const API_BASE_URL = 'http://localhost:3000/api';
+  // Configuration is loaded from config.js
   const tableBodyRegulares = document.getElementById('bosquejos-table-body');
   const tableBodyEspeciales = document.getElementById('especiales-table-body');
   const searchInput = document.querySelector('input[name="table_search"]');

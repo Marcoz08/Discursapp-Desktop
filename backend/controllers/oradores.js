@@ -2,7 +2,7 @@ import pool from '../config/db.js';
 
 // Obtener oradores con sus temas
 export const getOradoresTemas = async (req, res) => {
-    console.log('Petición recibida: GET /api/oradores-temas');
+    console.log('Peticion recibida: GET /api/oradores-temas');
     try {
         const query = `
             SELECT 

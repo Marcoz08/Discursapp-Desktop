@@ -1,6 +1,4 @@
-const API_BASE_URL = "http://localhost:3000/api";
-
-      document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
         const tableBody = document.getElementById('agenda-table-body');
         const selectAnio = document.getElementById('select-anio-agenda');
         const btnNew = document.getElementById('btn-new-agreement');
@@ -13,7 +11,9 @@ const API_BASE_URL = "http://localhost:3000/api";
         let agendaDataRaw = []; // Almacenamos los datos para acceder a ellos al editar
 
         // Limpiar checkboxes al cerrar modal
-        document.getElementById('addAgreementModal').addEventListener('hidden.bs.modal', () => {
+        const modalElement = document.getElementById('addAgreementModal');
+        if (modalElement) {
+          modalElement.addEventListener('hidden.bs.modal', () => {
           document.querySelectorAll('.month-check').forEach(chk => chk.checked = false);
           document.getElementById('edit-rol-id').value = '';
           document.getElementById('dia_rp').value = '6';
@@ -23,10 +23,22 @@ const API_BASE_URL = "http://localhost:3000/api";
           btnDelete.style.display = 'none';
           form.reset();
         });
+        }
 
-        // Establecer el año actual por defecto
+        // Generar opciones de año dinámicamente y establecer el año actual
         const anioActual = new Date().getFullYear();
+        if (selectAnio) {
+          selectAnio.innerHTML = "";
+          // Generamos un rango de años (2 atrás, 5 adelante) para dar flexibilidad
+          for (let i = -2; i <= 5; i++) {
+            const year = anioActual + i;
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            selectAnio.appendChild(option);
+          }
         selectAnio.value = anioActual;
+        }
 
         // Función para formatear fechas de YYYY-MM-DD a DD-mes-YYYY
         function formatDate(dateStr) {
@@ -84,31 +96,41 @@ const API_BASE_URL = "http://localhost:3000/api";
         // Cargar datos de la agenda
         async function fetchAgenda() {
           const anio = selectAnio.value;
+          if (!anio) return;
+
           try {
             const response = await fetch(`${API_BASE_URL}/agenda?anio=${anio}`);
-            agendaDataRaw = await response.json();
+            if (!response.ok) throw new Error('Error en la respuesta del servidor');
             
+            agendaDataRaw = await response.json();
+
             tableBody.innerHTML = '';
-            agendaDataRaw.forEach(item => {
-              const tr = document.createElement('tr');
-              const badgeClass = item.estatus ? 'text-bg-success' : 'text-bg-secondary';
-              const statusLabel = item.estatus ? 'Confirmado' : 'Pendiente';
-              
-              tr.innerHTML = `
-                <td class="small">${formatDate(item.fecha_ini)}</td>
-                <td class="small">${formatDate(item.fecha_fin)}</td>
-                <td><span class="badge text-bg-info w-100">${item.meses_texto || 'S/M'}</span></td>
-                <td>${item.congregacion}</td>
-                <td><span class="badge ${badgeClass}">${statusLabel}</span></td>
-                <td class="text-muted small">${item.notas || ''}</td>
-                <td class="text-center">
-                  <button class="btn btn-sm btn-outline-secondary" onclick="openEditModal(${item.id_rol})" title="Editar"><i class="bi bi-pencil"></i></button>
-                </td>
-              `;
-              tableBody.appendChild(tr);
-            });
+
+            if (agendaDataRaw && agendaDataRaw.length > 0) {
+              agendaDataRaw.forEach(item => {
+                const tr = document.createElement('tr');
+                const badgeClass = item.estatus ? 'text-bg-success' : 'text-bg-secondary';
+                const statusLabel = item.estatus ? 'Confirmado' : 'Pendiente';
+                
+                tr.innerHTML = `
+                  <td class="small">${formatDate(item.fecha_ini)}</td>
+                  <td class="small">${formatDate(item.fecha_fin)}</td>
+                  <td><span class="badge text-bg-info w-100">${item.meses_texto || 'S/M'}</span></td>
+                  <td>${item.congregacion}</td>
+                  <td><span class="badge ${badgeClass}">${statusLabel}</span></td>
+                  <td class="text-muted small">${item.notas || ''}</td>
+                  <td class="text-center">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="openEditModal(${item.id_rol})" title="Editar"><i class="bi bi-pencil"></i></button>
+                  </td>
+                `;
+                tableBody.appendChild(tr);
+              });
+            } else {
+              tableBody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">No hay acuerdos registrados para este año.</td></tr>';
+            }
           } catch (error) {
             console.error('Error al cargar agenda:', error);
+            if (tableBody) tableBody.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Error al cargar los datos del servidor.</td></tr>';
           }
         }
 

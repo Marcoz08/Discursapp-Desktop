@@ -53,7 +53,7 @@ export const clearDatabaseContents = async (req, res) => {
             connection.release();
         }
     } catch (err) {
-        console.error('Error al obtener conexión para limpiar BD:', err);
+        console.error('Error al obtener conexion para limpiar BD:', err);
         res.status(500).json({ error: err.message });
     }
 };

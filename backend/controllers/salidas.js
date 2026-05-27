@@ -4,6 +4,11 @@ import pool from '../config/db.js';
 export const getSalidasProgramacion = async (req, res) => {
     const { mes, anio } = req.query;
     try {
+        // Validación básica para evitar errores de tipo NaN en la consulta
+        if (!mes || !anio || isNaN(parseInt(mes)) || isNaN(parseInt(anio))) {
+            return res.json([]);
+        }
+
         const query = `
             SELECT 
                 s.id_salida, s.id_tituloOrador, s.id_rol, s.fecha_salida, s.id_orador,

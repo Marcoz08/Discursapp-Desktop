@@ -28,6 +28,12 @@ Columnas:
 // Obtener los registros de la agenda filtrados por año
 export const getAgenda = async (req, res) => {
     const { anio } = req.query;
+    const yearFilter = parseInt(anio);
+
+    if (isNaN(yearFilter)) {
+        return res.status(400).json({ error: "Año no válido" });
+    }
+
     try {
         const query = `
             SELECT a.*, 
@@ -36,11 +42,15 @@ export const getAgenda = async (req, res) => {
             FROM agenda a
             LEFT JOIN agenda_meses am ON a.id_rol = am.id_rol
             LEFT JOIN meses m ON am.id_mes = m.id_mes
-            WHERE CAST(strftime('%Y', a.fecha_ini) AS INTEGER) = ? OR CAST(strftime('%Y', a.fecha_fin) AS INTEGER) = ?
+            WHERE 
+                CAST(strftime('%Y', a.fecha_ini) AS INTEGER) = ? 
+                OR CAST(strftime('%Y', a.fecha_fin) AS INTEGER) = ?
+                OR a.fecha_ini LIKE ? || '-%'
+                OR a.fecha_fin LIKE ? || '-%'
             GROUP BY a.id_rol
             ORDER BY a.fecha_ini ASC
         `;
-        const [rows] = await pool.query(query, [parseInt(anio), parseInt(anio)]);
+        const [rows] = await pool.query(query, [yearFilter, yearFilter, yearFilter.toString(), yearFilter.toString()]);
         res.json(rows);
     } catch (err) {
         res.status(500).json({ error: err.message });

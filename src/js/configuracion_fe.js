@@ -1,6 +1,5 @@
 ﻿
-const API_BASE_URL = "http://localhost:3000/api";
-const CLEAR_DATA_ENDPOINT = `${API_BASE_URL}/admin/clear-data`;
+// Configuration is loaded from config.js
 
 function showNotification(message, type = "success") {
   const toastContainer = document.getElementById("toastContainer");

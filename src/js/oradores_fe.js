@@ -1,6 +1,4 @@
-const API_BASE_URL = "http://localhost:3000/api";
-
-      document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", async function () {
         const tableBody = document.getElementById("oradores-table-body");
         const searchInput = document.getElementById("search-orador");
         let oradoresData = [];

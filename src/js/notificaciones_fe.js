@@ -1,6 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000/api';
-const NOTIFICATIONS_ENDPOINT = `${API_BASE_URL}/notificaciones`;
-const DEFAULT_NOTIFICATION_DETAIL = 'Esta notificación requiere tu atención inmediata.';
+// Configuration is loaded from config.js
 
 async function updateSystemNotifications() {
     const badge = document.getElementById('notif-count');

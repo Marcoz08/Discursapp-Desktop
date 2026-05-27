@@ -1,6 +1,5 @@
-const API_BASE_URL = "http://localhost:3000/api";
-
       document.addEventListener("DOMContentLoaded", function () {
+        const API_BASE_URL = "http://localhost:3000/api";
               console.log('[salidas] salidas_fe.js cargado');
               const selectMes = document.getElementById("select-mes-salidas");
         const selectAnio = document.getElementById("select-anio-salidas");
@@ -36,7 +35,8 @@ const API_BASE_URL = "http://localhost:3000/api";
         }
 
         if (selectAnio) {
-          for (let i = 0; i < 3; i++) {
+          selectAnio.innerHTML = ""; // Limpiar opciones existentes
+          for (let i = -5; i <= 3; i++) { // Rango extendido para mayor flexibilidad (igual que en visitantes)
             const year = currentYear + i;
             selectAnio.innerHTML += `<option value="${year}">${year}</option>`;
           }
