@@ -1,57 +1,33 @@
 # DiscursApp 🎤
 
-**Aplicación de escritorio para la administración y coordinación de discursos públicos.**
+**Aplicación de escritorio open source para la coordinación y administración de discursos.**
 
-## 📌 Resumen
+## 📌 Qué es DiscursApp
 
-DiscursApp es una herramienta pensada para administrar la programación de oradores, visitantes, bosquejos, agenda y salidas de una congregación. En su estado actual, la aplicación funciona como una solución local con **backend en Node.js/Express** y **frontend en HTML, CSS y JavaScript**, lista para encapsularse en una versión de escritorio con **Electron**.
+DiscursApp es un proyecto para gestionar:
 
-La lógica actual ya está preparada para ejecutarse de forma local y offline, con una base de datos **SQLite** dentro del proyecto, lo que la hace ideal para uso en escritorio sin depender de servicios externos.
+- oradores,
+- bosquejos,
+- agenda,
+- visitantes,
+- salidas,
+- histórico,
+- notificaciones.
 
-## ✨ Qué hace la aplicación
+Está diseñado para ejecutarse como aplicación de escritorio en Windows mediante **Electron** y **Electron Forge**, con un backend local en **Node.js/Express** y un frontend basado en **HTML, CSS y JavaScript**.
 
-- **Dashboard** con información general del sistema.
-- **Gestión de oradores** y sus temas.
-- **Registro de bosquejos** y seguimiento de presentaciones.
-- **Agenda y programación** de discursos.
-- **Control de visitantes** y salidas.
-- **Histórico** de registros y actividades.
-- **Notificaciones** y panel de gestión.
+## 🧩 Tecnologías principales
 
-## 🧱 Estado actual del proyecto
+- **Electron**: plataforma que empaqueta la aplicación web como app de escritorio.
+- **Electron Forge**: herramienta de configuración, construcción y empaquetado para Electron.
+- **Node.js**: servidor backend local.
+- **Express**: framework web para API REST.
+- **SQLite**: base de datos local para datos offline.
+- **AdminLTE / Bootstrap**: diseño e interfaz del frontend.
+- **dotenv**: carga variables de entorno.
+- **CORS** y **body-parser**: configuración de comunicación HTTP.
 
-### Frontend
-
-- Interfaz construida con **HTML5**, **CSS**, **JavaScript** y componentes basados en **AdminLTE / Bootstrap**.
-- Las vistas se encuentran en `src/pages/`.
-- La entrada principal es `index.html`, que redirige al `home.html`.
-
-### Backend
-
-- Servidor creado con **Node.js + Express**.
-- API REST expuesta bajo `/api`.
-- Manejo de CORS y JSON mediante `body-parser`.
-- Validación y manejo de errores centralizados en `backend/middleware/errorHandler.js`.
-
-### Base de datos
-
-- Actualmente se utiliza **SQLite** local.
-- La conexión está configurada en `backend/config/db.js`.
-- La base de datos se guarda en `backend/data/discursapp_sqlite.db`.
-
-> En esta versión, la app está orientada a ejecución local y escritorio, no a una arquitectura de nube.
-
-## 🖥️ Versión de escritorio con Electron
-
-El proyecto está preparado para evolucionar hacia una aplicación de escritorio con **Electron**, manteniendo:
-
-- El mismo **frontend** que ya se utiliza en el navegador.
-- El **backend local** para manejar la API y la base de datos.
-- Un empaquetado gráfico para que el usuario abra la app como una ventana nativa.
-
-Actualmente, el contenido del README describe la **base funcional actual** del proyecto, y la integración con Electron debe añadirse como una capa de empaquetado o lanzamiento.
-
-## 📁 Estructura del proyecto
+## 📂 Estructura del proyecto
 
 ```text
 discursapp/
@@ -68,78 +44,130 @@ discursapp/
 │   ├── css/
 │   ├── js/
 │   └── pages/
+├── forge.config.cjs
 ├── index.html
+├── main.js
 ├── package.json
 └── README.md
 ```
 
-## 🔧 Instalación y ejecución
+## 🚀 Requisitos para desarrollar y ejecutar
 
-### 1. Clonar el repositorio
+Para trabajar en el proyecto necesitas:
+
+- **Windows 10/11** (o compatible con Electron).
+- **Node.js** (recomendado: versión 18 o superior).
+- **npm** (incluido con Node.js).
+- **Git** para clonar el repositorio.
+- Un editor de código como **Visual Studio Code**.
+
+### Opcional, recomendado
+
+- **Live Server** en VS Code para abrir `index.html` durante el desarrollo frontend.
+- **GitHub Desktop** u otra GUI para Git.
+
+## 🔧 Instalación paso a paso
+
+1. Clona el repositorio:
 
 ```bash
 git clone https://github.com/tu-usuario/discursapp.git
 cd discursapp
 ```
 
-### 2. Instalar dependencias
+2. Instala dependencias:
 
 ```bash
 npm install
 ```
 
-### 3. Iniciar el backend
+3. Ejecuta la aplicación en modo desarrollo con Electron Forge:
 
 ```bash
 npm start
 ```
 
-Esto levanta el servidor local en:
+Este comando arranca la app de escritorio usando Electron. También puedes usar:
 
-```text
-http://localhost:3000
+```bash
+npm run dev
 ```
 
-### 4. Abrir la interfaz
+## 🧪 Scripts disponibles
 
-Puedes abrir la app de dos maneras:
+El proyecto ya incluye scripts útiles en `package.json`:
 
-#### Opción A: navegador
+- `npm start`: inicia la app con **Electron Forge**.
+- `npm run dev`: ejecuta la app directamente con **Electron**.
+- `npm run package`: empaqueta la aplicación en un directorio local.
+- `npm run make`: genera instaladores para la plataforma configurada.
 
-Abre `index.html` o usa una extensión como **Live Server**.
+## 📝 Cómo editar el código
 
-#### Opción B: escritorio (futuro / integración con Electron)
+### Backend
 
-El proyecto está listo para adaptarse a Electron como contenedor de esa misma interfaz y backend local.
+- Archivos principales: `backend/server.js`
+- Configuración de la base de datos: `backend/config/db.js`
+- Rutas y controladores: `backend/routes/` y `backend/controllers/`
+- Middleware: `backend/middleware/errorHandler.js`
 
-## 🧪 Dependencias principales
+### Frontend
 
-- **Node.js**
-- **Express.js**
-- **SQLite3**
-- **dotenv**
-- **cors**
-- **body-parser**
-- **mysql2** (soporte de compatibilidad para uso de datos relacionales)
+- Archivo de entrada principal: `index.html`
+- Vistas de la interfaz: `src/pages/`
+- Estilos: `src/css/`
+- Scripts del frontend: `src/js/`
+- Recursos estáticos: `src/assets/`
 
-## 📦 Scripts disponibles
+### Electron
 
-```json
-"scripts": {
-  "start": "node backend/server.js"
-}
+- Punto de entrada de Electron: `main.js`
+- Configuración de Forge: `forge.config.cjs`
+
+
+## 📦 Empaquetado para Windows
+
+Para generar una versión instalable en Windows:
+
+```bash
+npm run make
 ```
 
-## 📚 Documentación adicional
+Esto creará un instalador en la carpeta de salida definida por Electron Forge.
+
+## 🔍 Dependencias importantes
+
+- `electron`
+- `@electron-forge/cli`
+- `@electron-forge/maker-squirrel`
+- `@electron-forge/maker-zip`
+- `@electron-forge/plugin-auto-unpack-natives`
+- `@electron-forge/plugin-fuses`
+- `express`
+- `sqlite3`
+- `cors`
+- `body-parser`
+- `dotenv`
+- `mysql2`
+
+## 🌐 ¿Qué hace este proyecto?
+
+DiscursApp ofrece una interfaz local para gestionar los eventos de una congregación o grupo organizador. La idea es que cualquier usuario pueda usarlo en su PC sin requerir servicios externos ni conexión permanente a internet.
+
+## 📖 Documentación adicional
 
 - `docs/DATABASE_SCHEMA.md`
 - `docs/CHANGELOG.md`
 - `docs/ACCESSIBILITY.md`
 
-## 👤 Autor
+## 📢 Licencia
+
+Este proyecto es **open source** bajo licencia **MIT**.
+
+## 🤝 Autor
 
 Desarrollado por **MarcoZ | MZTechonologies**.
 
-## 📝 Nota importante
+## 🙌 Contribuciones
 
-Si quieres que el README describa **ya una versión empaquetada en Electron**, será necesario añadir primero la capa de Electron al proyecto (dependencias, script principal y empaquetado). Esta guía refleja el **estado real actual** del proyecto.
+Si quieres ayudar a mejorar DiscursApp, abre un issue o envía un pull request con tus cambios. El proyecto está pensado para mejorar la versión de escritorio en Windows y facilitar su uso offline.

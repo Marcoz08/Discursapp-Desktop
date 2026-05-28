@@ -3,7 +3,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import fs from 'fs';
-import { app } from 'electron';
 
 dotenv.config();
 
@@ -12,20 +11,25 @@ const __dirname = path.dirname(__filename);
 
 let dbPath;
 
-if (app && app.isPackaged) {
-    const userDataPath = app.getPath('userData');
+// Detectar si estamos en modo empaquetado usando la variable de entorno
+// que main.js establece antes de cargar el backend
+const userDataPath = process.env.DISCURSAPP_USER_DATA;
+
+if (userDataPath) {
     const dbDir = path.join(userDataPath, 'data');
     if (!fs.existsSync(dbDir)) {
         fs.mkdirSync(dbDir, { recursive: true });
     }
     dbPath = path.join(dbDir, 'discursapp_sqlite.db');
     
+    // Copiar la BD original si no existe en userData
     const originalDbPath = path.resolve(__dirname, '../data/discursapp_sqlite.db');
     if (!fs.existsSync(dbPath) && fs.existsSync(originalDbPath)) {
         fs.copyFileSync(originalDbPath, dbPath);
+        console.log('Base de datos copiada a:', dbPath);
     }
 } else {
-    // Ajustamos la ruta de la base de datos ya que ahora estamos dentro de /backend/config
+    // Modo desarrollo: usar la ruta relativa normal
     dbPath = path.resolve(__dirname, '../data/discursapp_sqlite.db');
 }
 
