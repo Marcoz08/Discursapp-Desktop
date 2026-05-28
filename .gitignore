@@ -47,3 +47,5 @@ notas.txt
 *.sqlite3
 *.db
 .env
+
+out/

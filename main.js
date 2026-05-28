@@ -1,29 +1,55 @@
 import { app, BrowserWindow } from 'electron';
-import { fork } from 'child_process';
 import http from 'http';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
+import squirrelStartup from 'electron-squirrel-startup';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-let serverProcess;
+let mainWindow;
 
-const createWindow = () => {
-  const win = new BrowserWindow({
-    width: 1100,
-    height: 780
-  })
-
-  win.loadFile('src/pages/home.html')
+if (squirrelStartup) {
+  app.quit();
 }
 
-const waitForServerReady = () => new Promise((resolve, reject) => {
-  if (!serverProcess) {
-    reject(new Error('No se pudo iniciar el proceso del servidor backend'));
+const gotLock = app.requestSingleInstanceLock();
+if (!gotLock) {
+  app.quit();
+  process.exit(0);
+}
+
+app.on('second-instance', () => {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) {
+      mainWindow.restore();
+    }
+    mainWindow.focus();
+  }
+});
+
+const getServerScriptPath = () => {
+  return path.join(__dirname, 'backend', 'server.js');
+};
+
+const createWindow = () => {
+  if (mainWindow) {
     return;
   }
 
+  mainWindow = new BrowserWindow({
+    width: 1100,
+    height: 780,
+  });
+
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
+
+  mainWindow.loadFile('src/pages/home.html');
+};
+
+const waitForServerReady = () => new Promise((resolve, reject) => {
   const startedAt = Date.now();
 
   const checkServer = () => {
@@ -52,21 +78,19 @@ const waitForServerReady = () => new Promise((resolve, reject) => {
     setTimeout(checkServer, 300);
   };
 
-  serverProcess.on('exit', (code) => {
-    reject(new Error(`El backend finalizó antes de estar listo. Código: ${code}`));
-  });
-
   checkServer();
 });
 
 app.whenReady().then(async () => {
-  // Iniciamos el servidor backend (server.js) como un subproceso
-  // path.join asegura que la ruta funcione correctamente en cualquier sistema operativo
-  serverProcess = fork(path.join(__dirname, 'backend', 'server.js'));
+  // Iniciamos el servidor backend (server.js) dentro del proceso principal
+  const serverScriptPath = getServerScriptPath();
 
-  serverProcess.on('error', (err) => {
-    console.error('Error al iniciar el servidor backend:', err);
-  });
+  try {
+    console.log('Iniciando backend local:', serverScriptPath);
+    await import(pathToFileURL(serverScriptPath).href);
+  } catch (err) {
+    console.error('Error al cargar el servidor backend:', err);
+  }
 
   try {
     await waitForServerReady();
@@ -84,15 +108,12 @@ app.whenReady().then(async () => {
 })
 
 app.on('window-all-closed', () => {
-  // Matamos el proceso del servidor si existe al cerrar las ventanas
-  if (serverProcess) serverProcess.kill();
-  
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
 
-// Aseguramos la limpieza del proceso en cualquier caso de salida
+// El backend corre en el mismo proceso principal.
 app.on('before-quit', () => {
-  if (serverProcess) serverProcess.kill();
+  // Ningún subproceso adicional que limpiar.
 });

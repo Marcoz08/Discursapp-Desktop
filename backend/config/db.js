@@ -2,14 +2,32 @@ import sqlite3 from 'sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import fs from 'fs';
+import { app } from 'electron';
 
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Ajustamos la ruta de la base de datos ya que ahora estamos dentro de /backend/config
-const dbPath = path.resolve(__dirname, '../data/discursapp_sqlite.db');
+let dbPath;
+
+if (app && app.isPackaged) {
+    const userDataPath = app.getPath('userData');
+    const dbDir = path.join(userDataPath, 'data');
+    if (!fs.existsSync(dbDir)) {
+        fs.mkdirSync(dbDir, { recursive: true });
+    }
+    dbPath = path.join(dbDir, 'discursapp_sqlite.db');
+    
+    const originalDbPath = path.resolve(__dirname, '../data/discursapp_sqlite.db');
+    if (!fs.existsSync(dbPath) && fs.existsSync(originalDbPath)) {
+        fs.copyFileSync(originalDbPath, dbPath);
+    }
+} else {
+    // Ajustamos la ruta de la base de datos ya que ahora estamos dentro de /backend/config
+    dbPath = path.resolve(__dirname, '../data/discursapp_sqlite.db');
+}
 
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) console.error('Error al conectar a SQLite:', err.message);
