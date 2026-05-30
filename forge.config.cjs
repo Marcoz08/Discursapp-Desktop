@@ -10,7 +10,12 @@ module.exports = {
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
-      config: {},
+      config: {
+        // 1. Url del icono para panel de control de Windows
+        iconUrl: 'https://raw.githubusercontent.com/Marcoz08/Discursapp-Desktop/refs/heads/main/src/assets/icon.ico',
+        // 2. Icono para el instalador .exe
+        setupIcon: 'src/assets/icon.ico',
+      },
     },
     {
       name: '@electron-forge/maker-zip',

@@ -1,20 +1,28 @@
-# DiscursApp 🎤
+# Discursapp
 
 **Aplicación de escritorio open source para la coordinación y administración de discursos.**
 
-## 📌 Qué es DiscursApp
+## 🌐 ¿Qué es Discursapp?
 
-DiscursApp es un proyecto para gestionar:
+DiscursApp es un proyecto para gestionar los roles de discursos entre congregaciónes. 
+Integra lo siguiente:
 
-- oradores,
-- bosquejos,
-- agenda,
-- visitantes,
-- salidas,
-- histórico,
-- notificaciones.
+- Informacion de oradores locales
+- Lista de bosquejos
+- Agenda de roles y acuerdos con congregaciónes
+- Oradores visitantes
+- Salidas a discursar
+- Historial de eventos
+- Notificaciones y recordatorios
+- Generacion de programas y documentos en PDF
 
-Está diseñado para ejecutarse como aplicación de escritorio en Windows mediante **Electron** y **Electron Forge**, con un backend local en **Node.js/Express** y un frontend basado en **HTML, CSS y JavaScript**.
+La version de escritorio esta pensada para poder trabajar offline sin necesidad de fuentes externas y con un acceso facil.
+
+Está diseñada para ejecutarse como aplicación de escritorio en Windows mediante **Electron** y **Electron Forge**, con un backend local en **Node.js/Express** y un frontend basado en **HTML, CSS y JavaScript**.
+
+## Descarga e instalacion del programa
+
+**LA SIGUIENTE PARTE DE LA DOCUMENTACION ES PARA DESARROLLADORES O USUARIOS AVANZADOS**
 
 ## 🧩 Tecnologías principales
 
@@ -55,18 +63,18 @@ discursapp/
 
 Para trabajar en el proyecto necesitas:
 
-- **Windows 10/11** (o compatible con Electron).
+- **Windows 10/11** (o compatible con Electron). Solo se ha probado en x64.
 - **Node.js** (recomendado: versión 18 o superior).
 - **npm** (incluido con Node.js).
 - **Git** para clonar el repositorio.
-- Un editor de código como **Visual Studio Code**.
+- **Visual Studio Code** o cualquier otro editor de código similar.
 
 ### Opcional, recomendado
 
 - **Live Server** en VS Code para abrir `index.html` durante el desarrollo frontend.
 - **GitHub Desktop** u otra GUI para Git.
 
-## 🔧 Instalación paso a paso
+## 🔧 Instalación del codigo de desarrollo paso a paso
 
 1. Clona el repositorio:
 
@@ -102,7 +110,7 @@ El proyecto ya incluye scripts útiles en `package.json`:
 - `npm run package`: empaqueta la aplicación en un directorio local.
 - `npm run make`: genera instaladores para la plataforma configurada.
 
-## 📝 Cómo editar el código
+## 📝 Editar el código
 
 ### Backend
 
@@ -150,10 +158,6 @@ Esto creará un instalador en la carpeta de salida definida por Electron Forge.
 - `dotenv`
 - `mysql2`
 
-## 🌐 ¿Qué hace este proyecto?
-
-DiscursApp ofrece una interfaz local para gestionar los eventos de una congregación o grupo organizador. La idea es que cualquier usuario pueda usarlo en su PC sin requerir servicios externos ni conexión permanente a internet.
-
 ## 📖 Documentación adicional
 
 - `docs/DATABASE_SCHEMA.md`
@@ -170,4 +174,4 @@ Desarrollado por **MarcoZ | MZTechonologies**.
 
 ## 🙌 Contribuciones
 
-Si quieres ayudar a mejorar DiscursApp, abre un issue o envía un pull request con tus cambios. El proyecto está pensado para mejorar la versión de escritorio en Windows y facilitar su uso offline.
+Si quieres ayudar a mejorar DiscursApp, abre un issue o envía un pull request con tus cambios. ¡Toda idea o ayuda es bienvenida!

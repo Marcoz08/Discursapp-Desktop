@@ -47,5 +47,7 @@ notas.txt
 *.sqlite3
 *.db
 .env
+/backend/data/discursapp_sqlite_resp.db
 
 out/
+own_files/
